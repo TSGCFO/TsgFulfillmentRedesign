@@ -1,8 +1,9 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation, useRouter } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -21,6 +22,25 @@ const PageLoader = () => (
 );
 
 function Router() {
+  const [location, setLocation] = useLocation();
+  
+  // Handle 301 redirects and set canonical URLs
+  useEffect(() => {
+    // Check if we need to redirect
+    const redirectTo = checkRedirect(location);
+    if (redirectTo) {
+      // Use 301 redirect - add history entry for browser back button
+      window.history.replaceState(null, '', redirectTo);
+      setLocation(redirectTo);
+    } else {
+      // Set canonical URL for current page
+      setCanonicalUrl(location);
+    }
+    
+    // Scroll to top on route change
+    window.scrollTo(0, 0);
+  }, [location, setLocation]);
+  
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
