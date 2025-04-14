@@ -307,16 +307,12 @@ const ServiceDetail = () => {
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between">
-            <Link href="/">
-              <a className="flex items-center">
-                <Logo />
-              </a>
+            <Link href="/" className="flex items-center">
+              <Logo />
             </Link>
-            <Link href="/">
-              <a className="text-primary hover:text-primary/80 transition-colors">
-                <ArrowLeft className="h-5 w-5 inline mr-2" />
-                Back to Home
-              </a>
+            <Link href="/" className="text-primary hover:text-primary/80 transition-colors">
+              <ArrowLeft className="h-5 w-5 inline mr-2" />
+              Back to Home
             </Link>
           </div>
         </div>
@@ -446,19 +442,15 @@ const ServiceDetail = () => {
             <Separator className="mb-12" />
             <div className="flex flex-col sm:flex-row justify-between items-center">
               {prevService && (
-                <Link href={`/services/${prevService?.slug}`}>
-                  <a className="text-primary hover:text-primary/80 transition-colors flex items-center mb-6 sm:mb-0">
-                    <ArrowLeft className="h-5 w-5 mr-2" />
-                    {prevService?.title}
-                  </a>
+                <Link href={`/services/${prevService?.slug}`} className="text-primary hover:text-primary/80 transition-colors flex items-center mb-6 sm:mb-0">
+                  <ArrowLeft className="h-5 w-5 mr-2" />
+                  {prevService?.title}
                 </Link>
               )}
               {nextService && (
-                <Link href={`/services/${nextService?.slug}`}>
-                  <a className="text-primary hover:text-primary/80 transition-colors flex items-center">
-                    {nextService?.title}
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </a>
+                <Link href={`/services/${nextService?.slug}`} className="text-primary hover:text-primary/80 transition-colors flex items-center">
+                  {nextService?.title}
+                  <ArrowRight className="h-5 w-5 ml-2" />
                 </Link>
               )}
             </div>
