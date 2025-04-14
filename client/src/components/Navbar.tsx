@@ -55,10 +55,8 @@ const Navbar: React.FC = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 shadow-md backdrop-blur-sm' : 'bg-white'}`}>
       <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/">
-          <a className="flex items-center">
-            <Logo />
-          </a>
+        <Link href="/" className="flex items-center">
+          <Logo />
         </Link>
         
         <div className="hidden md:flex items-center space-x-8">

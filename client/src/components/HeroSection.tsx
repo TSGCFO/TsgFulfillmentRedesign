@@ -80,7 +80,7 @@ const HeroSection: React.FC = () => {
               />
             </div>
             <motion.div 
-              className="absolute -bottom-10 -right-10 bg-[#28A745] text-white p-6 rounded-lg shadow-lg max-w-xs"
+              className="absolute -bottom-10 -right-10 bg-[#28A745] text-white p-6 rounded-lg shadow-lg max-w-xs z-10"
               variants={fadeIn}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
