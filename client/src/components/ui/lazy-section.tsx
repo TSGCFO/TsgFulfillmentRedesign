@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 interface LazySectionProps {
   children: ReactNode;
   className?: string;
+  id?: string;
   rootMargin?: string;
   threshold?: number;
   animate?: boolean;
@@ -18,6 +19,7 @@ interface LazySectionProps {
 export const LazySection: React.FC<LazySectionProps> = ({
   children,
   className = '',
+  id,
   rootMargin = '100px',
   threshold = 0.1,
   animate = true,
@@ -42,6 +44,7 @@ export const LazySection: React.FC<LazySectionProps> = ({
     return (
       <div 
         ref={ref as React.RefObject<HTMLDivElement>} 
+        id={id}
         className={cn("min-h-[200px]", className)}
         aria-hidden="true"
       />
@@ -51,6 +54,7 @@ export const LazySection: React.FC<LazySectionProps> = ({
   return (
     <div 
       ref={ref as React.RefObject<HTMLDivElement>} 
+      id={id}
       className={cn(
         className,
         animate && isIntersecting && "animate-fadeIn"
