@@ -26,10 +26,10 @@ const AboutSection: React.FC = () => {
             <span className="text-primary font-medium">ABOUT US</span>
             <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Your Trusted Logistics Partner</h2>
             <p className="text-gray-600 mb-6">
-              TSG Fulfillment Services has been providing exceptional logistics and fulfillment solutions since 2005. With a focus on technology, efficiency, and customer satisfaction, we've helped hundreds of businesses streamline their operations and grow.
+              Who is TSG? We are a mid-size fulfillment company that specializes in retail, e-commerce, and B2B fulfillment. We not only want to help companies succeed, but also grow with them.
             </p>
             <p className="text-gray-600 mb-6">
-              Our team of logistics experts brings decades of combined experience to every client relationship. We understand the unique challenges of modern commerce and work tirelessly to create customized solutions that address your specific needs.
+              Our team understands complex logistics processes, and we implement practical and cost-effective solutions to help you overcome your fulfillment challenges. Whether you're looking for fulfillment, reverse logistics, or warehousing services, our TSG team is ready to help with all your shipping, supply chain logistics, and warehousing challenges.
             </p>
             <div className="grid grid-cols-2 gap-6 mb-8">
               <div>

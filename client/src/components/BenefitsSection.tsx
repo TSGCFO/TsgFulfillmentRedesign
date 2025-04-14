@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, TrendingUp, Maximize, Headphones, Laptop, Activity } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle2, TrendingUp, Clock, Truck, Users, BarChart3, Globe } from 'lucide-react';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -29,16 +30,22 @@ interface BenefitItemProps {
 
 const BenefitItem: React.FC<BenefitItemProps> = ({ icon, title, description }) => {
   return (
-    <motion.div variants={fadeIn}>
-      <div className="flex items-start mb-4">
-        <div className="bg-primary/10 p-3 rounded-lg mr-4">
-          {icon}
-        </div>
-        <h3 className="text-xl font-semibold font-poppins">{title}</h3>
-      </div>
-      <p className="text-gray-600 pl-14">
-        {description}
-      </p>
+    <motion.div variants={fadeIn} className="benefit-card">
+      <Card className="h-full border-0 shadow-md">
+        <CardContent className="p-6">
+          <div className="flex items-start">
+            <div className="mr-4 text-primary">
+              {icon}
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold font-poppins mb-2">{title}</h3>
+              <p className="text-gray-600">
+                {description}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 };
@@ -46,43 +53,39 @@ const BenefitItem: React.FC<BenefitItemProps> = ({ icon, title, description }) =
 const BenefitsSection: React.FC = () => {
   const benefits = [
     {
-      icon: <DollarSign className="text-primary" />,
-      title: "Lower Shipping Costs",
-      description: "Leverage our volume discounts with major carriers to reduce your shipping costs significantly."
+      icon: <TrendingUp className="h-6 w-6" />,
+      title: "Lower Shipping Cost",
+      description: "Benefit from our volume discounts with major carriers and optimized shipping routes to reduce your overall shipping expenses."
     },
     {
-      icon: <TrendingUp className="text-primary" />,
-      title: "Reduced Operating Costs",
-      description: "Eliminate the need for warehouse space, staff, and equipment with our all-inclusive fulfillment services."
+      icon: <BarChart3 className="h-6 w-6" />,
+      title: "Reduced Operating Cost",
+      description: "Eliminate the need for warehouse space, staff, and equipment by outsourcing your fulfillment operations to us."
     },
     {
-      icon: <Maximize className="text-primary" />,
-      title: "Extend Your Reach",
-      description: "Our strategically located facilities help you reach customers faster with shorter transit times."
+      icon: <Globe className="h-6 w-6" />,
+      title: "Extending Your Reach",
+      description: "Easily expand into new markets with our strategically located warehouses and international shipping capabilities."
     },
     {
-      icon: <Headphones className="text-primary" />,
+      icon: <Users className="h-6 w-6" />,
       title: "Improved Customer Service",
-      description: "Provide faster shipping, accurate order fulfillment, and easy returns to enhance customer satisfaction."
+      description: "Enhance customer satisfaction with faster deliveries, accurate order fulfillment, and professional packaging."
     },
     {
-      icon: <Laptop className="text-primary" />,
-      title: "Advanced Technology",
-      description: "Our integrated systems provide real-time inventory visibility and seamless order management."
+      icon: <Clock className="h-6 w-6" />,
+      title: "Time Efficiency",
+      description: "Focus on growing your business while we handle the time-consuming tasks of storing, packing, and shipping your products."
     },
     {
-      icon: <Activity className="text-primary" />,
-      title: "Scale With Ease",
-      description: "Our flexible solutions grow with your business, accommodating seasonal peaks and rapid expansion."
+      icon: <CheckCircle2 className="h-6 w-6" />,
+      title: "Harnessing Technology",
+      description: "Leverage our advanced inventory management systems and real-time tracking to optimize your supply chain."
     }
   ];
 
   return (
-    <section id="benefits" className="py-20 bg-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-primary/5 -z-10"></div>
-      <div className="absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-[#28A745]/5 -z-10"></div>
-      
+    <section id="benefits" className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <motion.div 
           className="text-center mb-16"
@@ -91,15 +94,16 @@ const BenefitsSection: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeIn}
         >
-          <span className="text-primary font-medium">WHY CHOOSE US</span>
-          <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">The Benefits of TSG Fulfillment</h2>
+          <span className="text-primary font-medium">BENEFITS</span>
+          <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Why Choose TSG Fulfillment</h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            Partnering with TSG Fulfillment gives your business a competitive edge in today's fast-paced market.
+            Here at TSG, we want to help smooth out the process and make sure that you can focus on what matters: 
+            the customer and your product. Promote, market, sell! Leave the heavy lifting to us.
           </p>
         </motion.div>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}

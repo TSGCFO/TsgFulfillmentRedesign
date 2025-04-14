@@ -46,10 +46,10 @@ const HeroSection: React.FC = () => {
             variants={fadeIn}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins text-gray-900 leading-tight mb-6">
-              Streamline Your <span className="text-primary">Order Fulfillment</span> Process
+              What An <span className="text-primary">Order Fulfillment Centre</span> Can Do For You
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-              Focus on growing your business while we handle your warehousing, shipping, and fulfillment needs with precision and efficiency.
+              Inventory gone missing? Slow shipping times? Back-logged orders? Order fulfillment is the bread and butter for any organization, be they eCommerce or brick-and-mortar companies. With the marketplace advancing and the way we communicate evolving, how you respond to your customer's needs and requests from the point of sale becomes that much more crucial.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <Button 
@@ -86,8 +86,8 @@ const HeroSection: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <p className="text-lg font-medium mb-2">Trusted by 200+ businesses</p>
-              <p className="text-sm opacity-90">Reliable fulfillment services for eCommerce and retail businesses</p>
+              <p className="text-lg font-medium mb-2">Benefits of Our Services</p>
+              <p className="text-sm opacity-90">Lower Shipping Cost • Reduced Operating Cost • Extending your Reach • Improved Customer Service • Harnessing Technology</p>
             </motion.div>
           </motion.div>
         </motion.div>
