@@ -49,7 +49,18 @@ const AboutSection: React.FC = () => {
                 <p className="text-gray-600">Accuracy Rate</p>
               </div>
             </div>
-            <Button className="bg-primary text-white hover:bg-primary/90 px-8 py-7 font-medium text-base">
+            <Button 
+              className="bg-primary text-white hover:bg-primary/90 px-8 py-7 font-medium text-base"
+              onClick={() => {
+                const element = document.getElementById('contact');
+                if (element) {
+                  window.scrollTo({
+                    top: element.offsetTop - 100,
+                    behavior: 'smooth',
+                  });
+                }
+              }}
+            >
               Our Story
             </Button>
           </motion.div>

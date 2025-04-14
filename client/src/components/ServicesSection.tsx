@@ -30,9 +30,20 @@ interface ServiceItemProps {
 }
 
 const ServiceItem: React.FC<ServiceItemProps> = ({ icon, title, description }) => {
+  const handleLearnMore = () => {
+    // Scroll to the contact section when clicked
+    const element = document.getElementById('contact');
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 100,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <motion.div variants={fadeIn} className="service-card">
-      <Card className="h-full">
+      <Card className="h-full transition-all duration-300 hover:shadow-xl border border-gray-100 hover:border-primary/20">
         <CardContent className="p-6">
           <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
             {icon}
@@ -41,7 +52,11 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ icon, title, description }) =
           <p className="text-gray-600 mb-4">
             {description}
           </p>
-          <Button variant="link" className="text-primary font-medium p-0 h-auto flex items-center group">
+          <Button 
+            variant="link" 
+            onClick={handleLearnMore}
+            className="text-primary font-medium p-0 h-auto flex items-center group"
+          >
             Learn More
             <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Button>

@@ -83,42 +83,42 @@ const ProcessSection: React.FC = () => {
   const processSteps = [
     {
       number: 1,
-      title: "Receiving Inventory",
-      description: "We receive and inspect your products, ensuring everything is accounted for and in good condition before being stored in our warehouse.",
+      title: "Receiving & Inbound Solutions",
+      description: "We receive your inventory at our fulfillment center, performing detailed quality inspection to ensure everything is accounted for and in excellent condition. Our team meticulously documents and catalogs each item for accurate inventory tracking.",
       imageSrc: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80",
-      imageAlt: "Receiving inventory",
+      imageAlt: "Receiving inventory at TSG Fulfillment",
       isReversed: false
     },
     {
       number: 2,
-      title: "Storage & Inventory Management",
-      description: "Your products are stored securely in our warehouses, with real-time inventory tracking and management systems.",
+      title: "Warehousing & Inventory Management",
+      description: "Your products are stored in our secure, climate-controlled facilities with advanced inventory management systems. We monitor stock levels in real-time, providing accurate reporting and ensuring efficient space utilization to keep your storage costs optimized.",
       imageSrc: "https://images.unsplash.com/photo-1507308820779-5b6fa128020c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      imageAlt: "Warehouse storage",
+      imageAlt: "TSG Warehouse storage systems",
       isReversed: true
     },
     {
       number: 3,
-      title: "Order Processing",
-      description: "When orders come in, our system automatically processes them, optimizing for efficiency and accuracy in the picking and packing stages.",
+      title: "Order Processing & Kitting",
+      description: "When orders arrive, our integrated system processes them automatically with precision. Our expert team handles picking, kitting, and packing with attention to detail. We can assemble multi-component orders and create custom product bundles according to your specifications.",
       imageSrc: "https://images.unsplash.com/photo-1586528116493-da8c594c2ded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      imageAlt: "Order processing",
+      imageAlt: "TSG Order processing system",
       isReversed: false
     },
     {
       number: 4,
-      title: "Shipping & Delivery",
-      description: "We ship your orders using optimized carrier selections based on cost, speed, and destination to ensure timely delivery.",
+      title: "Shipping & Freight Solutions",
+      description: "We leverage our relationships with major carriers to optimize your shipping costs and transit times. Our team selects the most appropriate shipping method based on package size, destination, and delivery timeline requirements, ensuring your customers receive their orders promptly.",
       imageSrc: "https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      imageAlt: "Shipping and delivery",
+      imageAlt: "TSG Shipping and freight solutions",
       isReversed: true
     },
     {
       number: 5,
-      title: "Returns Management",
-      description: "Our comprehensive returns system processes customer returns efficiently, inspecting items and returning them to inventory when appropriate.",
+      title: "Reverse Logistics",
+      description: "Our comprehensive returns management system handles the entire returns process efficiently. We receive returns, inspect items, process them according to your specifications, and either restock them or dispose of them appropriately, reducing waste and improving customer satisfaction.",
       imageSrc: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      imageAlt: "Returns management",
+      imageAlt: "TSG Returns management process",
       isReversed: false
     }
   ];
@@ -136,7 +136,8 @@ const ProcessSection: React.FC = () => {
           <span className="text-primary font-medium">HOW IT WORKS</span>
           <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Our Fulfillment Process</h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
-            A streamlined approach to handle your logistics needs efficiently and reliably.
+            Our streamlined logistics process is designed to increase efficiency, reduce costs, and help your business grow. 
+            From receiving your inventory to managing returns, we handle every step with precision and care.
           </p>
         </motion.div>
         
