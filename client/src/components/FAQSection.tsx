@@ -55,9 +55,15 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section 
+      id="faq"
+      className="py-20 bg-white"
+      aria-labelledby="faq-heading"
+      itemScope
+      itemType="https://schema.org/FAQPage"
+    >
       <div className="container mx-auto px-6">
-        <motion.div 
+        <motion.header 
           className="text-center mb-16"
           initial="hidden"
           whileInView="visible"
@@ -65,11 +71,16 @@ const FAQSection: React.FC = () => {
           variants={fadeIn}
         >
           <span className="text-primary font-medium">COMMON QUESTIONS</span>
-          <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Frequently Asked Questions</h2>
+          <h2 
+            id="faq-heading"
+            className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6"
+          >
+            Frequently Asked Questions
+          </h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
             Find answers to common questions about our fulfillment services.
           </p>
-        </motion.div>
+        </motion.header>
         
         <motion.div 
           className="max-w-4xl mx-auto"
@@ -77,16 +88,40 @@ const FAQSection: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
+          role="group"
+          aria-label="Frequently Asked Questions"
         >
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion 
+            type="single" 
+            collapsible 
+            className="w-full"
+          >
             {faqs.map((faq, index) => (
-              <motion.div key={index} variants={fadeIn}>
-                <AccordionItem value={`item-${index}`} className="mb-4 border-none">
-                  <AccordionTrigger className="bg-accent rounded-lg px-6 py-4 text-left hover:bg-gray-200 transition-colors duration-300 text-lg font-semibold font-poppins">
+              <motion.div 
+                key={index} 
+                variants={fadeIn}
+                itemScope
+                itemType="https://schema.org/Question"
+              >
+                <AccordionItem 
+                  value={`item-${index}`} 
+                  className="mb-4 border-none"
+                >
+                  <AccordionTrigger 
+                    className="bg-accent rounded-lg px-6 py-4 text-left hover:bg-gray-200 transition-colors duration-300 text-lg font-semibold font-poppins"
+                    itemProp="name"
+                  >
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent className="bg-white px-6 py-4 rounded-b-lg shadow-inner text-gray-600">
-                    {faq.answer}
+                  <AccordionContent 
+                    className="bg-white px-6 py-4 rounded-b-lg shadow-inner text-gray-600"
+                    itemScope
+                    itemType="https://schema.org/Answer"
+                    itemProp="acceptedAnswer"
+                  >
+                    <div itemProp="text">
+                      {faq.answer}
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </motion.div>

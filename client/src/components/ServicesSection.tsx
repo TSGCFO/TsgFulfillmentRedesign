@@ -39,27 +39,48 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ icon, title, description, slu
   };
 
   return (
-    <motion.div variants={fadeIn} className="service-card">
+    <motion.article 
+      variants={fadeIn} 
+      className="service-card"
+      itemScope
+      itemType="https://schema.org/Service"
+    >
+      <meta itemProp="serviceType" content={title} />
+      <meta itemProp="provider" content="TSG Fulfillment Services" />
+      <meta itemProp="url" content={`https://tsgfulfillment.com/services/${slug}`} />
+      
       <Card className="h-full transition-all duration-300 hover:shadow-xl border border-gray-100 hover:border-primary/20">
         <CardContent className="p-6">
-          <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
-            {icon}
+          <header>
+            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-6" aria-hidden="true">
+              {icon}
+            </div>
+            <h3 
+              className="text-xl font-semibold font-poppins mb-3"
+              itemProp="name"
+            >
+              {title}
+            </h3>
+          </header>
+          <div itemProp="description">
+            <p className="text-gray-600 mb-4">
+              {description}
+            </p>
           </div>
-          <h3 className="text-xl font-semibold font-poppins mb-3">{title}</h3>
-          <p className="text-gray-600 mb-4">
-            {description}
-          </p>
-          <Button 
-            variant="link" 
-            onClick={handleLearnMore}
-            className="text-primary font-medium p-0 h-auto flex items-center group"
-          >
-            Learn More
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </Button>
+          <footer>
+            <Button 
+              variant="link" 
+              onClick={handleLearnMore}
+              className="text-primary font-medium p-0 h-auto flex items-center group"
+              aria-label={`Learn more about ${title}`}
+            >
+              Learn More
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Button>
+          </footer>
         </CardContent>
       </Card>
-    </motion.div>
+    </motion.article>
   );
 };
 
@@ -116,9 +137,19 @@ const ServicesSection: React.FC = () => {
   ];
 
   return (
-    <section id="services" className="py-20 bg-white">
+    <section 
+      id="services" 
+      className="py-20 bg-white"
+      aria-labelledby="services-heading"
+      itemScope
+      itemType="https://schema.org/ItemList"
+    >
+      <meta itemProp="itemListOrder" content="Unordered" />
+      <meta itemProp="numberOfItems" content={services.length.toString()} />
+      <meta itemProp="name" content="TSG Fulfillment Services" />
+      
       <div className="container mx-auto px-6">
-        <motion.div 
+        <motion.header 
           className="text-center mb-16"
           initial="hidden"
           whileInView="visible"
@@ -126,14 +157,22 @@ const ServicesSection: React.FC = () => {
           variants={fadeIn}
         >
           <span className="text-primary font-medium">OUR SERVICES</span>
-          <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Comprehensive Fulfillment Solutions</h2>
+          <h2 
+            id="services-heading" 
+            className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6"
+            itemProp="description"
+          >
+            Comprehensive Fulfillment Solutions
+          </h2>
           <p className="text-gray-600 max-w-3xl mx-auto">
             From warehousing to shipping, we provide end-to-end logistics solutions 
             tailored to meet your specific business needs.
           </p>
-        </motion.div>
+        </motion.header>
         
         <motion.div 
+          role="list"
+          aria-label="Fulfillment services"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           initial="hidden"
           whileInView="visible"
@@ -141,13 +180,15 @@ const ServicesSection: React.FC = () => {
           variants={staggerContainer}
         >
           {services.map((service, index) => (
-            <ServiceItem 
-              key={index}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-              slug={service.slug}
-            />
+            <div key={index} role="listitem" itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <meta itemProp="position" content={(index + 1).toString()} />
+              <ServiceItem 
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+                slug={service.slug}
+              />
+            </div>
           ))}
         </motion.div>
       </div>
