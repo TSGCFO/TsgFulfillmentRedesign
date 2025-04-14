@@ -445,18 +445,22 @@ const ServiceDetail = () => {
           <div className="container mx-auto px-6">
             <Separator className="mb-12" />
             <div className="flex flex-col sm:flex-row justify-between items-center">
-              <Link href={`/services/${prevService.slug}`}>
-                <a className="text-primary hover:text-primary/80 transition-colors flex items-center mb-6 sm:mb-0">
-                  <ArrowLeft className="h-5 w-5 mr-2" />
-                  {prevService.title}
-                </a>
-              </Link>
-              <Link href={`/services/${nextService.slug}`}>
-                <a className="text-primary hover:text-primary/80 transition-colors flex items-center">
-                  {nextService.title}
-                  <ArrowRight className="h-5 w-5 ml-2" />
-                </a>
-              </Link>
+              {prevService && (
+                <Link href={`/services/${prevService?.slug}`}>
+                  <a className="text-primary hover:text-primary/80 transition-colors flex items-center mb-6 sm:mb-0">
+                    <ArrowLeft className="h-5 w-5 mr-2" />
+                    {prevService?.title}
+                  </a>
+                </Link>
+              )}
+              {nextService && (
+                <Link href={`/services/${nextService?.slug}`}>
+                  <a className="text-primary hover:text-primary/80 transition-colors flex items-center">
+                    {nextService?.title}
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </a>
+                </Link>
+              )}
             </div>
           </div>
         </section>
