@@ -8,6 +8,7 @@ import Logo from '@/components/Logo';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -27,6 +28,7 @@ interface ServiceData {
   features: string[];
   benefits: string[];
   callToAction: string;
+  featuredImage?: string;
 }
 
 const serviceDetails: ServiceData[] = [
@@ -57,7 +59,8 @@ const serviceDetails: ServiceData[] = [
       "Eliminate the need for warehouse space and staff",
       "Focus on your core business while we handle logistics"
     ],
-    callToAction: "Ready to streamline your order fulfillment process? Contact us today for a customized solution that fits your business needs."
+    callToAction: "Ready to streamline your order fulfillment process? Contact us today for a customized solution that fits your business needs.",
+    featuredImage: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Warehouse className="text-primary text-4xl" />,
@@ -86,7 +89,8 @@ const serviceDetails: ServiceData[] = [
       "Access real-time inventory data from anywhere",
       "Optimize warehouse space utilization"
     ],
-    callToAction: "Looking for reliable warehousing solutions? Contact our team today to discuss how we can help you optimize your storage and inventory management."
+    callToAction: "Looking for reliable warehousing solutions? Contact our team today to discuss how we can help you optimize your storage and inventory management.",
+    featuredImage: "https://images.unsplash.com/photo-1583302729124-de1f8e61bcf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Package className="text-primary text-4xl" />,
