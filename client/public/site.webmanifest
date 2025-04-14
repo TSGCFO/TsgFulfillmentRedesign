@@ -1,20 +1,50 @@
 {
   "name": "TSG Fulfillment Services",
   "short_name": "TSG Fulfillment",
+  "description": "Professional order fulfillment and logistics services for eCommerce and retail businesses",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "theme_color": "#0056B3",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": "/"
+  "orientation": "any",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["business", "logistics", "ecommerce", "fulfillment"],
+  "screenshots": [
+    {
+      "src": "/screenshot-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "TSG Fulfillment Homepage"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Order Fulfillment",
+      "url": "/services/order-fulfillment",
+      "description": "Learn about our order fulfillment services"
+    },
+    {
+      "name": "Contact Us",
+      "url": "/#contact",
+      "description": "Get in touch with our team"
+    }
+  ],
+  "prefer_related_applications": false
 }

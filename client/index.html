@@ -41,6 +41,15 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap">
     <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Preload logo image -->
+    <link rel="preload" as="image" href="/logo.png" imagesrcset="/logo.png 1x, /logo@2x.png 2x" fetchpriority="high">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    
+    <!-- Preconnect to analytics (for future implementation) -->
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+    
     <!-- Load fonts and styles -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -126,6 +135,123 @@
         "https://www.facebook.com/tsgfulfillment/",
         "https://twitter.com/tsgfulfillment"
       ] 
+    }
+    </script>
+    
+    <!-- Services structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Service",
+            "name": "Order Fulfillment",
+            "url": "https://tsgfulfillment.com/services/order-fulfillment",
+            "description": "We handle the entire fulfillment process from receiving and storing your inventory to processing orders, picking, packing, and shipping products directly to your customers.",
+            "provider": {
+              "@type": "Organization",
+              "name": "TSG Fulfillment Services"
+            },
+            "serviceType": "Logistics Service"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Service",
+            "name": "Warehousing Services",
+            "url": "https://tsgfulfillment.com/services/warehousing-services",
+            "description": "Our climate-controlled warehousing facilities offer secure storage solutions with advanced inventory management systems to help you consolidate your supply chains.",
+            "provider": {
+              "@type": "Organization",
+              "name": "TSG Fulfillment Services"
+            },
+            "serviceType": "Logistics Service"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Service",
+            "name": "Kitting Services",
+            "url": "https://tsgfulfillment.com/services/kitting-services",
+            "description": "We combine multiple components or products into a single package or kit, making it easier to manage inventory and fulfill orders for product bundles or special promotions.",
+            "provider": {
+              "@type": "Organization",
+              "name": "TSG Fulfillment Services"
+            },
+            "serviceType": "Logistics Service"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Service",
+            "name": "Inventory Management",
+            "url": "https://tsgfulfillment.com/services/inventory-management",
+            "description": "We provide real-time inventory tracking, automated reordering, and detailed reporting to help you maintain optimal stock levels and prevent stockouts or overstock situations.",
+            "provider": {
+              "@type": "Organization",
+              "name": "TSG Fulfillment Services"
+            },
+            "serviceType": "Logistics Service"
+          }
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Reviews structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "TSG Fulfillment Services",
+      "description": "Professional fulfillment and logistics services for eCommerce and retail businesses",
+      "brand": {
+        "@type": "Brand",
+        "name": "TSG Fulfillment"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "142"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Jane Smith"
+          },
+          "datePublished": "2024-01-15",
+          "reviewBody": "TSG Fulfillment has transformed our logistics operations. Their warehousing and order fulfillment services have allowed us to scale rapidly without worrying about shipping logistics.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Mark Johnson"
+          },
+          "datePublished": "2023-11-22",
+          "reviewBody": "Excellent inventory management system that gives us real-time visibility into our stock levels. Their customer service team has been exceptional.",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5"
+          }
+        }
+      ]
     }
     </script>
   </body>

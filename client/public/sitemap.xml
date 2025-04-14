@@ -1,45 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
   <url>
     <loc>https://tsgfulfillment.com/</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/logo.png</image:loc>
+      <image:title>TSG Fulfillment Logo</image:title>
+      <image:caption>TSG Fulfillment Logistics and Order Fulfillment Services</image:caption>
+    </image:image>
   </url>
+  
+  <!-- Service Pages -->
   <url>
     <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/order-fulfillment"/>
   </url>
   <url>
-    <loc>https://tsgfulfillment.com/services/warehousing</loc>
+    <loc>https://tsgfulfillment.com/services/warehousing-services</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/warehousing-services"/>
   </url>
   <url>
-    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <loc>https://tsgfulfillment.com/services/kitting-services</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/kitting-services"/>
   </url>
   <url>
-    <loc>https://tsgfulfillment.com/services/inventory-management</loc>
+    <loc>https://tsgfulfillment.com/services/hand-assembly</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
-    <lastmod>2025-04-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/hand-assembly"/>
   </url>
   <url>
     <loc>https://tsgfulfillment.com/services/reverse-logistics</loc>
     <lastmod>2025-04-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/reverse-logistics"/>
+  </url>
+  <url>
+    <loc>https://tsgfulfillment.com/services/inventory-management</loc>
+    <lastmod>2025-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/inventory-management"/>
+  </url>
+  <url>
+    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
+    <lastmod>2025-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/freight-forwarding"/>
+  </url>
+  <url>
+    <loc>https://tsgfulfillment.com/services/healthcare-services</loc>
+    <lastmod>2025-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/healthcare-services"/>
+  </url>
+  <url>
+    <loc>https://tsgfulfillment.com/services/custom-packaging</loc>
+    <lastmod>2025-04-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/custom-packaging"/>
   </url>
 </urlset>
