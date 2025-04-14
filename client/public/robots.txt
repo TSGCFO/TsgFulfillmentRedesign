@@ -1,6 +1,81 @@
-# Allow all web crawlers
+# robots.txt for TSG Fulfillment
+# Last updated: April 14, 2025
+
+# Allow all web crawlers to visit the site
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Disallow specific private or temporary pages
+Disallow: /private/
+Disallow: /temp/
+Disallow: /admin/
+Disallow: /login
+Disallow: /signup
+Disallow: /404
+Disallow: /maintenance
+Disallow: /error
+
+# Prevent crawling of duplicate content
+Disallow: /*?*
+
+# Prevent crawling of authentication parameters
+Disallow: /*?auth=*
+Disallow: /*?token=*
+Disallow: /*?session=*
+
+# Don't crawl tracking URLs
+Disallow: /*?utm_*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+
+# Allow crawling of assets and resources
+Allow: /images/
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+Allow: /fonts/
+Allow: /favicon.ico
+Allow: /sitemap.xml
+Allow: /site.webmanifest
+
+# Specify the sitemap location
 Sitemap: https://tsgfulfillment.com/sitemap.xml
+
+# Rate limiting for specific crawlers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 10
+
+User-agent: Baiduspider
+Crawl-delay: 5
+
+# Custom instructions for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Rules for mobile-specific bots
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Bingbot-Mobile
+Allow: /
