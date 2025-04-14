@@ -365,6 +365,36 @@ const ServiceDetail = () => {
       canonicalLink.setAttribute('href', `https://tsgfulfillment.com/services/${currentService.slug}`);
     }
     
+    // Add rel="next" and rel="prev" links for paginated content
+    let nextLink = document.querySelector('link[rel="next"]');
+    let prevLink = document.querySelector('link[rel="prev"]');
+    
+    // If next service exists, add/update the next link
+    if (nextService) {
+      if (!nextLink) {
+        nextLink = document.createElement('link');
+        nextLink.setAttribute('rel', 'next');
+        document.head.appendChild(nextLink);
+      }
+      nextLink.setAttribute('href', `https://tsgfulfillment.com/services/${nextService.slug}`);
+    } else if (nextLink) {
+      // If no next service but link exists, remove it
+      nextLink.remove();
+    }
+    
+    // If previous service exists, add/update the prev link
+    if (prevService) {
+      if (!prevLink) {
+        prevLink = document.createElement('link');
+        prevLink.setAttribute('rel', 'prev');
+        document.head.appendChild(prevLink);
+      }
+      prevLink.setAttribute('href', `https://tsgfulfillment.com/services/${prevService.slug}`);
+    } else if (prevLink) {
+      // If no previous service but link exists, remove it
+      prevLink.remove();
+    }
+    
     // Scroll to top when service changes
     window.scrollTo(0, 0);
     
