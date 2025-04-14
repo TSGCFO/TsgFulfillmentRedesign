@@ -239,7 +239,8 @@ const serviceDetails: ServiceData[] = [
       "Access global shipping expertise without in-house specialists",
       "Maintain supply chain visibility across borders"
     ],
-    callToAction: "Need help with international shipping and logistics? Contact us today to discuss how our freight forwarding services can help you optimize your global supply chain."
+    callToAction: "Need help with international shipping and logistics? Contact us today to discuss how our freight forwarding services can help you optimize your global supply chain.",
+    featuredImage: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Stethoscope className="text-primary text-4xl" />,
@@ -268,7 +269,8 @@ const serviceDetails: ServiceData[] = [
       "Protect sensitive healthcare information",
       "Focus on core activities while we handle logistics"
     ],
-    callToAction: "Looking for specialized fulfillment services for your healthcare marketing needs? Contact us today to learn how we can help you maintain compliance while improving efficiency."
+    callToAction: "Looking for specialized fulfillment services for your healthcare marketing needs? Contact us today to learn how we can help you maintain compliance while improving efficiency.",
+    featuredImage: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   }
 ];
 
@@ -316,6 +318,9 @@ const ServiceDetail = () => {
     // Update Open Graph meta tags
     const ogTitle = document.querySelector('meta[property="og:title"]');
     const ogDescription = document.querySelector('meta[property="og:description"]');
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    const ogType = document.querySelector('meta[property="og:type"]');
     
     if (ogTitle) {
       ogTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
@@ -323,6 +328,35 @@ const ServiceDetail = () => {
     
     if (ogDescription) {
       ogDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
+    }
+    
+    if (ogImage && currentService.featuredImage) {
+      ogImage.setAttribute('content', currentService.featuredImage);
+    }
+    
+    if (ogUrl) {
+      ogUrl.setAttribute('content', `https://tsgfulfillment.com/services/${currentService.slug}`);
+    }
+    
+    if (ogType) {
+      ogType.setAttribute('content', 'website');
+    }
+    
+    // Update Twitter card meta tags if they exist
+    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+    
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
+    }
+    
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
+    }
+    
+    if (twitterImage && currentService.featuredImage) {
+      twitterImage.setAttribute('content', currentService.featuredImage);
     }
     
     // Update canonical URL
@@ -356,9 +390,17 @@ const ServiceDetail = () => {
       'serviceType': currentService.title,
       'url': `https://tsgfulfillment.com/services/${currentService.slug}`,
       'termsOfService': 'https://tsgfulfillment.com/terms',
+      ...(currentService.featuredImage && {
+        'image': currentService.featuredImage
+      }),
       'audience': {
         '@type': 'BusinessAudience',
         'audienceType': 'eCommerce and retail businesses'
+      },
+      'offers': {
+        '@type': 'Offer',
+        'availability': 'https://schema.org/InStock',
+        'url': `https://tsgfulfillment.com/services/${currentService.slug}#contact`
       }
     });
     
