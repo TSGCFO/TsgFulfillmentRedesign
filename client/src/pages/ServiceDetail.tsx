@@ -364,14 +364,25 @@ const ServiceDetail = () => {
     <>
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center">
-              <Logo />
-            </Link>
-            <Link href="/" className="text-primary hover:text-primary/80 transition-colors">
-              <ArrowLeft className="h-5 w-5 inline mr-2" />
-              Back to Home
-            </Link>
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="flex items-center">
+                <Logo />
+              </Link>
+              <Link href="/" className="text-primary hover:text-primary/80 transition-colors">
+                <ArrowLeft className="h-5 w-5 inline mr-2" />
+                Back to Home
+              </Link>
+            </div>
+            
+            {/* Breadcrumbs navigation */}
+            <Breadcrumbs 
+              className="mt-3"
+              items={[
+                { label: 'Services', href: '/#services' },
+                { label: service.title, href: `/services/${params?.slug}`, isCurrent: true }
+              ]}
+            />
           </div>
         </div>
       </header>
