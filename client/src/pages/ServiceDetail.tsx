@@ -284,7 +284,8 @@ const ServiceDetail = () => {
       return;
     }
     
-    setService(serviceDetails[currentServiceIndex]);
+    const currentService = serviceDetails[currentServiceIndex];
+    setService(currentService);
     
     // Set next service
     const nextIndex = (currentServiceIndex + 1) % serviceDetails.length;
@@ -294,8 +295,65 @@ const ServiceDetail = () => {
     const prevIndex = currentServiceIndex === 0 ? serviceDetails.length - 1 : currentServiceIndex - 1;
     setPrevService(serviceDetails[prevIndex]);
     
+    // Update document title and meta tags for SEO
+    document.title = `${currentService.title} | TSG Fulfillment Services`;
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
+    }
+    
+    // Update Open Graph meta tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    
+    if (ogTitle) {
+      ogTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
+    }
+    
+    if (ogDescription) {
+      ogDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
+    }
+    
+    // Update canonical URL
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', `https://tsgfulfillment.com/services/${currentService.slug}`);
+    }
+    
     // Scroll to top when service changes
     window.scrollTo(0, 0);
+    
+    // Add JSON-LD structured data for this service
+    const existingScript = document.getElementById('service-jsonld');
+    if (existingScript) {
+      existingScript.remove();
+    }
+    
+    const script = document.createElement('script');
+    script.id = 'service-jsonld';
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      'name': `${currentService.title}`,
+      'description': currentService.description,
+      'provider': {
+        '@type': 'Organization',
+        'name': 'TSG Fulfillment Services',
+        'url': 'https://tsgfulfillment.com'
+      },
+      'serviceType': currentService.title,
+      'url': `https://tsgfulfillment.com/services/${currentService.slug}`,
+      'termsOfService': 'https://tsgfulfillment.com/terms',
+      'audience': {
+        '@type': 'BusinessAudience',
+        'audienceType': 'eCommerce and retail businesses'
+      }
+    });
+    
+    document.head.appendChild(script);
   }, [params, setLocation]);
 
   if (!service) {
