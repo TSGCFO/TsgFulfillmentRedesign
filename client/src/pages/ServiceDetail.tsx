@@ -9,7 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import { LazySection } from '@/components/ui/lazy-section';
+import LazySection from '@/components/ui/lazy-section';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -580,7 +580,7 @@ const ServiceDetail = () => {
           </div>
         </LazySection>
 
-        <section className="py-16 bg-primary/5" id="contact">
+        <LazySection className="py-16 bg-primary/5" id="contact">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
@@ -602,9 +602,9 @@ const ServiceDetail = () => {
               </motion.div>
             </div>
           </div>
-        </section>
+        </LazySection>
 
-        <section className="py-16">
+        <LazySection className="py-16">
           <div className="container mx-auto px-6">
             <Separator className="mb-12" />
             <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -622,7 +622,7 @@ const ServiceDetail = () => {
               )}
             </div>
           </div>
-        </section>
+        </LazySection>
       </main>
 
       <Footer />
