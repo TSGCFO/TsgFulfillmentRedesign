@@ -119,7 +119,8 @@ const serviceDetails: ServiceData[] = [
       "Create a consistent unboxing experience",
       "Simplify inventory management for bundled products"
     ],
-    callToAction: "Ready to simplify your product bundling and kitting process? Contact us today to learn how our kitting services can save you time and money."
+    callToAction: "Ready to simplify your product bundling and kitting process? Contact us today to learn how our kitting services can save you time and money.",
+    featuredImage: "https://images.unsplash.com/photo-1600494448655-ae58f58bb945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Package className="text-primary text-4xl" />,
@@ -148,7 +149,8 @@ const serviceDetails: ServiceData[] = [
       "Save on equipment and training costs",
       "Free up your team to focus on core operations"
     ],
-    callToAction: "Need expert hand assembly services for your products? Contact us today to discuss how we can support your specialized assembly needs."
+    callToAction: "Need expert hand assembly services for your products? Contact us today to discuss how we can support your specialized assembly needs.",
+    featuredImage: "https://images.unsplash.com/photo-1523800378286-dae1f0dae656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <RotateCcw className="text-primary text-4xl" />,
@@ -177,7 +179,8 @@ const serviceDetails: ServiceData[] = [
       "Gain insights from returns data and patterns",
       "Free up resources focused on forward logistics"
     ],
-    callToAction: "Looking to optimize your returns management process? Contact us today to learn how our reverse logistics solutions can help you improve efficiency and customer satisfaction."
+    callToAction: "Looking to optimize your returns management process? Contact us today to learn how our reverse logistics solutions can help you improve efficiency and customer satisfaction.",
+    featuredImage: "https://images.unsplash.com/photo-1592842232655-e5d345cbc2d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Box className="text-primary text-4xl" />,
@@ -206,7 +209,8 @@ const serviceDetails: ServiceData[] = [
       "Make data-driven purchasing decisions",
       "Optimize working capital allocation"
     ],
-    callToAction: "Ready to take control of your inventory? Contact us today to learn how our inventory management services can help you optimize your stock levels and improve efficiency."
+    callToAction: "Ready to take control of your inventory? Contact us today to learn how our inventory management services can help you optimize your stock levels and improve efficiency.",
+    featuredImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
     icon: <Truck className="text-primary text-4xl" />,
@@ -406,6 +410,22 @@ const ServiceDetail = () => {
               </div>
               <h1 className="text-4xl md:text-5xl font-bold font-poppins mb-6">{service.title}</h1>
               <p className="text-xl text-gray-600 mb-8">{service.description}</p>
+              
+              {/* Featured image with optimized loading */}
+              {service.featuredImage && (
+                <div className="mt-8 mb-12 overflow-hidden rounded-xl shadow-lg">
+                  <OptimizedImage
+                    src={service.featuredImage}
+                    alt={`${service.title} - TSG Fulfillment Services`}
+                    width={1200}
+                    height={600}
+                    className="w-full h-auto object-cover"
+                    loading="eager"
+                    priority={true}
+                    sizes="(max-width: 768px) 100vw, 1200px"
+                  />
+                </div>
+              )}
               <Button 
                 size="lg" 
                 className="bg-primary hover:bg-primary/90"
