@@ -38,12 +38,12 @@ const ContactSection: React.FC = () => {
     {
       icon: <MapPin size={18} />,
       title: "Our Location",
-      details: "123 Logistics Way, Toronto, ON, Canada"
+      details: "13329, Lyons Avenue, Suite 18, Plano, TX, 75074"
     },
     {
       icon: <Phone size={18} />,
       title: "Phone Number",
-      details: "+1 (800) 123-4567"
+      details: "(800) 480-2176"
     },
     {
       icon: <Mail size={18} />,
@@ -53,7 +53,7 @@ const ContactSection: React.FC = () => {
     {
       icon: <Clock size={18} />,
       title: "Business Hours",
-      details: "Monday - Friday: 8:00 AM - 6:00 PM EST"
+      details: "Monday - Friday: 9:00 AM - 5:00 PM CT"
     }
   ];
 
@@ -78,7 +78,7 @@ const ContactSection: React.FC = () => {
             <span className="text-primary font-medium">GET IN TOUCH</span>
             <h2 className="text-3xl md:text-4xl font-bold font-poppins mt-2 mb-6">Contact Us</h2>
             <p className="text-gray-600 mb-10">
-              Ready to optimize your fulfillment process? Fill out the form, and one of our logistics experts will contact you to discuss your specific needs.
+              Want to learn more about our fulfillment services? Fill out the form, and one of our logistics experts will contact you promptly. We're here to answer your questions and find practical, cost-effective solutions for your fulfillment challenges.
             </p>
             
             <div className="space-y-6 mb-10">

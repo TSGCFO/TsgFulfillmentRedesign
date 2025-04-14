@@ -166,11 +166,13 @@ export function QuoteForm() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="order-fulfillment">Order Fulfillment</SelectItem>
-                  <SelectItem value="warehousing">Warehousing & Storage</SelectItem>
+                  <SelectItem value="warehousing">Warehousing Services</SelectItem>
+                  <SelectItem value="kitting">Kitting Services</SelectItem>
+                  <SelectItem value="hand-assembly">Hand Assembly</SelectItem>
+                  <SelectItem value="reverse-logistics">Reverse Logistics</SelectItem>
+                  <SelectItem value="inventory-management">Inventory Management</SelectItem>
                   <SelectItem value="freight-forwarding">Freight Forwarding</SelectItem>
-                  <SelectItem value="kitting">Kitting & Assembly</SelectItem>
-                  <SelectItem value="returns">Returns Management</SelectItem>
-                  <SelectItem value="cross-border">Cross-Border Shipping</SelectItem>
+                  <SelectItem value="healthcare-marketing">Healthcare Marketing Services</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>

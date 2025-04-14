@@ -29,24 +29,28 @@ const staggerContainer = {
 const FAQSection: React.FC = () => {
   const faqs = [
     {
-      question: "How quickly can you start fulfilling my orders?",
-      answer: "Once we receive your inventory, we can typically begin fulfilling orders within 1-3 business days. The exact timeline depends on the complexity of your products, special requirements, and current volume. We'll provide a specific timeline during our onboarding process."
+      question: "What is order fulfillment?",
+      answer: "Order fulfillment is the complete process from receiving and storing your inventory to processing orders, picking, packing, and shipping products directly to your customers. We handle the entire fulfillment process for you, allowing you to focus on growing your business."
     },
     {
-      question: "How do you integrate with my eCommerce platform?",
-      answer: "We integrate seamlessly with most major eCommerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and Amazon. Our API also allows for custom integrations with proprietary systems. During onboarding, our tech team will work with you to ensure a smooth connection."
+      question: "How can TSG Fulfillment help my business?",
+      answer: "TSG Fulfillment can help your business by providing professional warehousing, inventory management, kitting, hand assembly, and shipping services. We help you reduce operating costs, improve shipping efficiency, extend your market reach, enhance customer service, and leverage modern logistics technology."
     },
     {
       question: "What are your shipping times and rates?",
-      answer: "We offer a variety of shipping options from economy to express, both domestic and international. Shipping times typically range from 1-7 business days depending on the destination and service level. Our rates are highly competitive thanks to our volume discounts with major carriers. We can provide a detailed quote based on your specific shipping needs."
+      answer: "We offer a variety of shipping options tailored to your business needs. By partnering with us, you can benefit from our volume discounts with major carriers. Shipping times vary depending on destination and service level chosen. We'll provide detailed shipping options and rates based on your specific requirements during consultation."
     },
     {
       question: "How do you handle returns?",
-      answer: "Our reverse logistics process is designed to be efficient and cost-effective. We can receive returns, inspect items for damage, restock eligible items, and process refunds or exchanges according to your policies. We provide detailed reporting on all returns, giving you visibility into return reasons and trends."
+      answer: "Our reverse logistics process is designed to be efficient and cost-effective. We receive returns, inspect items, process them according to your specifications, and restock or dispose of items as needed. This comprehensive returns management system helps reduce waste and improve customer satisfaction."
     },
     {
-      question: "Do you offer custom packaging options?",
-      answer: "Yes, we offer a wide range of custom packaging solutions. From branded boxes and poly mailers to custom inserts and gift wrapping, we can help enhance your customer's unboxing experience. Our team can work with you to design packaging that reflects your brand identity while remaining cost-effective."
+      question: "What types of businesses do you work with?",
+      answer: "We work with a wide range of businesses including eCommerce retailers, brick-and-mortar stores expanding online, direct-to-consumer brands, and businesses in the healthcare and pharmaceutical industries. Our mid-size company structure allows us to provide personalized service while handling significant order volumes."
+    },
+    {
+      question: "Do you offer inventory management services?",
+      answer: "Yes, we provide comprehensive inventory management services including real-time tracking, automated reordering, and detailed reporting. Our system helps you maintain optimal stock levels, prevent stockouts or overstock situations, and gain valuable insights into your inventory performance."
     }
   ];
 
