@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Breadcrumbs } from '@/components/ui/breadcrumb';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },

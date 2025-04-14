@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -92,15 +93,19 @@ const HeroSection: React.FC = () => {
             itemType="https://schema.org/ImageObject"
           >
             <div className="relative z-10">
-              <img 
+              <OptimizedImage 
                 src="https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80" 
                 alt="Modern warehouse fulfillment center with organized shelving and logistics operations" 
-                className="rounded-lg shadow-2xl w-full md:w-11/12 h-auto object-cover" 
-                style={{ minHeight: "400px" }} 
+                className="rounded-lg shadow-2xl w-full md:w-11/12 h-auto" 
+                width={1035}
+                height={600}
                 itemProp="contentUrl"
                 loading="eager"
-                width="1035"
-                height="600"
+                priority={true}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                quality={90}
+                objectFit="cover"
+                style={{ minHeight: "400px" }}
               />
               <meta itemProp="name" content="TSG Fulfillment Warehouse Operations" />
               <meta itemProp="description" content="Modern warehouse with fulfillment operations at TSG Fulfillment Services" />

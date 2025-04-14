@@ -12,6 +12,7 @@ interface OptimizedImageProps {
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   priority?: boolean;
   itemProp?: string;
+  style?: React.CSSProperties;
 }
 
 /**
@@ -33,66 +34,57 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   loading = 'lazy',
   sizes = '100vw',
   quality = 80,
-  objectFit = 'cover',
+  objectFit,
   priority = false,
   itemProp,
+  ...props
 }) => {
-  // Handle image URL parameters
-  const addParamsToImageUrl = (url: string, params: Record<string, string | number>) => {
-    // If the URL is from unsplash, we can add quality parameters
-    if (url.includes('unsplash.com')) {
-      const separator = url.includes('?') ? '&' : '?';
-      const paramString = Object.entries(params)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('&');
-      return `${url}${separator}${paramString}`;
-    }
-    return url;
-  };
-
-  // Generate srcset for responsive images (using Unsplash's native functionality)
+  // Calculate image srcset for responsive images
   const generateSrcSet = () => {
-    if (!src.includes('unsplash.com')) return undefined;
-    
-    const breakpoints = [640, 750, 828, 1080, 1200, 1920, 2048];
-    return breakpoints
-      .map(breakpoint => {
-        const optimizedSrc = addParamsToImageUrl(src, { 
-          w: breakpoint,
-          q: quality,
-          auto: 'format'
-        });
-        return `${optimizedSrc} ${breakpoint}w`;
-      })
-      .join(', ');
+    // If it's an external URL that doesn't support srcset, don't create one
+    if (src.startsWith('http') && !src.includes('unsplash.com')) {
+      return undefined;
+    }
+
+    // For Unsplash, we can generate a proper srcset
+    if (src.includes('unsplash.com')) {
+      const widths = [320, 640, 960, 1280, 1920, 2560];
+      return widths
+        .map(w => {
+          const imgSrc = src.includes('w=') 
+            ? src.replace(/w=\d+/, `w=${w}`)
+            : `${src}&w=${w}&q=${quality}`;
+          return `${imgSrc} ${w}w`;
+        })
+        .join(', ');
+    }
+
+    return undefined;
   };
 
-  // For Unsplash images, we can use their native optimization features
-  const optimizedSrc = src.includes('unsplash.com') 
-    ? addParamsToImageUrl(src, { q: quality, auto: 'format' })
-    : src;
-
-  const loadingAttr = priority ? 'eager' : loading;
-  const srcSet = generateSrcSet();
+  const srcset = generateSrcSet();
+  
+  // Merge style props with objectFit
+  const imgStyle: React.CSSProperties = {
+    ...(objectFit ? { objectFit } : {}),
+    ...(props.style || {})
+  };
 
   return (
     <img
-      src={optimizedSrc}
+      src={src}
       alt={alt}
       width={width}
       height={height}
-      loading={loadingAttr}
       className={className}
+      loading={priority ? 'eager' : loading}
       sizes={sizes}
-      srcSet={srcSet}
-      style={{ objectFit }}
+      srcSet={srcset}
+      style={imgStyle}
       itemProp={itemProp}
-      decoding={priority ? 'sync' : 'async'}
-      onError={(e) => {
-        // Fallback for image load errors
-        const target = e.target as HTMLImageElement;
-        console.warn(`Image failed to load: ${target.src}`);
-      }}
+      {...props}
+      // Add structured data attributes for better SEO
+      data-testid="optimized-image"
     />
   );
 };
