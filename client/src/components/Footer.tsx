@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'wouter';
 import Logo from './Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,24 +26,34 @@ const Footer: React.FC = () => {
     }
   };
 
-  const services = [
-    "Order Fulfillment", 
-    "Warehousing Services", 
-    "Kitting Services", 
-    "Hand Assembly", 
-    "Reverse Logistics", 
-    "Inventory Management",
-    "Freight Forwarding",
-    "Healthcare Marketing Services"
+  interface ServiceLink {
+    name: string;
+    slug: string;
+  }
+
+  const services: ServiceLink[] = [
+    { name: "Order Fulfillment", slug: "order-fulfillment" },
+    { name: "Warehousing Services", slug: "warehousing-services" },
+    { name: "Kitting Services", slug: "kitting-services" },
+    { name: "Hand Assembly", slug: "hand-assembly" },
+    { name: "Reverse Logistics", slug: "reverse-logistics" },
+    { name: "Inventory Management", slug: "inventory-management" },
+    { name: "Freight Forwarding", slug: "freight-forwarding" },
+    { name: "Healthcare Marketing Services", slug: "healthcare-services" }
   ];
 
-  const quickLinks = [
-    "About Us", 
-    "Why Choose TSG", 
-    "Custom Solutions",
-    "Testimonials", 
-    "Request a Quote", 
-    "Contact Us"
+  interface QuickLink {
+    name: string;
+    href: string;
+  }
+
+  const quickLinks: QuickLink[] = [
+    { name: "About Us", href: "/#about" },
+    { name: "Why Choose TSG", href: "/#benefits" },
+    { name: "Custom Solutions", href: "/#services" },
+    { name: "Testimonials", href: "/#testimonials" },
+    { name: "Request a Quote", href: "/#contact" },
+    { name: "Contact Us", href: "/#contact" }
   ];
 
   return (
@@ -86,8 +97,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               {services.map((service, index) => (
                 <li key={index}>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                    {service}
+                  <a href={`/services/${service.slug}`} className="text-gray-400 hover:text-white transition-colors duration-300">
+                    {service.name}
                   </a>
                 </li>
               ))}
@@ -99,8 +110,8 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">
-                    {link}
+                  <a href={link.href} className="text-gray-400 hover:text-white transition-colors duration-300">
+                    {link.name}
                   </a>
                 </li>
               ))}
