@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { OptimizedImage } from '@/components/ui/optimized-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -48,15 +47,11 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
             </p>
           </>
         ) : (
-          <OptimizedImage 
+          <img 
             src={imageSrc}
-            width={800}
-            height={600}
-            className="rounded-lg shadow-lg w-full h-auto object-cover" 
-            alt={imageAlt}
-            priority={number === 1}
-            loading={number === 1 ? "eager" : "lazy"}
-            sizes="(max-width: 768px) 100vw, 50vw"
+            className="rounded-lg shadow-lg w-full" 
+            alt={imageAlt} 
+            loading="lazy"
           />
         )}
       </div>
@@ -74,15 +69,11 @@ const ProcessStep: React.FC<ProcessStepProps> = ({
             </p>
           </>
         ) : (
-          <OptimizedImage 
+          <img 
             src={imageSrc}
-            width={800}
-            height={600}
-            className="rounded-lg shadow-lg w-full h-auto object-cover" 
-            alt={imageAlt}
-            priority={number === 1}
-            loading={number === 1 ? "eager" : "lazy"}
-            sizes="(max-width: 768px) 100vw, 50vw"
+            className="rounded-lg shadow-lg w-full" 
+            alt={imageAlt} 
+            loading="lazy"
           />
         )}
       </div>
