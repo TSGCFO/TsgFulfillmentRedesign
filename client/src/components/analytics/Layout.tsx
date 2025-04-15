@@ -119,11 +119,9 @@ const AnalyticsLayout: React.FC<AnalyticsLayoutProps> = ({ children, title = 'An
             <ul className="space-y-2 px-2">
               {sidebarItems.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href}>
-                    <a className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg group transition-colors">
-                      <div className="text-gray-500 group-hover:text-primary">{item.icon}</div>
-                      <span className="ml-3 hidden md:inline-block">{item.label}</span>
-                    </a>
+                  <Link href={item.href} className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg group transition-colors">
+                    <div className="text-gray-500 group-hover:text-primary">{item.icon}</div>
+                    <span className="ml-3 hidden md:inline-block">{item.label}</span>
                   </Link>
                 </li>
               ))}
@@ -153,11 +151,9 @@ const AnalyticsLayout: React.FC<AnalyticsLayoutProps> = ({ children, title = 'An
               <DropdownMenuSeparator />
               {sidebarItems.map((item) => (
                 <DropdownMenuItem key={item.href} asChild>
-                  <Link href={item.href}>
-                    <div className="flex items-center">
-                      <div className="mr-2">{item.icon}</div>
-                      <span>{item.label}</span>
-                    </div>
+                  <Link href={item.href} className="flex items-center">
+                    <div className="mr-2">{item.icon}</div>
+                    <span>{item.label}</span>
                   </Link>
                 </DropdownMenuItem>
               ))}

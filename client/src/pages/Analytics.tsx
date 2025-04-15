@@ -28,6 +28,7 @@ import {
   DropdownMenu, DropdownMenuContent, 
   DropdownMenuItem, DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import AnalyticsLayout from '@/components/analytics/Layout';
 
 // Analytics Dashboard Colors
 const COLORS = {
@@ -291,8 +292,6 @@ const PieChartWidget: React.FC<{
 };
 
 // Main Dashboard Component
-import AnalyticsLayout from '@/components/analytics/Layout';
-
 const AnalyticsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedClient, setSelectedClient] = useState<number | null>(1); // Default to first client
@@ -460,11 +459,12 @@ const AnalyticsPage: React.FC = () => {
     : [];
   
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-gray-600">Comprehensive analytics and reporting for logistics performance</p>
-      </header>
+    <AnalyticsLayout title="Analytics Dashboard">
+      <div className="p-6 max-w-7xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
+          <p className="text-gray-600">Comprehensive analytics and reporting for logistics performance</p>
+        </header>
       
       <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
         <div className="flex flex-col md:flex-row gap-4">
@@ -839,7 +839,8 @@ const AnalyticsPage: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </AnalyticsLayout>
   );
 };
 
