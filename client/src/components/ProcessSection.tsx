@@ -1,5 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import twitterHeader from '@assets/Twitter Header Photo.png';
+import androidPlaystore from '@assets/Android Playstore Logo.png';
+import originalPng from '@assets/Original.png';
+import whiteOnBlack from '@assets/White on Black.png';
+import blackOnWhite from '@assets/Black on White.png';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -14,7 +19,7 @@ interface ProcessStepProps {
   number: number;
   title: string;
   description: string;
-  imageSrc: string;
+  imageSrc: any; // Changed from string to any to accommodate imported images
   imageAlt: string;
   isReversed?: boolean;
   delay?: number;
@@ -87,7 +92,7 @@ const ProcessSection: React.FC = () => {
       number: 1,
       title: "Receiving & Inbound Solutions",
       description: "We receive your inventory at our fulfillment center, performing detailed quality inspection to ensure everything is accounted for and in excellent condition. Our team meticulously documents and catalogs each item for accurate inventory tracking.",
-      imageSrc: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=765&q=80",
+      imageSrc: twitterHeader,
       imageAlt: "Receiving inventory at TSG Fulfillment",
       isReversed: false
     },
@@ -95,7 +100,7 @@ const ProcessSection: React.FC = () => {
       number: 2,
       title: "Warehousing & Inventory Management",
       description: "Your products are stored in our secure, climate-controlled facilities with advanced inventory management systems. We monitor stock levels in real-time, providing accurate reporting and ensuring efficient space utilization to keep your storage costs optimized.",
-      imageSrc: "https://images.unsplash.com/photo-1507308820779-5b6fa128020c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      imageSrc: androidPlaystore,
       imageAlt: "TSG Warehouse storage systems",
       isReversed: true
     },
@@ -103,7 +108,7 @@ const ProcessSection: React.FC = () => {
       number: 3,
       title: "Order Processing & Kitting",
       description: "When orders arrive, our integrated system processes them automatically with precision. Our expert team handles picking, kitting, and packing with attention to detail. We can assemble multi-component orders and create custom product bundles according to your specifications.",
-      imageSrc: "https://images.unsplash.com/photo-1586528116493-da8c594c2ded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      imageSrc: originalPng,
       imageAlt: "TSG Order processing system",
       isReversed: false
     },
@@ -111,7 +116,7 @@ const ProcessSection: React.FC = () => {
       number: 4,
       title: "Shipping & Freight Solutions",
       description: "We leverage our relationships with major carriers to optimize your shipping costs and transit times. Our team selects the most appropriate shipping method based on package size, destination, and delivery timeline requirements, ensuring your customers receive their orders promptly.",
-      imageSrc: "https://images.unsplash.com/photo-1568910748155-01ca989dbdd6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      imageSrc: whiteOnBlack,
       imageAlt: "TSG Shipping and freight solutions",
       isReversed: true
     },
@@ -119,7 +124,7 @@ const ProcessSection: React.FC = () => {
       number: 5,
       title: "Reverse Logistics",
       description: "Our comprehensive returns management system handles the entire returns process efficiently. We receive returns, inspect items, process them according to your specifications, and either restock them or dispose of them appropriately, reducing waste and improving customer satisfaction.",
-      imageSrc: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      imageSrc: blackOnWhite,
       imageAlt: "TSG Returns management process",
       isReversed: false
     }
