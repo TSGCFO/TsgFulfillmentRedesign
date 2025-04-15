@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import twitterHeader from '../assets/images/Twitter Header Photo.png';
-import androidPlaystore from '../assets/images/Android Playstore Logo.png';
-import originalPng from '../assets/images/Original.png';
-import whiteOnBlack from '../assets/images/White on Black.png';
-import blackOnWhite from '../assets/images/Black on White.png';
+import receivingImg from '../assets/images/fullfi-banner.jpg';
+import warehouseImg from '../assets/images/warehouse.png';
+import kittingImg from '../assets/images/kitting-pic.jpg';
+import shippingImg from '../assets/images/freight.jpg';
+import reverseImg from '../assets/images/logistic.jpg';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -92,7 +92,7 @@ const ProcessSection: React.FC = () => {
       number: 1,
       title: "Receiving & Inbound Solutions",
       description: "We receive your inventory at our fulfillment center, performing detailed quality inspection to ensure everything is accounted for and in excellent condition. Our team meticulously documents and catalogs each item for accurate inventory tracking.",
-      imageSrc: twitterHeader,
+      imageSrc: receivingImg,
       imageAlt: "Receiving inventory at TSG Fulfillment",
       isReversed: false
     },
@@ -100,7 +100,7 @@ const ProcessSection: React.FC = () => {
       number: 2,
       title: "Warehousing & Inventory Management",
       description: "Your products are stored in our secure, climate-controlled facilities with advanced inventory management systems. We monitor stock levels in real-time, providing accurate reporting and ensuring efficient space utilization to keep your storage costs optimized.",
-      imageSrc: androidPlaystore,
+      imageSrc: warehouseImg,
       imageAlt: "TSG Warehouse storage systems",
       isReversed: true
     },
@@ -108,7 +108,7 @@ const ProcessSection: React.FC = () => {
       number: 3,
       title: "Order Processing & Kitting",
       description: "When orders arrive, our integrated system processes them automatically with precision. Our expert team handles picking, kitting, and packing with attention to detail. We can assemble multi-component orders and create custom product bundles according to your specifications.",
-      imageSrc: originalPng,
+      imageSrc: kittingImg,
       imageAlt: "TSG Order processing system",
       isReversed: false
     },
@@ -116,7 +116,7 @@ const ProcessSection: React.FC = () => {
       number: 4,
       title: "Shipping & Freight Solutions",
       description: "We leverage our relationships with major carriers to optimize your shipping costs and transit times. Our team selects the most appropriate shipping method based on package size, destination, and delivery timeline requirements, ensuring your customers receive their orders promptly.",
-      imageSrc: whiteOnBlack,
+      imageSrc: shippingImg,
       imageAlt: "TSG Shipping and freight solutions",
       isReversed: true
     },
@@ -124,7 +124,7 @@ const ProcessSection: React.FC = () => {
       number: 5,
       title: "Reverse Logistics",
       description: "Our comprehensive returns management system handles the entire returns process efficiently. We receive returns, inspect items, process them according to your specifications, and either restock them or dispose of them appropriately, reducing waste and improving customer satisfaction.",
-      imageSrc: blackOnWhite,
+      imageSrc: reverseImg,
       imageAlt: "TSG Returns management process",
       isReversed: false
     }
