@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import twitterHeader from '@assets/Twitter Header Photo.png';
-import androidPlaystore from '@assets/Android Playstore Logo.png';
-import originalPng from '@assets/Original.png';
-import whiteOnBlack from '@assets/White on Black.png';
-import blackOnWhite from '@assets/Black on White.png';
+import twitterHeader from '../assets/images/Twitter Header Photo.png';
+import androidPlaystore from '../assets/images/Android Playstore Logo.png';
+import originalPng from '../assets/images/Original.png';
+import whiteOnBlack from '../assets/images/White on Black.png';
+import blackOnWhite from '../assets/images/Black on White.png';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
