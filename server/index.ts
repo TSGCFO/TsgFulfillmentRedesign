@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { seedAnalyticsData } from "./seed-data";
 
 const app = express();
 app.use(express.json());
@@ -54,6 +55,13 @@ app.use((req, res, next) => {
     await setupVite(app, server);
   } else {
     serveStatic(app);
+  }
+
+  // Seed analytics data for demo purposes
+  try {
+    await seedAnalyticsData();
+  } catch (error) {
+    log(`Error seeding analytics data: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 
   // ALWAYS serve the app on port 5000

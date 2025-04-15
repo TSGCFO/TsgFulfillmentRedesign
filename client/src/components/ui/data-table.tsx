@@ -56,11 +56,15 @@ export function DataTable<T>({
   
   // Filter data based on search term
   const filteredData = searchTerm
-    ? data.filter(item => 
-        Object.values(item).some(value => 
-          String(value).toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      )
+    ? data.filter(item => {
+        if (typeof item === 'object' && item !== null) {
+          return Object.values(item as Record<string, any>).some(value => 
+            value !== null && value !== undefined && 
+            String(value).toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+        return false;
+      })
     : data;
   
   // Sort data if sorting is active

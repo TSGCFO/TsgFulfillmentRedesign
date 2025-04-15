@@ -8,6 +8,7 @@ import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
+const Analytics = lazy(() => import("@/pages/Analytics"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component
