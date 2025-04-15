@@ -9,6 +9,9 @@ import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 const Home = lazy(() => import("@/pages/Home"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
+const ReportGenerator = lazy(() => import("@/pages/ReportGenerator"));
+const PerformanceComparison = lazy(() => import("@/pages/PerformanceComparison"));
+const CustomDashboard = lazy(() => import("@/pages/CustomDashboard"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component
@@ -48,6 +51,9 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/analytics" component={Analytics} />
+        <Route path="/analytics/reports" component={ReportGenerator} />
+        <Route path="/analytics/comparison" component={PerformanceComparison} />
+        <Route path="/analytics/dashboard" component={CustomDashboard} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

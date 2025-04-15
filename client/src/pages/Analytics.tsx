@@ -9,8 +9,10 @@ import {
 } from 'recharts';
 import { 
   Calendar, ChevronDown, ChevronUp, Package, 
-  Truck, BarChart2, Settings, Clock, DollarSign
+  Truck, BarChart2, Settings, Clock, DollarSign,
+  TrendingUp, FileText
 } from 'lucide-react';
+import { Link } from 'wouter';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -501,9 +503,23 @@ const AnalyticsPage: React.FC = () => {
           </div>
         </div>
         
-        <Button className="bg-primary hover:bg-primary/90 text-white">
-          <BarChart2 className="h-4 w-4 mr-2" /> Generate Report
-        </Button>
+        <div className="flex flex-col md:flex-row gap-2">
+          <Link href="/analytics/dashboard">
+            <Button variant="outline">
+              <BarChart2 className="h-4 w-4 mr-2" /> Custom Dashboard
+            </Button>
+          </Link>
+          <Link href="/analytics/comparison">
+            <Button variant="outline">
+              <TrendingUp className="h-4 w-4 mr-2" /> Performance Comparison
+            </Button>
+          </Link>
+          <Link href="/analytics/reports">
+            <Button className="bg-primary hover:bg-primary/90 text-white">
+              <FileText className="h-4 w-4 mr-2" /> Generate Report
+            </Button>
+          </Link>
+        </div>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
