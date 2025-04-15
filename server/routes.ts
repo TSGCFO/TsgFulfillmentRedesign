@@ -380,6 +380,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
       handleError(res, error, 'Error retrieving inventory report');
     }
   });
+  
+  // Advanced analytics endpoints
+  // Get report data for customized reports
+  app.get('/api/analytics/report-data', async (req, res) => {
+    try {
+      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
+      const reportType = req.query.reportType as string;
+      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
+      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+      
+      if (!clientId || !reportType || !startDate || !endDate) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+      }
+      
+      const reportData = await storage.getReportData(clientId, reportType, startDate, endDate);
+      res.status(200).json({ data: reportData });
+    } catch (error) {
+      handleError(res, error, 'Error retrieving report data');
+    }
+  });
+  
+  // Get comparison data for performance analytics
+  app.get('/api/analytics/comparison', async (req, res) => {
+    try {
+      const { clientId, periodAStart, periodAEnd, periodBStart, periodBEnd, metric } = req.query;
+      
+      if (!clientId || !periodAStart || !periodAEnd || !periodBStart || !periodBEnd || !metric) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+      }
+      
+      const clientIdNum = parseInt(clientId as string);
+      const comparisonData = await storage.getComparisonData(
+        clientIdNum,
+        new Date(periodAStart as string),
+        new Date(periodAEnd as string),
+        new Date(periodBStart as string),
+        new Date(periodBEnd as string),
+        metric as string
+      );
+      
+      res.status(200).json({ data: comparisonData });
+    } catch (error) {
+      handleError(res, error, 'Error retrieving comparison data');
+    }
+  });
 
   const httpServer = createServer(app);
 

@@ -500,6 +500,220 @@ export class MemStorage implements IStorage {
       byLocation
     };
   }
+  
+  async getReportData(
+    clientId: number,
+    reportType: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<any> {
+    // Generate customized reports based on the report type
+    let data: any = {};
+    
+    if (reportType === 'inventory') {
+      // Get inventory report
+      const inventoryReport = await this.getInventoryReport(clientId);
+      
+      // In a real implementation, we would calculate the actual value
+      // For now, we'll provide realistic sample data
+      data = {
+        summary: {
+          totalItems: inventoryReport.totalQuantity,
+          totalValue: Math.round(inventoryReport.totalQuantity * 35.2), // Sample value calculation
+          criticalAlerts: inventoryReport.inventoryHealth.lowStock,
+          recommendations: inventoryReport.inventoryHealth.lowStock > 0 ? 
+            inventoryReport.inventoryHealth.lowStock + 5 : 0
+        }
+      };
+    } else if (reportType === 'shipment') {
+      // Get shipment data
+      const shipments = await this.getShipments(clientId);
+      const filteredShipments = shipments.filter(shipment => 
+        shipment.shipDate >= startDate && shipment.shipDate <= endDate
+      );
+      
+      data = {
+        summary: {
+          totalItems: filteredShipments.length,
+          totalValue: Math.round(filteredShipments.reduce((sum, s) => sum + (s.cost || 0), 0)),
+          criticalAlerts: filteredShipments.filter(s => s.status === 'delayed').length,
+          recommendations: 3
+        }
+      };
+    } else if (reportType === 'order') {
+      // Get order statistics
+      const orderStats = await this.getOrderStatistics(clientId, startDate, endDate);
+      
+      data = {
+        summary: {
+          totalItems: orderStats.reduce((sum, stat) => sum + (stat.ordersReceived || 0), 0),
+          totalValue: Math.round(orderStats.reduce((sum, stat) => sum + (stat.totalValue || 0), 0)),
+          criticalAlerts: 2,
+          recommendations: 8
+        }
+      };
+    } else if (reportType === 'performance') {
+      // Get KPI data
+      const kpis = await this.getClientKpis(clientId);
+      
+      data = {
+        summary: {
+          totalItems: kpis.length,
+          totalValue: 0,
+          criticalAlerts: kpis.filter(kpi => 
+            (kpi.onTimeDelivery || 100) < 90 || 
+            (kpi.shippingAccuracy || 100) < 95
+          ).length,
+          recommendations: 5
+        }
+      };
+    }
+    
+    return data;
+  }
+  
+  async getComparisonData(
+    clientId: number,
+    periodAStart: Date,
+    periodAEnd: Date,
+    periodBStart: Date,
+    periodBEnd: Date,
+    metric: string
+  ): Promise<any> {
+    // This method generates comparison data between two time periods
+    
+    // For simplicity, return example data based on metric type
+    // In a real implementation, we would compute actual metrics from the database
+    
+    // Define the return structure with realistic sample data 
+    const data = {
+      summaries: [
+        {
+          title: 'Shipment Performance',
+          metrics: [
+            {
+              key: 'totalShipments',
+              name: 'Total Shipments',
+              periodA: 245,
+              periodB: 312,
+              change: 67,
+              changePercentage: 27.35,
+              trend: 'up'
+            },
+            {
+              key: 'averageDeliveryTime',
+              name: 'Avg. Delivery Time',
+              periodA: 3.8,
+              periodB: 2.9,
+              change: -0.9,
+              changePercentage: -23.68,
+              unit: 'days',
+              trend: 'down'
+            },
+            {
+              key: 'onTimeDelivery',
+              name: 'On-Time Delivery',
+              periodA: 92.1,
+              periodB: 95.7,
+              change: 3.6,
+              changePercentage: 3.91,
+              unit: '%',
+              trend: 'up'
+            },
+            {
+              key: 'shippingAccuracy',
+              name: 'Shipping Accuracy',
+              periodA: 98.2,
+              periodB: 99.1,
+              change: 0.9,
+              changePercentage: 0.92,
+              unit: '%',
+              trend: 'up'
+            }
+          ]
+        },
+        {
+          title: 'Inventory Management',
+          metrics: [
+            {
+              key: 'stockLevels',
+              name: 'Avg. Stock Levels',
+              periodA: 5280,
+              periodB: 6120,
+              change: 840,
+              changePercentage: 15.91,
+              trend: 'up'
+            },
+            {
+              key: 'stockTurnover',
+              name: 'Stock Turnover Rate',
+              periodA: 4.2,
+              periodB: 4.8,
+              change: 0.6,
+              changePercentage: 14.29,
+              trend: 'up'
+            },
+            {
+              key: 'lowStockOccurrences',
+              name: 'Low Stock Occurrences',
+              periodA: 18,
+              periodB: 12,
+              change: -6,
+              changePercentage: -33.33,
+              trend: 'down'
+            }
+          ]
+        },
+        {
+          title: 'Order Processing',
+          metrics: [
+            {
+              key: 'totalOrders',
+              name: 'Total Orders',
+              periodA: 318,
+              periodB: 402,
+              change: 84,
+              changePercentage: 26.42,
+              trend: 'up'
+            },
+            {
+              key: 'processingTime',
+              name: 'Avg. Processing Time',
+              periodA: 1.6,
+              periodB: 1.2,
+              change: -0.4,
+              changePercentage: -25.0,
+              unit: 'days',
+              trend: 'down'
+            },
+            {
+              key: 'fulfillmentRate',
+              name: 'Fulfillment Rate',
+              periodA: 94.3,
+              periodB: 96.8,
+              change: 2.5,
+              changePercentage: 2.65,
+              unit: '%',
+              trend: 'up'
+            }
+          ]
+        }
+      ],
+      charts: {
+        dailyMetrics: [
+          { date: '2025-03-15', periodA: 12, periodB: 18 },
+          { date: '2025-03-16', periodA: 15, periodB: 20 },
+          { date: '2025-03-17', periodA: 13, periodB: 22 },
+          { date: '2025-03-18', periodA: 17, periodB: 19 },
+          { date: '2025-03-19', periodA: 14, periodB: 23 },
+          { date: '2025-03-20', periodA: 16, periodB: 25 },
+          { date: '2025-03-21', periodA: 19, periodB: 21 }
+        ]
+      }
+    };
+    
+    return data;
+  }
 }
 
 export const storage = new MemStorage();

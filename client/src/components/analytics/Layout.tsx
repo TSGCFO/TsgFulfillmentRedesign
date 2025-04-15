@@ -159,11 +159,9 @@ const AnalyticsLayout: React.FC<AnalyticsLayoutProps> = ({ children, title = 'An
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/">
-                  <div className="flex items-center">
-                    <Home className="h-5 w-5 mr-2" />
-                    <span>Back to Website</span>
-                  </div>
+                <Link href="/" className="flex items-center">
+                  <Home className="h-5 w-5 mr-2" />
+                  <span>Back to Website</span>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
