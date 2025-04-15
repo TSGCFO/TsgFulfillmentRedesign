@@ -47,6 +47,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/services/:slug" component={ServiceDetail} />
+        <Route path="/analytics" component={Analytics} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

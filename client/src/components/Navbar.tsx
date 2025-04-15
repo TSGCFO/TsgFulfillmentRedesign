@@ -51,6 +51,10 @@ const Navbar: React.FC = () => {
     { label: 'About Us', id: 'about' },
     { label: 'Contact', id: 'contact' }
   ];
+  
+  const pageLinks = [
+    { label: 'Analytics', href: '/analytics' }
+  ];
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 shadow-md backdrop-blur-sm' : 'bg-white'}`}>
@@ -68,6 +72,15 @@ const Navbar: React.FC = () => {
             >
               {item.label}
             </button>
+          ))}
+          {pageLinks.map((link) => (
+            <Link 
+              key={link.href}
+              href={link.href}
+              className="text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+            >
+              {link.label}
+            </Link>
           ))}
           <Button onClick={handleGetQuote} className="bg-primary text-white hover:bg-primary/90">Get a Quote</Button>
         </div>
@@ -88,6 +101,15 @@ const Navbar: React.FC = () => {
                 >
                   {item.label}
                 </button>
+              ))}
+              {pageLinks.map((link) => (
+                <Link 
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-700 hover:text-primary py-2 transition-colors duration-300 font-medium text-left"
+                >
+                  {link.label}
+                </Link>
               ))}
               <Button onClick={handleGetQuote} className="bg-primary text-white hover:bg-primary/90 w-full mt-2">
                 Get a Quote

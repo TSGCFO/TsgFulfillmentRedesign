@@ -291,6 +291,8 @@ const PieChartWidget: React.FC<{
 };
 
 // Main Dashboard Component
+import AnalyticsLayout from '@/components/analytics/Layout';
+
 const AnalyticsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedClient, setSelectedClient] = useState<number | null>(1); // Default to first client
