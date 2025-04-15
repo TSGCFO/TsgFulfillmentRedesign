@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format, parseISO, subDays } from 'date-fns';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link } from 'wouter';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
   Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
@@ -12,7 +13,6 @@ import {
   Truck, BarChart2, Settings, Clock, DollarSign,
   TrendingUp, FileText
 } from 'lucide-react';
-import { Link } from 'wouter';
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

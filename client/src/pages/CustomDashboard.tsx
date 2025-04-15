@@ -1,63 +1,44 @@
-import React, { useState, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { format, subDays } from 'date-fns';
+import { Link } from 'wouter';
 import {
-  Package,
-  Truck,
-  Clock,
-  Settings,
-  Plus,
-  X,
-  Move,
-  BarChart2,
-  PieChart as PieChartIcon,
-  LineChart as LineChartIcon,
-  Table,
-  Layout,
-  Save,
-  Loader2,
-  Eye,
-  EyeOff,
-  Trash2,
-  RefreshCw
-} from 'lucide-react';
-import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
+  BarChart, Bar, LineChart, Line, PieChart, Pie,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ResponsiveContainer, Cell
 } from 'recharts';
-
-import AnalyticsLayout from '@/components/analytics/Layout';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  TrendingUp, FileText, Save, Plus, X, GripHorizontal,
+  ExternalLink, Settings, LayoutGrid, Trash2, Edit3,
+  BarChart2, PieChart as PieChartIcon, LineChart as LineChartIcon,
+  Activity, Clock, ArrowUpRight, ArrowDownRight,
+  Maximize2, Minimize2, Move, Package, DollarSign
+} from 'lucide-react';
+
+import { DashboardSetting } from '@/shared/schema'; 
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue
 } from '@/components/ui/select';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogContent, DialogHeader,
+  DialogTitle, DialogFooter, DialogClose
 } from '@/components/ui/dialog';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent,
+  DropdownMenuItem, DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import AnalyticsLayout from '@/components/analytics/Layout';
 
-// Colors
+// Colors for visualizations
 const COLORS = {
   primary: '#0056B3',
   secondary: '#28A745',
@@ -66,862 +47,890 @@ const COLORS = {
   quinary: '#6C757D',
 };
 
-// Available chart and widget types
+// Widget types
 const WIDGET_TYPES = [
-  { id: 'line-chart', name: 'Line Chart', icon: <LineChartIcon className="h-5 w-5" /> },
-  { id: 'bar-chart', name: 'Bar Chart', icon: <BarChart2 className="h-5 w-5" /> },
-  { id: 'pie-chart', name: 'Pie Chart', icon: <PieChartIcon className="h-5 w-5" /> },
-  { id: 'stat-card', name: 'Stat Card', icon: <Layout className="h-5 w-5" /> },
-  { id: 'data-table', name: 'Data Table', icon: <Table className="h-5 w-5" /> },
+  { id: 'kpi', name: 'KPI Card', icon: <Activity size={18} /> },
+  { id: 'bar', name: 'Bar Chart', icon: <BarChart2 size={18} /> },
+  { id: 'line', name: 'Line Chart', icon: <LineChartIcon size={18} /> },
+  { id: 'pie', name: 'Pie Chart', icon: <PieChartIcon size={18} /> },
 ];
 
-// Available data sources
-const DATA_SOURCES = [
-  { id: 'shipment-overview', name: 'Shipment Overview', category: 'shipments' },
-  { id: 'delivery-times', name: 'Delivery Times', category: 'shipments' },
-  { id: 'carrier-distribution', name: 'Carrier Distribution', category: 'shipments' },
-  { id: 'shipping-costs', name: 'Shipping Costs', category: 'shipments' },
-  { id: 'inventory-levels', name: 'Inventory Levels', category: 'inventory' },
-  { id: 'stock-turnover', name: 'Stock Turnover', category: 'inventory' },
-  { id: 'low-stock-items', name: 'Low Stock Items', category: 'inventory' },
-  { id: 'order-volume', name: 'Order Volume', category: 'orders' },
-  { id: 'processing-times', name: 'Processing Times', category: 'orders' },
-  { id: 'order-fulfillment', name: 'Order Fulfillment', category: 'orders' },
-  { id: 'return-rate', name: 'Return Rate', category: 'orders' },
-  { id: 'performance-kpis', name: 'Performance KPIs', category: 'performance' },
+// KPI types
+const KPI_TYPES = [
+  { id: 'shipments', name: 'Total Shipments', icon: <Package size={18} />, color: COLORS.primary },
+  { id: 'inventory', name: 'Inventory Items', icon: <Package size={18} />, color: COLORS.secondary },
+  { id: 'orders', name: 'Orders Processed', icon: <FileText size={18} />, color: COLORS.tertiary },
+  { id: 'ontime', name: 'On-Time Delivery', icon: <Clock size={18} />, color: COLORS.quaternary },
+  { id: 'revenue', name: 'Total Revenue', icon: <DollarSign size={18} />, color: COLORS.quinary },
 ];
 
-// Time period options
-const TIME_PERIODS = [
-  { id: 'today', name: 'Today' },
-  { id: 'yesterday', name: 'Yesterday' },
-  { id: 'last7days', name: 'Last 7 Days' },
-  { id: 'last30days', name: 'Last 30 Days' },
-  { id: 'thisMonth', name: 'This Month' },
-  { id: 'lastMonth', name: 'Last Month' },
-  { id: 'thisYear', name: 'This Year' },
-];
-
-// Dashboard layout presets
-const DASHBOARD_PRESETS = [
-  { id: 'shipments', name: 'Shipments Dashboard' },
-  { id: 'inventory', name: 'Inventory Dashboard' },
-  { id: 'orders', name: 'Orders Dashboard' },
-  { id: 'performance', name: 'Performance Dashboard' },
-  { id: 'executive', name: 'Executive Overview' },
-];
-
-// Mock data for chart widgets
-const MOCK_DATA = {
-  'shipment-overview': [
-    { date: '2025-03-15', shipments: 28, delivered: 24 },
-    { date: '2025-03-16', shipments: 32, delivered: 29 },
-    { date: '2025-03-17', shipments: 36, delivered: 30 },
-    { date: '2025-03-18', shipments: 30, delivered: 25 },
-    { date: '2025-03-19', shipments: 42, delivered: 38 },
-    { date: '2025-03-20', shipments: 38, delivered: 34 },
-    { date: '2025-03-21', shipments: 45, delivered: 40 },
-  ],
-  'delivery-times': [
-    { carrier: 'FedEx', time: 2.4 },
-    { carrier: 'UPS', time: 2.1 },
-    { carrier: 'USPS', time: 3.2 },
-    { carrier: 'DHL', time: 2.7 },
-  ],
-  'carrier-distribution': [
-    { name: 'FedEx', value: 35 },
-    { name: 'UPS', value: 30 },
-    { name: 'USPS', value: 20 },
-    { name: 'DHL', value: 15 },
-  ],
-  'inventory-levels': [
-    { date: '2025-03-15', quantity: 5280 },
-    { date: '2025-03-16', quantity: 5350 },
-    { date: '2025-03-17', quantity: 5420 },
-    { date: '2025-03-18', quantity: 5380 },
-    { date: '2025-03-19', quantity: 5510 },
-    { date: '2025-03-20', quantity: 5650 },
-    { date: '2025-03-21', quantity: 5720 },
-  ],
-  'order-volume': [
-    { date: '2025-03-15', orders: 48 },
-    { date: '2025-03-16', orders: 52 },
-    { date: '2025-03-17', orders: 58 },
-    { date: '2025-03-18', orders: 51 },
-    { date: '2025-03-19', orders: 63 },
-    { date: '2025-03-20', orders: 59 },
-    { date: '2025-03-21', orders: 67 },
-  ],
+// Mock Data Generators
+const getKpiData = (type: string) => {
+  switch (type) {
+    case 'shipments':
+      return { value: 243, change: 12.5, changeType: 'increase' };
+    case 'inventory':
+      return { value: 1298, change: 4.2, changeType: 'increase' };
+    case 'orders':
+      return { value: 508, change: 7.8, changeType: 'increase' };
+    case 'ontime':
+      return { value: 97.2, change: 1.5, changeType: 'increase', isPercentage: true };
+    case 'revenue':
+      return { value: 145750, change: 9.7, changeType: 'increase', isCurrency: true };
+    default:
+      return { value: 0, change: 0, changeType: 'increase' };
+  }
 };
 
-// Widget interface
-interface DashboardWidget {
-  id: string;
-  type: string;
-  dataSource: string;
-  title: string;
-  timePeriod: string;
-  settings: {
-    height: number;
-    showLegend: boolean;
-    chartColors: string[];
-    dataKeys: string[];
-  };
-  position: {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-  };
-  visible: boolean;
-}
-
-const CustomDashboard: React.FC = () => {
-  const [widgets, setWidgets] = useState<DashboardWidget[]>([
-    {
-      id: 'widget-1',
-      type: 'line-chart',
-      dataSource: 'shipment-overview',
-      title: 'Shipment Volume',
-      timePeriod: 'last7days',
-      settings: {
-        height: 300,
-        showLegend: true,
-        chartColors: [COLORS.primary, COLORS.secondary],
-        dataKeys: ['shipments', 'delivered'],
-      },
-      position: { x: 0, y: 0, w: 6, h: 2 },
-      visible: true,
-    },
-    {
-      id: 'widget-2',
-      type: 'pie-chart',
-      dataSource: 'carrier-distribution',
-      title: 'Carrier Distribution',
-      timePeriod: 'last30days',
-      settings: {
-        height: 300,
-        showLegend: true,
-        chartColors: [COLORS.primary, COLORS.secondary, COLORS.tertiary, COLORS.quaternary],
-        dataKeys: ['value'],
-      },
-      position: { x: 6, y: 0, w: 6, h: 2 },
-      visible: true,
-    },
-    {
-      id: 'widget-3',
-      type: 'bar-chart',
-      dataSource: 'delivery-times',
-      title: 'Average Delivery Times by Carrier',
-      timePeriod: 'last30days',
-      settings: {
-        height: 300,
-        showLegend: false,
-        chartColors: [COLORS.tertiary],
-        dataKeys: ['time'],
-      },
-      position: { x: 0, y: 2, w: 6, h: 2 },
-      visible: true,
-    },
-    {
-      id: 'widget-4',
-      type: 'line-chart',
-      dataSource: 'inventory-levels',
-      title: 'Inventory Levels',
-      timePeriod: 'last7days',
-      settings: {
-        height: 300,
-        showLegend: true,
-        chartColors: [COLORS.primary],
-        dataKeys: ['quantity'],
-      },
-      position: { x: 6, y: 2, w: 6, h: 2 },
-      visible: true,
-    },
-  ]);
+const getBarChartData = (dataType: string) => {
+  if (dataType === 'shipments') {
+    return [
+      { name: 'Mon', value: 45 },
+      { name: 'Tue', value: 52 },
+      { name: 'Wed', value: 48 },
+      { name: 'Thu', value: 61 },
+      { name: 'Fri', value: 55 },
+      { name: 'Sat', value: 32 },
+      { name: 'Sun', value: 18 },
+    ];
+  } else if (dataType === 'inventory') {
+    return [
+      { name: 'Warehouse A', value: 450 },
+      { name: 'Warehouse B', value: 320 },
+      { name: 'Warehouse C', value: 280 },
+      { name: 'Warehouse D', value: 190 },
+    ];
+  } else if (dataType === 'orders') {
+    return [
+      { name: 'Standard', value: 320 },
+      { name: 'Express', value: 125 },
+      { name: 'Priority', value: 75 },
+    ];
+  }
   
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [selectedWidgetId, setSelectedWidgetId] = useState<string | null>(null);
-  const [isAddingWidget, setIsAddingWidget] = useState<boolean>(false);
-  const [newWidget, setNewWidget] = useState<Partial<DashboardWidget>>({
-    type: 'line-chart',
-    dataSource: 'shipment-overview',
-    title: '',
-    timePeriod: 'last7days',
-    settings: {
-      height: 300,
-      showLegend: true,
-      chartColors: [COLORS.primary, COLORS.secondary],
-      dataKeys: ['shipments', 'delivered'],
-    },
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
+  return [];
+};
 
-  // Fetch saved dashboard settings
-  const { data: dashboardSettings, refetch } = useQuery({
-    queryKey: ['/api/analytics/dashboard-settings'],
-    queryFn: async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch('/api/analytics/dashboard-settings');
-        if (!response.ok) {
-          throw new Error('Failed to fetch dashboard settings');
-        }
-        return response.json();
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    // For demo purposes, we'll just use our initial state
-    enabled: false
-  });
+const getLineChartData = (dataType: string) => {
+  if (dataType === 'shipments') {
+    return Array.from({ length: 14 }, (_, i) => ({
+      date: format(subDays(new Date(), 13 - i), 'MM/dd'),
+      value: Math.floor(Math.random() * 30) + 30,
+    }));
+  } else if (dataType === 'inventory') {
+    return Array.from({ length: 14 }, (_, i) => ({
+      date: format(subDays(new Date(), 13 - i), 'MM/dd'),
+      value: Math.floor(Math.random() * 200) + 1100,
+    }));
+  } else if (dataType === 'orders') {
+    return Array.from({ length: 14 }, (_, i) => ({
+      date: format(subDays(new Date(), 13 - i), 'MM/dd'),
+      value: Math.floor(Math.random() * 60) + 30,
+    }));
+  }
+  
+  return [];
+};
 
-  // Get selected widget
-  const selectedWidget = widgets.find(widget => widget.id === selectedWidgetId);
+const getPieChartData = (dataType: string) => {
+  if (dataType === 'shipments') {
+    return [
+      { name: 'FedEx', value: 45 },
+      { name: 'UPS', value: 35 },
+      { name: 'USPS', value: 25 },
+      { name: 'DHL', value: 15 },
+    ];
+  } else if (dataType === 'inventory') {
+    return [
+      { name: 'Optimal', value: 250 },
+      { name: 'Low Stock', value: 12 },
+      { name: 'Overstock', value: 38 },
+    ];
+  } else if (dataType === 'orders') {
+    return [
+      { name: 'Processed', value: 380 },
+      { name: 'Pending', value: 45 },
+      { name: 'Cancelled', value: 15 },
+    ];
+  }
+  
+  return [];
+};
 
-  // Handle widget selection
-  const handleSelectWidget = (widgetId: string) => {
-    if (isEditMode) {
-      setSelectedWidgetId(widgetId);
-    }
-  };
+// KPI Card Component
+const KpiCard: React.FC<{
+  title: string;
+  value: number;
+  change: number;
+  changeType: 'increase' | 'decrease';
+  color?: string;
+  isPercentage?: boolean;
+  isCurrency?: boolean;
+  isCompact?: boolean;
+  widgetId: string;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
+}> = ({ 
+  title, 
+  value, 
+  change, 
+  changeType, 
+  color = COLORS.primary, 
+  isPercentage = false, 
+  isCurrency = false,
+  isCompact = false,
+  widgetId,
+  onEdit,
+  onRemove
+}) => {
+  return (
+    <Card className={`${isCompact ? 'p-3' : 'p-4'} h-full`}>
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className={`${isCompact ? 'text-xs' : 'text-sm'} font-medium text-gray-500`}>{title}</h3>
+          <p className={`${isCompact ? 'text-xl' : 'text-2xl'} font-bold mt-1`}>
+            {isCurrency && '$'}
+            {typeof value === 'number' ? value.toLocaleString() : value}
+            {isPercentage && '%'}
+          </p>
+          <div className={`flex items-center mt-1 ${isCompact ? 'text-xs' : 'text-sm'} ${changeType === 'increase' ? 'text-green-500' : 'text-red-500'}`}>
+            {changeType === 'increase' ? <ArrowUpRight size={isCompact ? 12 : 14} /> : <ArrowDownRight size={isCompact ? 12 : 14} />}
+            <span>{change}%</span>
+            <span className="text-gray-500 ml-1">vs last period</span>
+          </div>
+        </div>
+        <div className="flex space-x-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onEdit(widgetId)}
+          >
+            <Edit3 size={14} />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onRemove(widgetId)}
+          >
+            <Trash2 size={14} />
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
+};
 
-  // Handle widget position change
-  const handleWidgetPositionChange = (widgetId: string, position: { x: number, y: number, w: number, h: number }) => {
-    setWidgets(prev => 
-      prev.map(widget => 
-        widget.id === widgetId 
-          ? { ...widget, position } 
-          : widget
-      )
-    );
-  };
+// Bar Chart Component
+const BarChartWidget: React.FC<{
+  title: string;
+  data: any[];
+  dataKey: string;
+  nameKey?: string;
+  color?: string;
+  widgetId: string;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
+}> = ({ 
+  title,
+  data,
+  dataKey = 'value',
+  nameKey = 'name',
+  color = COLORS.primary,
+  widgetId,
+  onEdit,
+  onRemove
+}) => {
+  return (
+    <Card className="p-4 h-full">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-sm font-medium">{title}</h3>
+        <div className="flex space-x-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onEdit(widgetId)}
+          >
+            <Edit3 size={14} />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onRemove(widgetId)}
+          >
+            <Trash2 size={14} />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="h-60">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            margin={{ top: 5, right: 5, left: 5, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={nameKey} />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </Card>
+  );
+};
 
-  // Handle widget visibility toggle
-  const handleToggleWidgetVisibility = (widgetId: string) => {
-    setWidgets(prev => 
-      prev.map(widget => 
-        widget.id === widgetId 
-          ? { ...widget, visible: !widget.visible } 
-          : widget
-      )
-    );
-  };
+// Line Chart Component
+const LineChartWidget: React.FC<{
+  title: string;
+  data: any[];
+  dataKey: string;
+  xAxisKey?: string;
+  color?: string;
+  widgetId: string;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
+}> = ({ 
+  title,
+  data,
+  dataKey = 'value',
+  xAxisKey = 'date',
+  color = COLORS.primary,
+  widgetId,
+  onEdit,
+  onRemove
+}) => {
+  return (
+    <Card className="p-4 h-full">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-sm font-medium">{title}</h3>
+        <div className="flex space-x-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onEdit(widgetId)}
+          >
+            <Edit3 size={14} />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onRemove(widgetId)}
+          >
+            <Trash2 size={14} />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="h-60">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={data}
+            margin={{ top: 5, right: 5, left: 5, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={xAxisKey} />
+            <YAxis />
+            <Tooltip />
+            <Line 
+              type="monotone" 
+              dataKey={dataKey} 
+              stroke={color} 
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </Card>
+  );
+};
 
-  // Handle widget removal
-  const handleRemoveWidget = (widgetId: string) => {
-    setWidgets(prev => prev.filter(widget => widget.id !== widgetId));
-    if (selectedWidgetId === widgetId) {
-      setSelectedWidgetId(null);
-    }
-  };
+// Pie Chart Component
+const PieChartWidget: React.FC<{
+  title: string;
+  data: any[];
+  dataKey: string;
+  nameKey?: string;
+  colors?: string[];
+  widgetId: string;
+  onEdit: (id: string) => void;
+  onRemove: (id: string) => void;
+}> = ({ 
+  title,
+  data,
+  dataKey = 'value',
+  nameKey = 'name',
+  colors = [COLORS.primary, COLORS.secondary, COLORS.tertiary, COLORS.quaternary, COLORS.quinary],
+  widgetId,
+  onEdit,
+  onRemove
+}) => {
+  return (
+    <Card className="p-4 h-full">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-sm font-medium">{title}</h3>
+        <div className="flex space-x-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onEdit(widgetId)}
+          >
+            <Edit3 size={14} />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => onRemove(widgetId)}
+          >
+            <Trash2 size={14} />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="h-60 flex justify-center">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey={dataKey}
+              nameKey={nameKey}
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value, name) => [value, name]} />
+            <Legend verticalAlign="bottom" height={36} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </Card>
+  );
+};
 
-  // Handle widget settings update
-  const handleUpdateWidgetSettings = (widgetId: string, updatedSettings: Partial<DashboardWidget>) => {
-    setWidgets(prev => 
-      prev.map(widget => 
-        widget.id === widgetId 
-          ? { ...widget, ...updatedSettings } 
-          : widget
-      )
-    );
-  };
-
-  // Handle adding a new widget
-  const handleAddWidget = () => {
-    if (!newWidget.title) return;
-    
-    const widget: DashboardWidget = {
-      id: `widget-${Date.now()}`,
-      type: newWidget.type || 'line-chart',
-      dataSource: newWidget.dataSource || 'shipment-overview',
-      title: newWidget.title || 'New Widget',
-      timePeriod: newWidget.timePeriod || 'last7days',
-      settings: newWidget.settings || {
-        height: 300,
-        showLegend: true,
-        chartColors: [COLORS.primary, COLORS.secondary],
-        dataKeys: ['shipments', 'delivered'],
-      },
-      position: { x: 0, y: 4, w: 6, h: 2 }, // Default position at bottom
-      visible: true,
-    };
-    
-    setWidgets(prev => [...prev, widget]);
-    setIsAddingWidget(false);
-    setNewWidget({
-      type: 'line-chart',
-      dataSource: 'shipment-overview',
-      title: '',
-      timePeriod: 'last7days',
-      settings: {
-        height: 300,
-        showLegend: true,
-        chartColors: [COLORS.primary, COLORS.secondary],
-        dataKeys: ['shipments', 'delivered'],
-      },
+// Dialog for adding/editing widgets
+const WidgetDialog: React.FC<{
+  open: boolean;
+  onClose: () => void;
+  onSave: (widgetConfig: any) => void;
+  initialConfig?: any;
+  isEditing?: boolean;
+}> = ({ open, onClose, onSave, initialConfig = null, isEditing = false }) => {
+  const [widgetType, setWidgetType] = useState(initialConfig?.type || 'kpi');
+  const [widgetTitle, setWidgetTitle] = useState(initialConfig?.title || '');
+  const [dataType, setDataType] = useState(initialConfig?.dataType || 'shipments');
+  const [refresh, setRefresh] = useState(initialConfig?.refresh || 'manual');
+  const [size, setSize] = useState(initialConfig?.size || 'medium');
+  
+  const handleSave = () => {
+    onSave({
+      id: initialConfig?.id || `widget-${Date.now()}`,
+      type: widgetType,
+      title: widgetTitle || (
+        widgetType === 'kpi' 
+          ? KPI_TYPES.find(k => k.id === dataType)?.name 
+          : `${dataType.charAt(0).toUpperCase() + dataType.slice(1)} ${WIDGET_TYPES.find(w => w.id === widgetType)?.name}`
+      ),
+      dataType,
+      refresh,
+      size,
+      position: initialConfig?.position || 0
     });
+    onClose();
   };
-
-  // Handle saving dashboard
-  const handleSaveDashboard = async () => {
-    setIsLoading(true);
-    try {
-      // In a real implementation, this would save to the server
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Dashboard saved:', widgets);
-      setIsEditMode(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle loading a preset dashboard
-  const handleLoadPreset = (presetId: string) => {
-    // In a real implementation, this would fetch a preset from the server
-    console.log('Loading preset:', presetId);
-    // For now we'll just keep our existing widgets
-  };
-
-  // Handle dashboard refresh
-  const handleRefreshDashboard = async () => {
-    setRefreshing(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // In a real implementation, this would refresh all widget data
-    } finally {
-      setRefreshing(false);
-    }
-  };
-
-  // Render widget content based on type and data source
-  const renderWidgetContent = (widget: DashboardWidget) => {
-    const data = MOCK_DATA[widget.dataSource as keyof typeof MOCK_DATA] || [];
-    
-    switch (widget.type) {
-      case 'line-chart':
-        return (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={(date) => date && typeof date === 'string' ? format(new Date(date), 'MMM d') : ''}
-                />
-                <YAxis />
-                <Tooltip 
-                  labelFormatter={(date) => date && typeof date === 'string' ? format(new Date(date), 'MMMM d, yyyy') : ''}
-                />
-                {widget.settings.showLegend && <Legend />}
-                {widget.settings.dataKeys.map((key, i) => (
-                  <Line
-                    key={key}
-                    type="monotone"
-                    dataKey={key}
-                    stroke={widget.settings.chartColors[i % widget.settings.chartColors.length]}
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        );
+  
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>{isEditing ? 'Edit Widget' : 'Add New Widget'}</DialogTitle>
+        </DialogHeader>
         
-      case 'bar-chart':
-        return (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={data}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey={widget.dataSource === 'delivery-times' ? 'carrier' : 'date'} />
-                <YAxis />
-                <Tooltip />
-                {widget.settings.showLegend && <Legend />}
-                {widget.settings.dataKeys.map((key, i) => (
-                  <Bar
-                    key={key}
-                    dataKey={key}
-                    fill={widget.settings.chartColors[i % widget.settings.chartColors.length]}
-                    radius={[4, 4, 0, 0]}
-                  />
-                ))}
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        );
-        
-      case 'pie-chart':
-        return (
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey={widget.settings.dataKeys[0]}
-                  nameKey={widget.dataSource === 'carrier-distribution' ? 'name' : undefined}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="widget-type">Widget Type</Label>
+            <div className="grid grid-cols-4 gap-2">
+              {WIDGET_TYPES.map(type => (
+                <Button
+                  key={type.id}
+                  type="button"
+                  variant={widgetType === type.id ? "default" : "outline"}
+                  className="justify-start h-auto py-2"
+                  onClick={() => setWidgetType(type.id)}
                 >
-                  {data.map((entry: any, index: number) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={widget.settings.chartColors[index % widget.settings.chartColors.length]} 
-                    />
-                  ))}
-                </Pie>
-                {widget.settings.showLegend && <Legend />}
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+                  <span className="mr-2">{type.icon}</span>
+                  <span className="text-xs">{type.name}</span>
+                </Button>
+              ))}
+            </div>
           </div>
-        );
-        
-      case 'stat-card':
-        // A simpler card for displaying a single statistic
-        return (
-          <div className="flex flex-col items-center justify-center h-full">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">Total Shipments</h3>
-            <p className="text-4xl font-bold">458</p>
-            <p className="text-sm text-green-500 flex items-center">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +12.3% vs previous period
+          
+          <div className="space-y-2">
+            <Label htmlFor="widget-title">Widget Title (Optional)</Label>
+            <Input
+              id="widget-title"
+              placeholder="Enter custom title"
+              value={widgetTitle}
+              onChange={(e) => setWidgetTitle(e.target.value)}
+            />
+            <p className="text-xs text-gray-500">
+              Leave blank to use default title based on data type
             </p>
           </div>
-        );
-        
-      case 'data-table':
-        // A simple data table
-        return (
-          <div className="overflow-x-auto h-full">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipments</th>
-                  <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivered</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {MOCK_DATA['shipment-overview'].map((entry, i) => (
-                  <tr key={i}>
-                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">
-                      {format(new Date(entry.date), 'MMM d, yyyy')}
-                    </td>
-                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">{entry.shipments}</td>
-                    <td className="px-3 py-2 whitespace-nowrap text-sm text-gray-900">{entry.delivered}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-        
-      default:
-        return <div className="p-4 text-center text-gray-500">Invalid widget type</div>;
-    }
-  };
-
-  // Get data sources for the selected widget type
-  const getDataSourcesForWidgetType = (widgetType: string) => {
-    return DATA_SOURCES;
-  };
-
-  return (
-    <AnalyticsLayout title="Custom Dashboard">
-      <div className="p-6 max-w-7xl mx-auto">
-        <header className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Custom Dashboard</h1>
-            <p className="text-gray-600">Create and customize your own analytics dashboard</p>
+          
+          <div className="space-y-2">
+            <Label htmlFor="data-type">Data Type</Label>
+            <Select value={dataType} onValueChange={setDataType}>
+              <SelectTrigger id="data-type">
+                <SelectValue placeholder="Select data type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="shipments">Shipments</SelectItem>
+                <SelectItem value="inventory">Inventory</SelectItem>
+                <SelectItem value="orders">Orders</SelectItem>
+                {widgetType === 'kpi' && (
+                  <>
+                    <SelectItem value="ontime">On-Time Delivery</SelectItem>
+                    <SelectItem value="revenue">Revenue</SelectItem>
+                  </>
+                )}
+              </SelectContent>
+            </Select>
           </div>
           
-          <div className="flex items-center gap-3">
-            {isEditMode ? (
-              <>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditMode(false)}
-                  disabled={isLoading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSaveDashboard}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Dashboard
-                    </>
-                  )}
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button 
-                  variant="outline"
-                  onClick={handleRefreshDashboard}
-                  disabled={refreshing}
-                >
-                  {refreshing ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <RefreshCw className="h-4 w-4" />
-                  )}
-                </Button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      <Layout className="mr-2 h-4 w-4" />
-                      Load Preset
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>Dashboard Presets</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {DASHBOARD_PRESETS.map(preset => (
-                      <DropdownMenuItem 
-                        key={preset.id}
-                        onClick={() => handleLoadPreset(preset.id)}
-                      >
-                        {preset.name}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button onClick={() => setIsEditMode(true)}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Edit Dashboard
-                </Button>
-              </>
-            )}
-          </div>
-        </header>
-        
-        {/* Add Widget Dialog */}
-        <Dialog open={isAddingWidget} onOpenChange={setIsAddingWidget}>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Add New Widget</DialogTitle>
-              <DialogDescription>
-                Configure a new widget to add to your dashboard.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="title">Widget Title</Label>
-                <Input
-                  id="title"
-                  value={newWidget.title || ''}
-                  onChange={(e) => setNewWidget(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="Enter widget title"
-                />
-              </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="type">Widget Type</Label>
-                <Select
-                  value={newWidget.type}
-                  onValueChange={(value) => setNewWidget(prev => ({ ...prev, type: value }))}
-                >
-                  <SelectTrigger id="type">
-                    <SelectValue placeholder="Select widget type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {WIDGET_TYPES.map(type => (
-                      <SelectItem key={type.id} value={type.id}>
-                        <div className="flex items-center">
-                          <span className="mr-2">{type.icon}</span>
-                          {type.name}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="dataSource">Data Source</Label>
-                <Select
-                  value={newWidget.dataSource}
-                  onValueChange={(value) => setNewWidget(prev => ({ ...prev, dataSource: value }))}
-                >
-                  <SelectTrigger id="dataSource">
-                    <SelectValue placeholder="Select data source" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getDataSourcesForWidgetType(newWidget.type || '').map(source => (
-                      <SelectItem key={source.id} value={source.id}>
-                        {source.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="timePeriod">Time Period</Label>
-                <Select
-                  value={newWidget.timePeriod}
-                  onValueChange={(value) => setNewWidget(prev => ({ ...prev, timePeriod: value }))}
-                >
-                  <SelectTrigger id="timePeriod">
-                    <SelectValue placeholder="Select time period" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TIME_PERIODS.map(period => (
-                      <SelectItem key={period.id} value={period.id}>
-                        {period.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="refresh-rate">Refresh Rate</Label>
+              <Select value={refresh} onValueChange={setRefresh}>
+                <SelectTrigger id="refresh-rate">
+                  <SelectValue placeholder="Select refresh rate" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="manual">Manual</SelectItem>
+                  <SelectItem value="hourly">Hourly</SelectItem>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="realtime">Real-time</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
-            <DialogFooter>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsAddingWidget(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleAddWidget}
-                disabled={!newWidget.title}
-              >
-                Add Widget
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Widget Settings Sidebar */}
-        {isEditMode && selectedWidget && (
-          <div className="fixed right-0 top-0 h-screen w-80 bg-white border-l border-gray-200 p-4 overflow-y-auto z-50">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Widget Settings</h2>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setSelectedWidgetId(null)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="widget-title">Title</Label>
-                <Input
-                  id="widget-title"
-                  value={selectedWidget.title}
-                  onChange={(e) => handleUpdateWidgetSettings(selectedWidget.id, { title: e.target.value })}
-                  className="mt-1"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="widget-type">Widget Type</Label>
-                <Select
-                  value={selectedWidget.type}
-                  onValueChange={(value) => handleUpdateWidgetSettings(selectedWidget.id, { type: value })}
-                >
-                  <SelectTrigger id="widget-type" className="mt-1">
-                    <SelectValue placeholder="Select widget type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {WIDGET_TYPES.map(type => (
-                      <SelectItem key={type.id} value={type.id}>
-                        <div className="flex items-center">
-                          <span className="mr-2">{type.icon}</span>
-                          {type.name}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="widget-data-source">Data Source</Label>
-                <Select
-                  value={selectedWidget.dataSource}
-                  onValueChange={(value) => handleUpdateWidgetSettings(selectedWidget.id, { dataSource: value })}
-                >
-                  <SelectTrigger id="widget-data-source" className="mt-1">
-                    <SelectValue placeholder="Select data source" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {getDataSourcesForWidgetType(selectedWidget.type).map(source => (
-                      <SelectItem key={source.id} value={source.id}>
-                        {source.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div>
-                <Label htmlFor="widget-time-period">Time Period</Label>
-                <Select
-                  value={selectedWidget.timePeriod}
-                  onValueChange={(value) => handleUpdateWidgetSettings(selectedWidget.id, { timePeriod: value })}
-                >
-                  <SelectTrigger id="widget-time-period" className="mt-1">
-                    <SelectValue placeholder="Select time period" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {TIME_PERIODS.map(period => (
-                      <SelectItem key={period.id} value={period.id}>
-                        {period.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedWidget.settings.showLegend}
-                    onChange={(e) => handleUpdateWidgetSettings(
-                      selectedWidget.id, 
-                      { 
-                        settings: { 
-                          ...selectedWidget.settings, 
-                          showLegend: e.target.checked 
-                        } 
-                      }
-                    )}
-                    className="rounded text-primary focus:ring-primary"
-                  />
-                  <span>Show Legend</span>
-                </label>
-              </div>
-              
-              <div className="pt-4 border-t">
-                <Button
-                  variant="outline"
-                  className="w-full mb-2 justify-between"
-                  onClick={() => handleToggleWidgetVisibility(selectedWidget.id)}
-                >
-                  <span>{selectedWidget.visible ? 'Hide Widget' : 'Show Widget'}</span>
-                  {selectedWidget.visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-                
-                <Button
-                  variant="destructive"
-                  className="w-full justify-between"
-                  onClick={() => handleRemoveWidget(selectedWidget.id)}
-                >
-                  <span>Remove Widget</span>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="widget-size">Widget Size</Label>
+              <Select value={size} onValueChange={setSize}>
+                <SelectTrigger id="widget-size">
+                  <SelectValue placeholder="Select widget size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="large">Large</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        )}
-        
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-12 gap-4">
-          {widgets.filter(widget => widget.visible || isEditMode).map((widget) => (
-            <div 
-              key={widget.id}
-              className={`col-span-${widget.position.w} md:col-span-${widget.position.w}`}
-              style={{ 
-                order: widget.position.y * 12 + widget.position.x,
-                opacity: widget.visible ? 1 : 0.5
-              }}
-            >
-              <Card 
-                className={`overflow-hidden transition-shadow ${
-                  isEditMode && selectedWidgetId === widget.id 
-                    ? 'ring-2 ring-primary shadow-lg' 
-                    : isEditMode 
-                    ? 'cursor-pointer hover:shadow-md' 
-                    : ''
-                }`}
-                onClick={isEditMode ? () => handleSelectWidget(widget.id) : undefined}
-              >
-                <div className="p-4 border-b flex justify-between items-center">
-                  <h3 className="font-medium">{widget.title}</h3>
-                  
-                  {isEditMode && (
-                    <div className="flex items-center space-x-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleWidgetVisibility(widget.id);
-                        }}
-                      >
-                        {widget.visible 
-                          ? <EyeOff className="h-4 w-4 text-gray-500" /> 
-                          : <Eye className="h-4 w-4 text-gray-500" />
-                        }
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveWidget(widget.id);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4 text-gray-500" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="cursor-move"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Move className="h-4 w-4 text-gray-500" />
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                
-                <div className={`p-4 ${!widget.visible && 'opacity-50'}`}>
-                  {renderWidgetContent(widget)}
-                </div>
-              </Card>
-            </div>
-          ))}
           
-          {/* Add Widget Button */}
-          {isEditMode && (
-            <div className="col-span-12 md:col-span-6">
-              <Button
-                variant="outline"
-                className="h-full w-full border-dashed flex flex-col items-center justify-center py-8"
-                onClick={() => setIsAddingWidget(true)}
-              >
-                <Plus className="h-8 w-8 mb-2 text-gray-400" />
-                <span>Add Widget</span>
-              </Button>
+          {widgetType !== 'kpi' && (
+            <div className="border rounded-md p-3 bg-gray-50">
+              <h4 className="text-sm font-medium mb-2">Preview</h4>
+              <div className="h-32 w-full bg-white border rounded">
+                <ResponsiveContainer width="100%" height="100%">
+                  {widgetType === 'bar' ? (
+                    <BarChart data={getBarChartData(dataType).slice(0, 3)}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Bar dataKey="value" fill={COLORS.primary} />
+                    </BarChart>
+                  ) : widgetType === 'line' ? (
+                    <LineChart data={getLineChartData(dataType).slice(0, 5)}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="date" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="value" stroke={COLORS.primary} />
+                    </LineChart>
+                  ) : (
+                    <PieChart>
+                      <Pie
+                        data={getPieChartData(dataType)}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={40}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {getPieChartData(dataType).map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={[COLORS.primary, COLORS.secondary, COLORS.tertiary, COLORS.quaternary][index % 4]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  )}
+                </ResponsiveContainer>
+              </div>
             </div>
           )}
         </div>
+        
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSave}>
+            {isEditing ? 'Update Widget' : 'Add Widget'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// Main Dashboard Component
+const CustomDashboard: React.FC = () => {
+  const [widgets, setWidgets] = useState<any[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingWidget, setEditingWidget] = useState<any>(null);
+  const [dashboardLayout, setDashboardLayout] = useState<'grid' | 'columns'>('grid');
+  const [refreshing, setRefreshing] = useState(false);
+  const queryClient = useQueryClient();
+  
+  // Fetch dashboard settings
+  const { data: dashboardData, isLoading } = useQuery({
+    queryKey: ['/api/analytics/dashboard-settings'],
+    queryFn: async () => {
+      const response = await fetch(`/api/analytics/dashboard-settings`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch dashboard settings');
+      }
+      return response.json();
+    }
+  });
+  
+  // Save dashboard settings
+  const saveMutation = useMutation({
+    mutationFn: async (settings: any) => {
+      const response = await fetch('/api/analytics/dashboard-settings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save dashboard settings');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/analytics/dashboard-settings'] });
+    },
+  });
+  
+  // Load widgets from dashboard data
+  useEffect(() => {
+    if (dashboardData?.data?.widgets) {
+      setWidgets(dashboardData.data.widgets);
+    } else if (!isLoading && !dashboardData?.data?.widgets) {
+      // Set default widgets if none exist
+      setWidgets([
+        {
+          id: 'widget-1',
+          type: 'kpi',
+          title: 'Total Shipments',
+          dataType: 'shipments',
+          refresh: 'daily',
+          size: 'medium',
+          position: 0
+        },
+        {
+          id: 'widget-2',
+          type: 'kpi',
+          title: 'Inventory Items',
+          dataType: 'inventory',
+          refresh: 'daily',
+          size: 'medium',
+          position: 1
+        },
+        {
+          id: 'widget-3',
+          type: 'bar',
+          title: 'Shipments by Day',
+          dataType: 'shipments',
+          refresh: 'daily',
+          size: 'medium',
+          position: 2
+        },
+        {
+          id: 'widget-4',
+          type: 'line',
+          title: 'Orders Trend',
+          dataType: 'orders',
+          refresh: 'daily',
+          size: 'large',
+          position: 3
+        }
+      ]);
+    }
+  }, [dashboardData, isLoading]);
+  
+  // Add new widget
+  const handleAddWidget = (widgetConfig: any) => {
+    const updatedWidgets = [...widgets, widgetConfig];
+    setWidgets(updatedWidgets);
+    saveMutation.mutate({ widgets: updatedWidgets });
+  };
+  
+  // Update existing widget
+  const handleUpdateWidget = (widgetConfig: any) => {
+    const updatedWidgets = widgets.map(widget => 
+      widget.id === widgetConfig.id ? widgetConfig : widget
+    );
+    setWidgets(updatedWidgets);
+    saveMutation.mutate({ widgets: updatedWidgets });
+  };
+  
+  // Remove widget
+  const handleRemoveWidget = (widgetId: string) => {
+    const updatedWidgets = widgets.filter(widget => widget.id !== widgetId);
+    setWidgets(updatedWidgets);
+    saveMutation.mutate({ widgets: updatedWidgets });
+  };
+  
+  // Edit widget
+  const handleEditWidget = (widgetId: string) => {
+    const widget = widgets.find(w => w.id === widgetId);
+    if (widget) {
+      setEditingWidget(widget);
+      setDialogOpen(true);
+    }
+  };
+  
+  // Handle refresh
+  const handleRefresh = () => {
+    setRefreshing(true);
+    queryClient.invalidateQueries({ queryKey: ['/api/analytics/dashboard-settings'] });
+    
+    // Simulate refresh delay
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  };
+  
+  // Widget size to grid span mapping
+  const getWidgetSize = (size: string) => {
+    if (dashboardLayout === 'grid') {
+      switch (size) {
+        case 'small': return 'col-span-1';
+        case 'large': return 'col-span-3';
+        case 'medium':
+        default: return 'col-span-2';
+      }
+    } else {
+      switch (size) {
+        case 'small': return 'col-span-1';
+        case 'large': return 'row-span-2';
+        case 'medium':
+        default: return '';
+      }
+    }
+  };
+  
+  // Render Widget
+  const renderWidget = (widget: any) => {
+    const kpiData = getKpiData(widget.dataType);
+    
+    switch (widget.type) {
+      case 'kpi':
+        return (
+          <KpiCard
+            title={widget.title}
+            value={kpiData.value}
+            change={kpiData.change}
+            changeType={kpiData.changeType}
+            isPercentage={kpiData.isPercentage}
+            isCurrency={kpiData.isCurrency}
+            color={KPI_TYPES.find(k => k.id === widget.dataType)?.color}
+            widgetId={widget.id}
+            onEdit={handleEditWidget}
+            onRemove={handleRemoveWidget}
+            isCompact={widget.size === 'small'}
+          />
+        );
+      
+      case 'bar':
+        return (
+          <BarChartWidget
+            title={widget.title}
+            data={getBarChartData(widget.dataType)}
+            dataKey="value"
+            widgetId={widget.id}
+            onEdit={handleEditWidget}
+            onRemove={handleRemoveWidget}
+          />
+        );
+      
+      case 'line':
+        return (
+          <LineChartWidget
+            title={widget.title}
+            data={getLineChartData(widget.dataType)}
+            dataKey="value"
+            widgetId={widget.id}
+            onEdit={handleEditWidget}
+            onRemove={handleRemoveWidget}
+          />
+        );
+      
+      case 'pie':
+        return (
+          <PieChartWidget
+            title={widget.title}
+            data={getPieChartData(widget.dataType)}
+            dataKey="value"
+            widgetId={widget.id}
+            onEdit={handleEditWidget}
+            onRemove={handleRemoveWidget}
+          />
+        );
+      
+      default:
+        return null;
+    }
+  };
+  
+  return (
+    <AnalyticsLayout title="Custom Dashboard">
+      <div className="p-6 max-w-7xl mx-auto">
+        <header className="mb-8">
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Custom Dashboard</h1>
+              <p className="text-gray-600">Create and customize your own analytics dashboard</p>
+            </div>
+            <div className="flex space-x-2">
+              <Link href="/analytics">
+                <Button variant="outline" size="sm">
+                  <TrendingUp className="mr-2 h-4 w-4" />
+                  Back to Analytics
+                </Button>
+              </Link>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleRefresh}
+                disabled={refreshing}
+              >
+                {refreshing ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+                    Refreshing...
+                  </>
+                ) : (
+                  <>
+                    <svg 
+                      className="mr-2 h-4 w-4" 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+                      <path d="M21 3v5h-5" />
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+                      <path d="M3 21v-5h5" />
+                    </svg>
+                    Refresh
+                  </>
+                )}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Layout
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setDashboardLayout('grid')}>
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    Grid Layout
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setDashboardLayout('columns')}>
+                    <GripHorizontal className="mr-2 h-4 w-4" />
+                    Column Layout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button onClick={() => { setEditingWidget(null); setDialogOpen(true); }}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Widget
+              </Button>
+            </div>
+          </div>
+        </header>
+        
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : widgets.length === 0 ? (
+          <Card className="p-6 text-center">
+            <h3 className="text-lg font-medium mb-2">No Widgets Added Yet</h3>
+            <p className="text-gray-600 mb-4">Start building your custom dashboard by adding widgets</p>
+            <Button onClick={() => { setEditingWidget(null); setDialogOpen(true); }}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Your First Widget
+            </Button>
+          </Card>
+        ) : (
+          <div className={
+            dashboardLayout === 'grid'
+              ? "grid grid-cols-4 gap-4"
+              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          }>
+            {widgets
+              .sort((a, b) => a.position - b.position)
+              .map(widget => (
+                <div 
+                  key={widget.id} 
+                  className={`${getWidgetSize(widget.size)}`}
+                >
+                  {renderWidget(widget)}
+                </div>
+              ))
+            }
+          </div>
+        )}
       </div>
+      
+      <WidgetDialog
+        open={dialogOpen}
+        onClose={() => { setDialogOpen(false); setEditingWidget(null); }}
+        onSave={editingWidget ? handleUpdateWidget : handleAddWidget}
+        initialConfig={editingWidget}
+        isEditing={!!editingWidget}
+      />
     </AnalyticsLayout>
   );
 };
