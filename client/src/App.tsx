@@ -7,6 +7,7 @@ import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
+const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
 const ReportGenerator = lazy(() => import("@/pages/ReportGenerator"));
@@ -48,7 +49,8 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={Home} />
+        <Route path="/" component={OWDStyleHome} />
+        <Route path="/old-home" component={Home} />
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/analytics" component={Analytics} />
         <Route path="/analytics/reports" component={ReportGenerator} />
