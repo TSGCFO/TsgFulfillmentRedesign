@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import LazySection from '@/components/ui/lazy-section';
+import { Helmet } from 'react-helmet';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -441,9 +442,46 @@ const ServiceDetail = () => {
   if (!service) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
+  
+  // Create structured data for this service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.longDescription[0] || service.description,
+    "provider": {
+      "@type": "Organization",
+      "name": "TSG Fulfillment Services",
+      "url": "https://tsgfulfillment.com"
+    },
+    "serviceType": service.title,
+    "areaServed": {
+      "@type": "Country",
+      "name": "Canada"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Logistics and Fulfillment Services",
+      "itemListElement": service.features.map((feature, index) => ({
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": feature
+        }
+      }))
+    }
+  };
 
   return (
     <>
+      <Helmet>
+        <title>{service.title} - TSG Fulfillment Services</title>
+        <meta name="description" content={service.description} />
+        <meta name="keywords" content={`fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`} />
+        <script type="application/ld+json">
+          {JSON.stringify(serviceSchema)}
+        </script>
+      </Helmet>
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">
           <div className="flex flex-col">

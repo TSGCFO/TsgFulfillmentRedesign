@@ -76,9 +76,9 @@ const Home: React.FC = () => {
           "logo": "https://tsgfulfillment.com/logo.png",
           "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+1-800-555-1234",
+            "telephone": "+1-289-815-5869",
             "contactType": "customer service",
-            "areaServed": "US",
+            "areaServed": "CA",
             "availableLanguage": ["English"]
           },
           "sameAs": [
@@ -98,19 +98,19 @@ const Home: React.FC = () => {
           "image": "https://tsgfulfillment.com/images/warehouse.jpg",
           "@id": "https://tsgfulfillment.com",
           "url": "https://tsgfulfillment.com",
-          "telephone": "+1-800-555-1234",
+          "telephone": "+1-289-815-5869",
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "123 Logistics Way",
-            "addressLocality": "Houston",
-            "addressRegion": "TX",
-            "postalCode": "77001",
-            "addressCountry": "US"
+            "streetAddress": "6750 Langstaff Road",
+            "addressLocality": "Vaughan",
+            "addressRegion": "Ontario",
+            "postalCode": "L4H 5K2",
+            "addressCountry": "CA"
           },
           "geo": {
             "@type": "GeoCoordinates",
-            "latitude": 29.7604,
-            "longitude": -95.3698
+            "latitude": 43.8013,
+            "longitude": -79.5425
           },
           "openingHoursSpecification": {
             "@type": "OpeningHoursSpecification",
