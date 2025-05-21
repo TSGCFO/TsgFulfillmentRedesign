@@ -5,7 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { lazy, Suspense, useEffect } from "react";
 import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 import CookieConsent from "@/components/CookieConsent";
-import { Helmet } from "react-helmet";
+// Import to suppress React Helmet warnings
+import suppressHelmetWarnings from "./utils/suppressHelmetWarnings";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));

@@ -13,9 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
+import { Helmet } from 'react-helmet';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Helmet } from 'react-helmet';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -126,11 +126,52 @@ const Contact: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Contact TSG Fulfillment - Get in Touch with Our Team</title>
-        <meta name="description" content="Contact TSG Fulfillment for information about our logistics and fulfillment services. Request a quote, ask questions, or get support from our team." />
-        <meta property="og:title" content="Contact TSG Fulfillment - Get in Touch with Our Team" />
-        <meta property="og:description" content="Contact TSG Fulfillment for information about our logistics and fulfillment services. Request a quote, ask questions, or get support from our team." />
+        <title>Contact TSG Fulfillment | Logistics & Fulfillment Services in Vaughan, Ontario</title>
+        <meta name="description" content="Contact TSG Fulfillment for information about our logistics and fulfillment services in Vaughan, Ontario. Request a quote, ask questions, or get support from our expert team." />
+        <meta name="keywords" content="contact fulfillment services, logistics company contact, warehousing contact, supply chain solutions, vaughan ontario fulfillment, contact tsg" />
+        <meta property="og:title" content="Contact TSG Fulfillment | Logistics & Fulfillment Services in Vaughan" />
+        <meta property="og:description" content="Contact TSG Fulfillment for information about our logistics and fulfillment services in Vaughan, Ontario. Request a quote, ask questions, or get support from our expert team." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tsgfulfillment.com/contact" />
+        <meta property="og:image" content="https://tsgfulfillment.com/images/contact-hero.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Contact TSG Fulfillment | Logistics & Fulfillment Services" />
+        <meta name="twitter:description" content="Contact TSG Fulfillment for logistics and fulfillment solutions based in Vaughan, Ontario." />
         <link rel="canonical" href="https://tsgfulfillment.com/contact" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact TSG Fulfillment",
+            "description": "Get in touch with TSG Fulfillment for logistics and fulfillment services in Vaughan, Ontario.",
+            "url": "https://tsgfulfillment.com/contact",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+1-289-815-5869",
+              "contactType": "customer service",
+              "email": "info@tsgfulfillment.com",
+              "areaServed": "CA",
+              "availableLanguage": ["English"]
+            },
+            "location": {
+              "@type": "Place",
+              "name": "TSG Fulfillment Services",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "6750 Langstaff Road",
+                "addressLocality": "Vaughan",
+                "addressRegion": "Ontario",
+                "postalCode": "L4H 5K2",
+                "addressCountry": "CA"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 43.8013,
+                "longitude": -79.5425
+              }
+            }
+          })}
+        </script>
       </Helmet>
       
       <Navbar />
