@@ -55,10 +55,10 @@ const Navbar: React.FC = () => {
   ];
 
   const serviceItems = [
-    { label: 'Warehousing', id: 'warehousing' },
-    { label: 'Fulfillment', id: 'fulfillment' },
-    { label: 'Transportation', id: 'transportation' },
-    { label: 'Value Added Services', id: 'value-added' },
+    { label: 'Warehousing', id: 'warehousing-services', isLink: true },
+    { label: 'Fulfillment', id: 'order-fulfillment', isLink: true },
+    { label: 'Transportation', id: 'freight-forwarding', isLink: true },
+    { label: 'Value Added Services', id: 'value-added-services', isLink: true },
   ];
 
   const navItems = [
@@ -130,13 +130,23 @@ const Navbar: React.FC = () => {
                     {/* Dropdown menu */}
                     <div className="absolute left-0 top-full transform origin-top-left transition-all opacity-0 invisible group-hover:opacity-100 group-hover:visible bg-white shadow-lg rounded-b-md min-w-[200px] z-10">
                       {item.dropdownItems?.map((dropdownItem) => (
-                        <button
-                          key={dropdownItem.id}
-                          onClick={() => scrollTo(dropdownItem.id)}
-                          className="block w-full text-left px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200"
-                        >
-                          {dropdownItem.label}
-                        </button>
+                        dropdownItem.isLink ? (
+                          <Link
+                            key={dropdownItem.id}
+                            href={`/services/${dropdownItem.id}`}
+                            className="block w-full text-left px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200"
+                          >
+                            {dropdownItem.label}
+                          </Link>
+                        ) : (
+                          <button
+                            key={dropdownItem.id}
+                            onClick={() => scrollTo(dropdownItem.id)}
+                            className="block w-full text-left px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200"
+                          >
+                            {dropdownItem.label}
+                          </button>
+                        )
                       ))}
                     </div>
                   </div>
@@ -177,7 +187,9 @@ const Navbar: React.FC = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[350px]">
-              <div className="flex flex-col space-y-1 mt-8">
+              <SheetTitle>Menu</SheetTitle>
+              <SheetDescription>Navigate to different sections of our website</SheetDescription>
+              <div className="flex flex-col space-y-1 mt-4">
                 {navItems.map((item) => (
                   <div key={item.id} className="border-b border-gray-100">
                     {item.hasDropdown ? (
@@ -193,13 +205,23 @@ const Navbar: React.FC = () => {
                         {mobileSubmenuOpen === item.id && (
                           <div className="pl-4 py-2 bg-gray-50">
                             {item.dropdownItems?.map((dropdownItem) => (
-                              <button
-                                key={dropdownItem.id}
-                                onClick={() => scrollTo(dropdownItem.id)}
-                                className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
-                              >
-                                {dropdownItem.label}
-                              </button>
+                              dropdownItem.isLink ? (
+                                <Link
+                                  key={dropdownItem.id}
+                                  href={`/services/${dropdownItem.id}`}
+                                  className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
+                                >
+                                  {dropdownItem.label}
+                                </Link>
+                              ) : (
+                                <button
+                                  key={dropdownItem.id}
+                                  onClick={() => scrollTo(dropdownItem.id)}
+                                  className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
+                                >
+                                  {dropdownItem.label}
+                                </button>
+                              )
                             ))}
                           </div>
                         )}
