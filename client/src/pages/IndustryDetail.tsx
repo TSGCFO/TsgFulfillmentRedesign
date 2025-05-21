@@ -512,6 +512,33 @@ const IndustryDetail: React.FC = () => {
       </div>
     );
   }
+  
+  // Create structured data for this industry page
+  const industrySchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": `${industry.title} Fulfillment Solutions`,
+    "description": industry.metaDescription,
+    "provider": {
+      "@type": "Organization",
+      "name": "TSG Fulfillment Services",
+      "url": "https://tsgfulfillment.com"
+    },
+    "serviceType": "Logistics and Fulfillment",
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": industry.title
+    },
+    "serviceOutput": industry.solutions.map(solution => solution.title).join(", "),
+    "offers": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": `${industry.title} Logistics Solutions`,
+        "description": industry.shortDescription
+      }
+    }
+  };
 
   return (
     <>
