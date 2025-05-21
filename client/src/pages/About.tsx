@@ -89,74 +89,96 @@ const About: React.FC = () => {
     }
   ];
   
-  // Facilities - replace with actual location information
+  // Facility information
   const facilities = [
     {
-      location: "Houston, TX",
-      address: "123 Logistics Way, Houston, TX 77001",
-      size: "250,000 sq ft",
-      features: ["Temperature control", "High security", "24/7 operations"],
-      coordinates: { lat: 29.7604, lng: -95.3698 }
-    },
-    {
-      location: "Chicago, IL",
-      address: "456 Distribution Blvd, Chicago, IL 60607",
-      size: "180,000 sq ft",
-      features: ["Multi-level", "Rail access", "Cross-docking"],
-      coordinates: { lat: 41.8781, lng: -87.6298 }
-    },
-    {
-      location: "Los Angeles, CA",
-      address: "789 Supply Chain Dr, Los Angeles, CA 90001",
-      size: "320,000 sq ft",
-      features: ["Port proximity", "Automated systems", "Eco-friendly"],
-      coordinates: { lat: 34.0522, lng: -118.2437 }
+      location: "Vaughan, Ontario",
+      address: "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2",
+      size: "150,000+ sq ft",
+      features: ["Temperature control", "High security", "24/7 operations", "Modern handling equipment", "Strategically located near GTA"],
+      coordinates: { lat: 43.8013, lng: -79.5425 }
     }
   ];
   
   // Milestones in company history
   const milestones = [
     {
-      year: "2008",
-      title: "Company Founded",
-      description: "TSG Fulfillment was established with a vision to provide innovative logistics solutions."
-    },
-    {
-      year: "2011",
-      title: "First Major Expansion",
-      description: "Opened our second facility in Chicago to better serve the Midwest region."
-    },
-    {
       year: "2015",
+      title: "Company Founded",
+      description: "TSG Fulfillment was established in Ontario with a vision to provide innovative logistics solutions to Canadian businesses."
+    },
+    {
+      year: "2017",
+      title: "Vaughan Facility",
+      description: "Opened our state-of-the-art facility in Vaughan to serve the Greater Toronto Area with advanced fulfillment services."
+    },
+    {
+      year: "2019",
       title: "Technology Platform Launch",
-      description: "Developed and implemented our proprietary logistics management platform."
+      description: "Developed and implemented our proprietary logistics management platform optimized for Canadian fulfillment needs."
     },
     {
-      year: "2018",
-      title: "West Coast Expansion",
-      description: "Established our Los Angeles facility to complete our national coverage."
+      year: "2020",
+      title: "E-commerce Specialization",
+      description: "Expanded services to focus on e-commerce fulfillment during the pandemic, helping Canadian online retailers scale operations."
     },
     {
-      year: "2021",
+      year: "2022",
       title: "Sustainability Initiative",
-      description: "Launched our eco-friendly operations program, reducing carbon footprint by 30%."
+      description: "Launched our eco-friendly operations program, implementing green practices throughout our Vaughan facility."
     },
     {
       year: "2023",
       title: "Technology Upgrade",
-      description: "Implemented AI-driven logistics optimization systems across all facilities."
+      description: "Implemented AI-driven logistics optimization and inventory management systems to enhance efficiency and accuracy."
     }
   ];
 
   return (
     <>
       <Helmet>
-        <title>About TSG Fulfillment - Our Story, Values, and Team</title>
-        <meta name="description" content="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider." />
-        <meta property="og:title" content="About TSG Fulfillment - Our Story, Values, and Team" />
-        <meta property="og:description" content="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider." />
+        <title>About TSG Fulfillment - Our Story, Values, and Team | Vaughan, Ontario</title>
+        <meta name="description" content="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider in Canada based in Vaughan, Ontario." />
+        <meta name="keywords" content="fulfillment services, logistics company, warehousing, canadian fulfillment, vaughan ontario, supply chain, logistics provider, order fulfillment" />
+        <meta property="og:title" content="About TSG Fulfillment - Our Story, Values, and Team | Vaughan, Ontario" />
+        <meta property="og:description" content="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider in Canada based in Vaughan, Ontario." />
         <meta property="og:image" content="https://tsgfulfillment.com/images/about-hero.jpg" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tsgfulfillment.com/about" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About TSG Fulfillment - Our Story, Values, and Team | Vaughan, Ontario" />
+        <meta name="twitter:description" content="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider in Canada." />
         <link rel="canonical" href="https://tsgfulfillment.com/about" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": "https://tsgfulfillment.com",
+            "logo": "https://tsgfulfillment.com/logo.png",
+            "description": "TSG Fulfillment is a leading provider of logistics and fulfillment services in Canada, dedicated to helping businesses optimize their supply chain operations.",
+            "foundingDate": "2015",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "6750 Langstaff Road",
+              "addressLocality": "Vaughan",
+              "addressRegion": "Ontario",
+              "postalCode": "L4H 5K2",
+              "addressCountry": "CA"
+            },
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+1-289-815-5869",
+              "contactType": "customer service",
+              "email": "info@tsgfulfillment.com"
+            },
+            "sameAs": [
+              "https://www.facebook.com/tsgfulfillment",
+              "https://www.linkedin.com/company/tsg-fulfillment",
+              "https://twitter.com/tsgfulfillment"
+            ]
+          })}
+        </script>
       </Helmet>
       
       <Navbar />
