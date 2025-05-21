@@ -53,6 +53,10 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/old-home" component={OWDStyleHome} />
         <Route path="/services/:slug" component={ServiceDetail} />
+        <Route path="/industries/:slug" component={IndustryDetail} />
+        <Route path="/about" component={About} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/locations" component={Locations} />
         <Route path="/analytics" component={Analytics} />
         <Route path="/analytics/reports" component={ReportGenerator} />
         <Route path="/analytics/comparison" component={PerformanceComparison} />
