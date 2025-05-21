@@ -84,11 +84,58 @@ const Locations: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>TSG Fulfillment Locations - Strategic Facilities Nationwide</title>
-        <meta name="description" content="Explore TSG Fulfillment's strategic warehouse and distribution centers across the United States, designed to provide optimal logistics coverage and efficient shipping." />
-        <meta property="og:title" content="TSG Fulfillment Locations - Strategic Facilities Nationwide" />
-        <meta property="og:description" content="Explore TSG Fulfillment's strategic warehouse and distribution centers across the United States, designed to provide optimal logistics coverage and efficient shipping." />
+        <title>Our Vaughan, Ontario Facility | TSG Fulfillment</title>
+        <meta name="description" content="TSG Fulfillment's state-of-the-art facility in Vaughan, Ontario provides comprehensive logistics and fulfillment services for businesses across Canada." />
+        <meta name="keywords" content="vaughan fulfillment center, ontario logistics facility, canadian fulfillment services, tsg fulfillment location, 6750 langstaff road, warehousing vaughan, gta logistics" />
+        <meta property="og:title" content="Our Vaughan, Ontario Facility | TSG Fulfillment" />
+        <meta property="og:description" content="TSG Fulfillment's state-of-the-art facility in Vaughan, Ontario provides comprehensive logistics and fulfillment services for businesses across Canada." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tsgfulfillment.com/locations" />
+        <meta property="og:image" content="https://tsgfulfillment.com/images/warehouse-facility.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Our Vaughan, Ontario Facility | TSG Fulfillment" />
+        <meta name="twitter:description" content="TSG Fulfillment's state-of-the-art facility in Vaughan, Ontario provides comprehensive logistics and fulfillment services for businesses across Canada." />
         <link rel="canonical" href="https://tsgfulfillment.com/locations" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": "https://tsgfulfillment.com",
+            "logo": "https://tsgfulfillment.com/logo.png",
+            "description": "TSG Fulfillment provides logistics and fulfillment services from our Vaughan, Ontario facility.",
+            "location": {
+              "@type": "Place",
+              "name": "TSG Fulfillment Services - Vaughan Facility",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "6750 Langstaff Road",
+                "addressLocality": "Vaughan",
+                "addressRegion": "Ontario",
+                "postalCode": "L4H 5K2",
+                "addressCountry": "CA"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 43.8013,
+                "longitude": -79.5425
+              },
+              "telephone": "+1-289-815-5869",
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "08:00",
+                "closes": "17:00"
+              }
+            }
+          })}
+        </script>
       </Helmet>
       
       <Navbar />
