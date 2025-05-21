@@ -4,6 +4,7 @@ import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { lazy, Suspense, useEffect } from "react";
 import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
+import CookieConsent from "@/components/CookieConsent";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -49,8 +50,8 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={OWDStyleHome} />
-        <Route path="/old-home" component={Home} />
+        <Route path="/" component={Home} />
+        <Route path="/old-home" component={OWDStyleHome} />
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/analytics" component={Analytics} />
         <Route path="/analytics/reports" component={ReportGenerator} />
@@ -62,11 +63,27 @@ function Router() {
   );
 }
 
+// Add an animation to the global CSS
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router />
       <Toaster />
+      <CookieConsent />
     </QueryClientProvider>
   );
 }
