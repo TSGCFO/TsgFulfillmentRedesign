@@ -105,9 +105,7 @@ const OWDStyleHome: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <Link href="/">
-              <a>
                 <img src={logoOnTransparent} alt="TSG Fulfillment" className="h-12" />
-              </a>
             </Link>
 
             <nav className="hidden md:flex items-center space-x-8">
@@ -196,10 +194,8 @@ const OWDStyleHome: React.FC = () => {
                   <div className="mb-4">{service.icon}</div>
                   <h3 className="text-xl font-bold mb-3">{service.title}</h3>
                   <p className="text-gray-600 mb-4">{service.description}</p>
-                  <Link href={service.link}>
-                    <a className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700">
-                      Learn more <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
+                  <Link href={service.link} className="inline-flex items-center font-medium text-blue-600 hover:text-blue-700">
+                    Learn more <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </div>
               </div>
