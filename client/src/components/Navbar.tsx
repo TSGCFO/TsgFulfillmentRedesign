@@ -7,6 +7,8 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import { Menu, Phone, Mail, MapPin, ChevronDown, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from 'lucide-react';
 
