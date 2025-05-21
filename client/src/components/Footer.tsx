@@ -53,9 +53,9 @@ const Footer: React.FC = () => {
   ];
 
   const contactInfo = [
-    { icon: <Phone className="h-5 w-5" />, text: "(800) 555-1234", href: "tel:8005551234" },
+    { icon: <Phone className="h-5 w-5" />, text: "(289) 815-5869", href: "tel:2898155869" },
     { icon: <Mail className="h-5 w-5" />, text: "info@tsgfulfillment.com", href: "mailto:info@tsgfulfillment.com" },
-    { icon: <MapPin className="h-5 w-5" />, text: "123 Logistics Way, Houston, TX 77001", href: "https://maps.google.com" }
+    { icon: <MapPin className="h-5 w-5" />, text: "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2", href: "https://maps.google.com" }
   ];
 
   return (

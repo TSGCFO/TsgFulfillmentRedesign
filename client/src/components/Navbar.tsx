@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
   };
 
   const topbarLinks = [
-    { icon: <Phone className="h-4 w-4 mr-2" />, label: '(800) 555-1234', href: 'tel:8005551234' },
+    { icon: <Phone className="h-4 w-4 mr-2" />, label: '(289) 815-5869', href: 'tel:2898155869' },
     { icon: <Mail className="h-4 w-4 mr-2" />, label: 'info@tsgfulfillment.com', href: 'mailto:info@tsgfulfillment.com' },
     { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '#locations' },
   ];

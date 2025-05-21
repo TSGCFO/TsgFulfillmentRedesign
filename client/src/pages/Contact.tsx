@@ -90,8 +90,8 @@ const Contact: React.FC = () => {
     {
       icon: <Phone className="h-10 w-10 text-primary" />,
       title: "Phone",
-      details: ["(800) 555-1234", "Mon-Fri, 8am-5pm CST"],
-      link: "tel:8005551234"
+      details: ["(289) 815-5869", "Mon-Fri, 8am-5pm EST"],
+      link: "tel:2898155869"
     },
     {
       icon: <Mail className="h-10 w-10 text-primary" />,
