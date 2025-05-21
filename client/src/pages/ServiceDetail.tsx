@@ -35,6 +35,36 @@ interface ServiceData {
 
 const serviceDetails: ServiceData[] = [
   {
+    icon: <Package className="text-primary text-4xl" />,
+    title: "Value-Added Services",
+    description: "Our value-added services allow you to tailor your products to your customers' needs, from simple tasks like applying stickers to complex multi-layered kitting projects.",
+    slug: "value-added-services",
+    longDescription: [
+      "TSG Fulfillment offers a comprehensive suite of value-added services that enable you to customize your inventory to meet specific customer requirements. Our skilled team can handle everything from simple product enhancements to complex assembly projects.",
+      "These services help you differentiate your products in the marketplace, meet special customer requests, and create a more personalized unboxing experience. We maintain strict quality control throughout all value-added processes to ensure consistent results.",
+      "Our flexible approach allows you to scale these services up or down based on seasonal demands or special promotions, without investing in additional staff or equipment. We work closely with you to develop efficient workflows that meet your exact specifications."
+    ],
+    features: [
+      "Product labeling and stickering",
+      "Custom packaging and gift wrapping",
+      "Product bundling and kitting",
+      "Assembly of multi-component products",
+      "Quality inspection and testing",
+      "Gift messaging and inserts",
+      "Promotional material insertion",
+      "Special packaging for fragile items"
+    ],
+    benefits: [
+      "Customize products for specific customer needs",
+      "Create unique unboxing experiences",
+      "Add value to your products without increasing internal costs",
+      "Easily accommodate seasonal or promotional variations",
+      "Maintain consistent quality across all customizations"
+    ],
+    callToAction: "Ready to enhance your products with our value-added services? Contact us today to discuss how we can help you create custom solutions that delight your customers.",
+    featuredImage: "https://images.unsplash.com/photo-1516733968668-dbdce39c4651?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+  },
+  {
     icon: <Box className="text-primary text-4xl" />,
     title: "Order Fulfillment",
     description: "We handle the entire fulfillment process from receiving and storing your inventory to processing orders, picking, packing, and shipping products directly to your customers.",
