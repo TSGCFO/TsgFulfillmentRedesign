@@ -31,6 +31,7 @@ import {
   DropdownMenuItem, DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import AnalyticsLayout from '@/components/analytics/Layout';
+import Seo from '@/components/SEO/Seo';
 
 // Analytics Dashboard Colors
 const COLORS = {
@@ -460,12 +461,43 @@ const AnalyticsPage: React.FC = () => {
       ]
     : [];
   
+  // Define structured data for analytics page
+  const analyticsStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TSG Fulfillment Analytics Dashboard",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web-based",
+    "description": "Comprehensive logistics analytics and reporting dashboard for monitoring shipment performance, inventory management, and fulfillment operations.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  };
+
   return (
     <AnalyticsLayout title="Analytics Dashboard">
+      <Seo
+        title="Logistics Analytics Dashboard | TSG Fulfillment"
+        description="Comprehensive analytics and reporting platform for monitoring and optimizing your logistics and fulfillment operations with TSG Fulfillment."
+        keywords="logistics analytics, fulfillment reporting, shipment tracking, inventory management, supply chain metrics, performance dashboard"
+        canonical="https://tsgfulfillment.com/analytics"
+        ogType="website" 
+        ogUrl="https://tsgfulfillment.com/analytics"
+        ogImage="https://tsgfulfillment.com/images/analytics-dashboard.jpg"
+        twitterCard="summary_large_image"
+        twitterTitle="Logistics Analytics Dashboard | TSG Fulfillment"
+        twitterDescription="Monitor and optimize your logistics operations with our comprehensive analytics dashboard."
+        structuredData={analyticsStructuredData}
+      />
       <div className="p-6 max-w-7xl mx-auto">
         <header className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
-          <p className="text-gray-600">Comprehensive analytics and reporting for logistics performance</p>
+          <p className="text-gray-600">Comprehensive analytics and reporting for logistics performance with real-time insights across all your fulfillment operations</p>
+          <div className="mt-4 text-sm text-gray-500">
+            <p>Our advanced analytics platform helps you track key metrics, identify trends, and optimize your supply chain operations for maximum efficiency and customer satisfaction. Monitor inventory levels, shipment performance, order processing, and more from a single intuitive dashboard.</p>
+          </div>
         </header>
       
       <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">

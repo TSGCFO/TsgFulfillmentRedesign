@@ -33,6 +33,7 @@ import {
   DialogTitle, DialogFooter, DialogClose
 } from '@/components/ui/dialog';
 import AnalyticsLayout from '@/components/analytics/Layout';
+import Seo from '@/components/SEO/Seo';
 
 // Analytics colors
 const COLORS = {
