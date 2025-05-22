@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import LazySection from '@/components/ui/lazy-section';
-import { Helmet } from 'react-helmet';
+import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -504,14 +504,19 @@ const ServiceDetail = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{service.title} - TSG Fulfillment Services</title>
-        <meta name="description" content={service.description} />
-        <meta name="keywords" content={`fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`} />
-        <script type="application/ld+json">
-          {JSON.stringify(serviceSchema)}
-        </script>
-      </Helmet>
+      <Seo
+        title={`${service.title} - TSG Fulfillment Services`}
+        description={service.description}
+        keywords={`fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`}
+        canonical={`https://tsgfulfillment.com/services/${service.slug}`}
+        ogType="website"
+        ogUrl={`https://tsgfulfillment.com/services/${service.slug}`}
+        ogImage={service.featuredImage || "https://tsgfulfillment.com/images/og-image.jpg"}
+        twitterCard="summary_large_image"
+        twitterTitle={`${service.title} - TSG Fulfillment Services`}
+        twitterDescription={service.description}
+        structuredData={serviceSchema}
+      />
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">
           <div className="flex flex-col">
