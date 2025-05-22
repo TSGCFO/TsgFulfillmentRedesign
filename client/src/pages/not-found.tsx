@@ -4,29 +4,36 @@ import { AlertCircle, ArrowLeft, Home } from "lucide-react";
 import { useEffect } from "react";
 import Footer from "../components/Footer";
 import { useLocation } from "wouter";
+import Seo from "@/components/SEO/Seo";
 
 export default function NotFound() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    // Update page title and meta tags for SEO
-    document.title = "Page Not Found | TSG Fulfillment";
-    
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'The page you are looking for could not be found. Return to the TSG Fulfillment homepage.');
+  // We no longer need to manually update document metadata
+  // The Seo component will handle this for us
+
+  // Define SEO properties for the 404 page
+  const notFoundSeo = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Page Not Found | TSG Fulfillment",
+    "description": "The page you are looking for could not be found. Return to the TSG Fulfillment homepage.",
+    "url": "https://tsgfulfillment.com/404",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "TSG Fulfillment",
+      "url": "https://tsgfulfillment.com"
     }
-    
-    // Remove canonical to avoid SEO issues on error pages
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.remove();
-    }
-  }, []);
+  };
 
   return (
     <>
+      <Seo
+        title="Page Not Found | TSG Fulfillment"
+        description="The page you are looking for could not be found. Return to the TSG Fulfillment homepage."
+        ogType="website"
+        structuredData={notFoundSeo}
+      />
       <div className="min-h-screen w-full flex flex-col">
         <main className="flex-grow flex items-center justify-center bg-gray-50 py-16 px-4">
           <Card className="w-full max-w-lg shadow-md">
