@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { OptimizedImage } from '@/components/ui/optimized-image';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -22,6 +23,13 @@ const staggerChildren = {
   }
 };
 
+// Images for slider
+const heroImages = [
+  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+  "https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80",
+  "https://images.unsplash.com/photo-1586528116493-ce31b741fdd4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
+];
+
 const HeroSection: React.FC = () => {
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
@@ -35,106 +43,119 @@ const HeroSection: React.FC = () => {
 
   return (
     <section 
-      className="relative pt-24 md:pt-32 pb-16 md:pb-24 overflow-hidden" 
-      aria-labelledby="hero-heading" 
+      className="relative h-[80vh] md:h-[90vh] max-h-[900px] min-h-[600px] overflow-hidden bg-primary"
+      aria-labelledby="hero-heading"
       itemScope 
       itemType="https://schema.org/WebPageElement"
     >
       <meta itemProp="name" content="Hero Section" />
       <meta itemProp="description" content="Logistics and fulfillment services overview from TSG Fulfillment Services" />
       
-      <div className="container mx-auto px-6">
-        <motion.article 
-          className="flex flex-col md:flex-row items-center"
+      {/* Hero background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <OptimizedImage 
+          src={heroImages[0]}
+          alt="Modern logistics and fulfillment center" 
+          className="w-full h-full object-cover" 
+          width={1920}
+          height={1080}
+          quality={90}
+          loading="eager"
+          priority={true}
+        />
+        <div className="absolute inset-0 bg-primary/70"></div>
+      </div>
+      
+      {/* Content container */}
+      <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
+        <motion.div
+          className="max-w-4xl"
           initial="hidden"
           animate="visible"
           variants={staggerChildren}
         >
-          <motion.header 
-            className="md:w-1/2 md:pr-12 mb-10 md:mb-0"
+          <motion.span
+            className="inline-block mb-4 text-white/90 font-medium tracking-wider text-lg"
             variants={fadeIn}
           >
-            <h1 
-              id="hero-heading" 
-              className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins text-gray-900 leading-tight mb-6"
-              itemProp="headline"
-            >
-              What An <span className="text-primary">Order Fulfillment Centre</span> Can Do For You
-            </h1>
-            <p 
-              className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed"
-              itemProp="text"
-            >
-              Inventory gone missing? Slow shipping times? Back-logged orders? Order fulfillment is the bread and butter for any organization, be they eCommerce or brick-and-mortar companies. With the marketplace advancing and the way we communicate evolving, how you respond to your customer's needs and requests from the point of sale becomes that much more crucial.
-            </p>
-            <nav className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4" aria-label="Hero navigation">
-              <Button 
-                className="btn-primary bg-primary text-white px-8 py-7 hover:bg-primary/90 font-medium text-base"
-                onClick={() => scrollTo('contact')}
-                aria-label="Contact us to get started"
-              >
-                Get Started
-              </Button>
-              <Button 
-                variant="outline" 
-                className="btn-secondary border-2 border-primary text-primary hover:bg-primary/5 px-8 py-7 font-medium text-base"
-                onClick={() => scrollTo('services')}
-                aria-label="Learn more about our services"
-              >
-                Learn More
-              </Button>
-            </nav>
-          </motion.header>
+            LOGISTICS & FULFILLMENT SOLUTIONS
+          </motion.span>
           
-          <motion.figure 
-            className="md:w-1/2 relative"
+          <motion.h1 
+            id="hero-heading" 
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+            itemProp="headline"
             variants={fadeIn}
-            itemScope
-            itemType="https://schema.org/ImageObject"
           >
-            <div className="relative z-10">
-              <OptimizedImage 
-                src="https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80" 
-                alt="Modern warehouse fulfillment center with organized shelving and logistics operations" 
-                className="rounded-lg shadow-2xl w-full md:w-11/12 h-auto" 
-                width={1035}
-                height={600}
-                itemProp="contentUrl"
-                loading="eager"
-                priority={true}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                quality={90}
-                objectFit="cover"
-                style={{ minHeight: "400px" }}
-              />
-              <meta itemProp="name" content="TSG Fulfillment Warehouse Operations" />
-              <meta itemProp="description" content="Modern warehouse with fulfillment operations at TSG Fulfillment Services" />
-            </div>
-            
-            <motion.aside 
-              className="absolute -bottom-10 -right-10 bg-[#28A745] text-white p-6 rounded-lg shadow-lg max-w-xs z-10"
-              variants={fadeIn}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              aria-label="Benefits overview"
+            Elevating Your <span className="text-white font-extrabold">E-Commerce Experience</span> Through Strategic Fulfillment
+          </motion.h1>
+          
+          <motion.p 
+            className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed max-w-3xl"
+            itemProp="text"
+            variants={fadeIn}
+          >
+            TSG Fulfillment provides end-to-end supply chain solutions designed to streamline your operations and enhance customer satisfaction. With strategically located facilities and cutting-edge technology, we deliver exceptional logistics services to businesses of all sizes.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-5"
+            variants={fadeIn}
+            aria-label="Hero navigation"
+          >
+            <Button 
+              className="bg-white text-primary hover:bg-white/90 font-semibold text-base px-8 py-6 transition-all"
+              onClick={() => scrollTo('contact')}
+              aria-label="Request a quote for our services"
             >
-              <h2 className="text-lg font-medium mb-2">Benefits of Our Services</h2>
-              <ul className="list-none text-sm opacity-90">
-                <li>Lower Shipping Cost</li>
-                <li>Reduced Operating Cost</li>
-                <li>Extending your Reach</li>
-                <li>Improved Customer Service</li>
-                <li>Harnessing Technology</li>
-              </ul>
-            </motion.aside>
-          </motion.figure>
-        </motion.article>
+              Request a Quote
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button 
+              variant="outline" 
+              className="border-2 border-white text-white hover:bg-white/10 font-semibold text-base px-8 py-6 transition-all"
+              onClick={() => scrollTo('services')}
+              aria-label="Learn more about our services"
+            >
+              Explore Our Services
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
       
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-1/4 h-screen bg-accent -z-10 transform translate-x-1/2" aria-hidden="true"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-primary/5 -z-10" aria-hidden="true"></div>
+      {/* Scroll down indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
+        <motion.button
+          className="text-white flex flex-col items-center cursor-pointer"
+          onClick={() => scrollTo('services')}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ 
+            opacity: 1, 
+            y: 0,
+            transition: { delay: 1, duration: 0.6 }
+          }}
+        >
+          <span className="text-sm mb-2 opacity-80">Scroll Down</span>
+          <motion.div
+            animate={{
+              y: [0, 8, 0],
+              transition: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
+          >
+            <ChevronDown className="h-6 w-6" />
+          </motion.div>
+        </motion.button>
+      </div>
+      
+      {/* Overlay pattern */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/30 z-[1]" 
+        aria-hidden="true"
+      ></div>
     </section>
   );
 };

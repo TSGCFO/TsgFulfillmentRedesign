@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import LazySection from '@/components/ui/lazy-section';
+import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -33,6 +34,36 @@ interface ServiceData {
 }
 
 const serviceDetails: ServiceData[] = [
+  {
+    icon: <Package className="text-primary text-4xl" />,
+    title: "Value-Added Services",
+    description: "Our value-added services allow you to tailor your products to your customers' needs, from simple tasks like applying stickers to complex multi-layered kitting projects.",
+    slug: "value-added-services",
+    longDescription: [
+      "TSG Fulfillment offers a comprehensive suite of value-added services that enable you to customize your inventory to meet specific customer requirements. Our skilled team can handle everything from simple product enhancements to complex assembly projects.",
+      "These services help you differentiate your products in the marketplace, meet special customer requests, and create a more personalized unboxing experience. We maintain strict quality control throughout all value-added processes to ensure consistent results.",
+      "Our flexible approach allows you to scale these services up or down based on seasonal demands or special promotions, without investing in additional staff or equipment. We work closely with you to develop efficient workflows that meet your exact specifications."
+    ],
+    features: [
+      "Product labeling and stickering",
+      "Custom packaging and gift wrapping",
+      "Product bundling and kitting",
+      "Assembly of multi-component products",
+      "Quality inspection and testing",
+      "Gift messaging and inserts",
+      "Promotional material insertion",
+      "Special packaging for fragile items"
+    ],
+    benefits: [
+      "Customize products for specific customer needs",
+      "Create unique unboxing experiences",
+      "Add value to your products without increasing internal costs",
+      "Easily accommodate seasonal or promotional variations",
+      "Maintain consistent quality across all customizations"
+    ],
+    callToAction: "Ready to enhance your products with our value-added services? Contact us today to discuss how we can help you create custom solutions that delight your customers.",
+    featuredImage: "https://images.unsplash.com/photo-1516733968668-dbdce39c4651?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+  },
   {
     icon: <Box className="text-primary text-4xl" />,
     title: "Order Fulfillment",
@@ -307,143 +338,70 @@ const ServiceDetail = () => {
     const prevIndex = currentServiceIndex === 0 ? serviceDetails.length - 1 : currentServiceIndex - 1;
     setPrevService(serviceDetails[prevIndex]);
     
-    // Update document title and meta tags for SEO
-    document.title = `${currentService.title} | TSG Fulfillment Services`;
+    // We've replaced all the manual DOM manipulations with our modern Seo component
+    // This approach is cleaner, more React-friendly, and eliminates the deprecation warnings
     
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
+    // The Seo component now handles all meta tags and structured data dynamically
+    // based on the current service data
     
-    // Update Open Graph meta tags
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    const ogDescription = document.querySelector('meta[property="og:description"]');
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    const ogType = document.querySelector('meta[property="og:type"]');
+    // Navigation links are now handled by our Seo component
+    // We'll use our modern SEO approach instead of direct DOM manipulation
     
-    if (ogTitle) {
-      ogTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
-    }
-    
-    if (ogDescription) {
-      ogDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
-    
-    if (ogImage && currentService.featuredImage) {
-      ogImage.setAttribute('content', currentService.featuredImage);
-    }
-    
-    if (ogUrl) {
-      ogUrl.setAttribute('content', `https://tsgfulfillment.com/services/${currentService.slug}`);
-    }
-    
-    if (ogType) {
-      ogType.setAttribute('content', 'website');
-    }
-    
-    // Update Twitter card meta tags if they exist
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
-    const twitterImage = document.querySelector('meta[name="twitter:image"]');
-    
-    if (twitterTitle) {
-      twitterTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
-    }
-    
-    if (twitterDescription) {
-      twitterDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
-    
-    if (twitterImage && currentService.featuredImage) {
-      twitterImage.setAttribute('content', currentService.featuredImage);
-    }
-    
-    // Update canonical URL
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', `https://tsgfulfillment.com/services/${currentService.slug}`);
-    }
-    
-    // Add rel="next" and rel="prev" links for paginated content
-    let nextLink = document.querySelector('link[rel="next"]');
-    let prevLink = document.querySelector('link[rel="prev"]');
-    
-    // If next service exists, add/update the next link
-    if (nextService) {
-      if (!nextLink) {
-        nextLink = document.createElement('link');
-        nextLink.setAttribute('rel', 'next');
-        document.head.appendChild(nextLink);
-      }
-      nextLink.setAttribute('href', `https://tsgfulfillment.com/services/${nextService.slug}`);
-    } else if (nextLink) {
-      // If no next service but link exists, remove it
-      nextLink.remove();
-    }
-    
-    // If previous service exists, add/update the prev link
-    if (prevService) {
-      if (!prevLink) {
-        prevLink = document.createElement('link');
-        prevLink.setAttribute('rel', 'prev');
-        document.head.appendChild(prevLink);
-      }
-      prevLink.setAttribute('href', `https://tsgfulfillment.com/services/${prevService.slug}`);
-    } else if (prevLink) {
-      // If no previous service but link exists, remove it
-      prevLink.remove();
-    }
-    
-    // Scroll to top when service changes
+    // Scroll to top when service changes 
     window.scrollTo(0, 0);
     
-    // Add JSON-LD structured data for this service
-    const existingScript = document.getElementById('service-jsonld');
-    if (existingScript) {
-      existingScript.remove();
-    }
-    
-    const script = document.createElement('script');
-    script.id = 'service-jsonld';
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      'name': `${currentService.title}`,
-      'description': currentService.description,
-      'provider': {
-        '@type': 'Organization',
-        'name': 'TSG Fulfillment Services',
-        'url': 'https://tsgfulfillment.com'
-      },
-      'serviceType': currentService.title,
-      'url': `https://tsgfulfillment.com/services/${currentService.slug}`,
-      'termsOfService': 'https://tsgfulfillment.com/terms',
-      ...(currentService.featuredImage && {
-        'image': currentService.featuredImage
-      }),
-      'audience': {
-        '@type': 'BusinessAudience',
-        'audienceType': 'eCommerce and retail businesses'
-      },
-      'offers': {
-        '@type': 'Offer',
-        'availability': 'https://schema.org/InStock',
-        'url': `https://tsgfulfillment.com/services/${currentService.slug}#contact`
-      }
-    });
-    
-    document.head.appendChild(script);
+    // We no longer need to manually add JSON-LD structured data
+    // The Seo component now handles this for us with the structuredData prop
   }, [params, setLocation]);
 
   if (!service) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
+  
+  // Create structured data for this service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.longDescription[0] || service.description,
+    "provider": {
+      "@type": "Organization",
+      "name": "TSG Fulfillment Services",
+      "url": "https://tsgfulfillment.com"
+    },
+    "serviceType": service.title,
+    "areaServed": {
+      "@type": "Country",
+      "name": "Canada"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Logistics and Fulfillment Services",
+      "itemListElement": service.features.map((feature, index) => ({
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": feature
+        }
+      }))
+    }
+  };
 
   return (
     <>
+      <Seo
+        title={`${service.title} - TSG Fulfillment Services`}
+        description={service.description}
+        keywords={`fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`}
+        canonical={`https://tsgfulfillment.com/services/${service.slug}`}
+        ogType="website"
+        ogUrl={`https://tsgfulfillment.com/services/${service.slug}`}
+        ogImage={service.featuredImage || "https://tsgfulfillment.com/images/og-image.jpg"}
+        twitterCard="summary_large_image"
+        twitterTitle={`${service.title} - TSG Fulfillment Services`}
+        twitterDescription={service.description}
+        structuredData={serviceSchema}
+      />
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">
           <div className="flex flex-col">

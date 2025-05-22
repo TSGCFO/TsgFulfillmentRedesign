@@ -1,14 +1,20 @@
-import { Switch, Route, useLocation, useRouter } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { lazy, Suspense, useEffect } from "react";
 import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
+import CookieConsent from "@/components/CookieConsent";
+import HelmetProvider from "@/components/SEO/HelmetProvider";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
 const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
+const IndustryDetail = lazy(() => import("@/pages/IndustryDetail"));
+const About = lazy(() => import("@/pages/About"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Locations = lazy(() => import("@/pages/Locations"));
 const Analytics = lazy(() => import("@/pages/Analytics"));
 const ReportGenerator = lazy(() => import("@/pages/ReportGenerator"));
 const PerformanceComparison = lazy(() => import("@/pages/PerformanceComparison"));
@@ -49,9 +55,13 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={OWDStyleHome} />
-        <Route path="/old-home" component={Home} />
+        <Route path="/" component={Home} />
+        <Route path="/old-home" component={OWDStyleHome} />
         <Route path="/services/:slug" component={ServiceDetail} />
+        <Route path="/industries/:slug" component={IndustryDetail} />
+        <Route path="/about" component={About} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/locations" component={Locations} />
         <Route path="/analytics" component={Analytics} />
         <Route path="/analytics/reports" component={ReportGenerator} />
         <Route path="/analytics/comparison" component={PerformanceComparison} />
@@ -62,11 +72,29 @@ function Router() {
   );
 }
 
+// Add an animation to the global CSS
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <HelmetProvider>
+        <Router />
+        <Toaster />
+        <CookieConsent />
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

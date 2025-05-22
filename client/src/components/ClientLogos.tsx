@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -10,46 +11,87 @@ const fadeIn = {
   }
 };
 
-const ClientLogos: React.FC = () => {
-  // Mock company names - in a real application these would come from an API or CMS
-  const companies = [
-    'COMPANY A',
-    'COMPANY B',
-    'COMPANY C',
-    'COMPANY D',
-    'COMPANY E',
-    'COMPANY F'
-  ];
+// Define client logos with their images and names
+const clientLogos = [
+  {
+    name: 'Amazon',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',
+  },
+  {
+    name: 'Walmart',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg',
+  },
+  {
+    name: 'Target',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Target_logo.svg',
+  },
+  {
+    name: 'Shopify',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg',
+  },
+  {
+    name: 'Nike',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
+  },
+  {
+    name: 'Adidas',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg',
+  }
+];
 
+const ClientLogos: React.FC = () => {
   return (
-    <section className="py-12 bg-accent">
+    <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <motion.div 
-          className="text-center mb-12"
+          className="text-center mb-16"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeIn}
         >
-          <p className="text-gray-500 font-medium mb-1">TRUSTED BY LEADING BRANDS</p>
-          <div className="w-20 h-1 bg-primary mx-auto mt-2"></div>
+          <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Trusted Partners</span>
+          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">Powering Supply Chains for <span className="text-primary">Market Leaders</span></h2>
+          <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+            Our enterprise-grade logistics solutions serve leading brands across various industries.
+          </p>
         </motion.div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
-          {companies.map((company, index) => (
+        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16">
+          {clientLogos.map((client, index) => (
             <motion.div 
               key={index}
-              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              className="grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-500 transform hover:scale-110"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
               variants={fadeIn}
               transition={{ delay: index * 0.1 }}
             >
-              <div className="text-gray-400 font-bold text-xl">{company}</div>
+              <div className="h-16 md:h-20 w-32 md:w-40 flex items-center justify-center">
+                <img 
+                  src={client.logo} 
+                  alt={`${client.name} logo - TSG Fulfillment client`} 
+                  className="max-h-full max-w-full object-contain"
+                  loading="lazy"
+                />
+                <span className="sr-only">{client.name}</span>
+              </div>
             </motion.div>
           ))}
         </div>
+        
+        <motion.div 
+          className="mt-16 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={fadeIn}
+        >
+          <p className="text-gray-500 italic">
+            *These are representative logos. Our client list includes companies across retail, e-commerce, healthcare, and technology sectors.
+          </p>
+        </motion.div>
       </div>
     </section>
   );
