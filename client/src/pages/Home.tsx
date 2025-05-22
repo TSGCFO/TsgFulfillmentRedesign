@@ -13,7 +13,7 @@ import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
-import { Helmet } from 'react-helmet';
+import Seo from '@/components/SEO/Seo';
 
 const Home: React.FC = () => {
   // Setup cookie consent functionality
@@ -28,27 +28,81 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  // Combined structured data for the homepage
+  const combinedStructuredData = [
+    // Organization data
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "TSG Fulfillment Services",
+      "url": "https://tsgfulfillment.com",
+      "logo": "https://tsgfulfillment.com/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-289-815-5869",
+        "contactType": "customer service",
+        "areaServed": "CA",
+        "availableLanguage": ["English"]
+      },
+      "sameAs": [
+        "https://www.facebook.com/tsgfulfillment",
+        "https://www.linkedin.com/company/tsg-fulfillment",
+        "https://twitter.com/tsgfulfillment"
+      ]
+    },
+    // Local Business data
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "TSG Fulfillment Services",
+      "image": "https://tsgfulfillment.com/images/warehouse.jpg",
+      "@id": "https://tsgfulfillment.com",
+      "url": "https://tsgfulfillment.com",
+      "telephone": "+1-289-815-5869",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "6750 Langstaff Road",
+        "addressLocality": "Vaughan",
+        "addressRegion": "Ontario",
+        "postalCode": "L4H 5K2",
+        "addressCountry": "CA"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 43.8013,
+        "longitude": -79.5425
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday"
+        ],
+        "opens": "08:00",
+        "closes": "17:00"
+      },
+      "priceRange": "$$"
+    }
+  ];
+
   return (
     <div className="min-h-screen">
-      <Helmet>
-        <title>TSG Fulfillment - Professional Logistics & Fulfillment Services</title>
-        <meta name="description" content="TSG Fulfillment provides end-to-end logistics and fulfillment solutions for eCommerce and retail businesses, including warehousing, order fulfillment, and transportation services." />
-        <meta name="keywords" content="fulfillment services, logistics, warehousing, ecommerce fulfillment, order fulfillment, transportation, supply chain" />
-        <link rel="canonical" href="https://tsgfulfillment.com" />
-        
-        {/* Open Graph / Social Media Meta Tags */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="TSG Fulfillment - Professional Logistics & Fulfillment Services" />
-        <meta property="og:description" content="TSG Fulfillment provides end-to-end logistics and fulfillment solutions for eCommerce and retail businesses." />
-        <meta property="og:url" content="https://tsgfulfillment.com" />
-        <meta property="og:image" content="https://tsgfulfillment.com/images/og-image.jpg" />
-        
-        {/* Twitter Card data */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="TSG Fulfillment - Professional Logistics & Fulfillment Services" />
-        <meta name="twitter:description" content="TSG Fulfillment provides end-to-end logistics and fulfillment solutions for eCommerce and retail businesses." />
-        <meta name="twitter:image" content="https://tsgfulfillment.com/images/twitter-image.jpg" />
-      </Helmet>
+      <Seo 
+        title="TSG Fulfillment - Professional Logistics & Fulfillment Services"
+        description="TSG Fulfillment provides end-to-end logistics and fulfillment solutions for eCommerce and retail businesses, including warehousing, order fulfillment, and transportation services."
+        keywords="fulfillment services, logistics, warehousing, ecommerce fulfillment, order fulfillment, transportation, supply chain"
+        canonical="https://tsgfulfillment.com"
+        ogType="website"
+        ogUrl="https://tsgfulfillment.com"
+        ogImage="https://tsgfulfillment.com/images/og-image.jpg"
+        twitterCard="summary_large_image"
+        twitterTitle="TSG Fulfillment - Professional Logistics & Fulfillment Services"
+        twitterDescription="TSG Fulfillment provides end-to-end logistics and fulfillment solutions for eCommerce and retail businesses."
+        structuredData={combinedStructuredData}
+      />
       
       <Navbar />
       <main>
@@ -65,68 +119,6 @@ const Home: React.FC = () => {
       </main>
       <Footer />
       <BackToTop />
-      
-      {/* JSON-LD Structured Data for Organization */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "TSG Fulfillment Services",
-          "url": "https://tsgfulfillment.com",
-          "logo": "https://tsgfulfillment.com/logo.png",
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+1-289-815-5869",
-            "contactType": "customer service",
-            "areaServed": "CA",
-            "availableLanguage": ["English"]
-          },
-          "sameAs": [
-            "https://www.facebook.com/tsgfulfillment",
-            "https://www.linkedin.com/company/tsg-fulfillment",
-            "https://twitter.com/tsgfulfillment"
-          ]
-        })}
-      </script>
-      
-      {/* JSON-LD Structured Data for Local Business */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "name": "TSG Fulfillment Services",
-          "image": "https://tsgfulfillment.com/images/warehouse.jpg",
-          "@id": "https://tsgfulfillment.com",
-          "url": "https://tsgfulfillment.com",
-          "telephone": "+1-289-815-5869",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "6750 Langstaff Road",
-            "addressLocality": "Vaughan",
-            "addressRegion": "Ontario",
-            "postalCode": "L4H 5K2",
-            "addressCountry": "CA"
-          },
-          "geo": {
-            "@type": "GeoCoordinates",
-            "latitude": 43.8013,
-            "longitude": -79.5425
-          },
-          "openingHoursSpecification": {
-            "@type": "OpeningHoursSpecification",
-            "dayOfWeek": [
-              "Monday",
-              "Tuesday",
-              "Wednesday",
-              "Thursday",
-              "Friday"
-            ],
-            "opens": "08:00",
-            "closes": "17:00"
-          },
-          "priceRange": "$$"
-        })}
-      </script>
     </div>
   );
 };

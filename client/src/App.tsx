@@ -1,10 +1,11 @@
-import { Switch, Route, useLocation, useRouter } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
 import { lazy, Suspense, useEffect } from "react";
 import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 import CookieConsent from "@/components/CookieConsent";
+import HelmetProvider from "@/components/SEO/HelmetProvider";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -89,9 +90,11 @@ if (typeof document !== 'undefined') {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
-      <CookieConsent />
+      <HelmetProvider>
+        <Router />
+        <Toaster />
+        <CookieConsent />
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
