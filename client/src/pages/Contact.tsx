@@ -102,8 +102,8 @@ const Contact: React.FC = () => {
     {
       icon: <MapPin className="h-10 w-10 text-primary" />,
       title: "Main Office",
-      details: ["123 Logistics Way", "Houston, TX 77001"],
-      link: "https://maps.google.com/?q=123+Logistics+Way+Houston+TX+77001"
+      details: ["6750 Langstaff Road", "Vaughan, Ontario L4H 5K2"],
+      link: "https://maps.google.com/?q=6750+Langstaff+Road+Vaughan+Ontario+L4H+5K2"
     },
     {
       icon: <FileText className="h-10 w-10 text-primary" />,
