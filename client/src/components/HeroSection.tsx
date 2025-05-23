@@ -108,12 +108,12 @@ const HeroSection: React.FC = () => {
               onClick={() => scrollTo('contact')}
               aria-label="Request a quote for our services"
             >
-              Request a Quote
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <span className="text-primary">Request a Quote</span>
+              <ArrowRight className="ml-2 h-4 w-4 text-primary" />
             </Button>
             <Button 
               variant="outline" 
-              className="border-2 border-white text-white hover:bg-white/10 font-semibold text-base px-8 py-6 transition-all"
+              className="border-2 border-white text-white dark:text-white hover:bg-white/10 hover:text-primary font-semibold text-base px-8 py-6 transition-all"
               onClick={() => scrollTo('services')}
               aria-label="Learn more about our services"
             >
