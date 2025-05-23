@@ -856,7 +856,7 @@ const IndustryDetail: React.FC = () => {
                 <Warehouse className="text-primary w-12 h-12 mb-4" />
                 <h3 className="text-xl font-bold mb-3">Warehousing</h3>
                 <p className="text-gray-600 mb-4">
-                  Strategic warehouse facilities optimized for {industry.title.toLowerCase()} products with security, 
+                  Our strategic warehouse facility optimized for {industry.title.toLowerCase()} products with security, 
                   environmental controls, and inventory management.
                 </p>
                 <Link href="/services/warehousing" className="text-primary font-medium flex items-center hover:underline">

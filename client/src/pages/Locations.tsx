@@ -236,10 +236,10 @@ const Locations: React.FC = () => {
             <div className="h-full w-full flex items-center justify-center">
               <div className="text-center max-w-md px-4">
                 <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Nationwide Coverage</h3>
+                <h3 className="text-2xl font-bold mb-2">Canada-Wide Service</h3>
                 <p className="text-gray-600">
-                  This would be an interactive map showing all our facility locations 
-                  and coverage areas in a real implementation.
+                  This would be an interactive map showing our Vaughan facility 
+                  and service coverage area in a real implementation.
                 </p>
               </div>
             </div>
@@ -361,7 +361,7 @@ const Locations: React.FC = () => {
                     window.location.href = `mailto:${facility.email}`;
                   }}
                 >
-                  Contact This Location
+                  Contact Our Facility
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
