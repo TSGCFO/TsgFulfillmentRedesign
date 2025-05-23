@@ -266,8 +266,8 @@ const About: React.FC = () => {
                   <div className="text-gray-600">Active Clients</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl font-bold text-primary mb-2">3</div>
-                  <div className="text-gray-600">Strategic Locations</div>
+                  <div className="text-3xl font-bold text-primary mb-2">1</div>
+                  <div className="text-gray-600">State-of-the-Art Facility</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
                   <div className="text-3xl font-bold text-primary mb-2">750K+</div>
@@ -409,13 +409,13 @@ const About: React.FC = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeIn}
           >
-            <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Our Facilities</span>
+            <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Our Facility</span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">
-              Strategic <span className="text-primary">Locations</span>
+              Strategic <span className="text-primary">Location</span>
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              Our state-of-the-art fulfillment centers are strategically located across the United States, 
-              allowing us to provide efficient, cost-effective shipping to customers nationwide.
+              Our state-of-the-art fulfillment center is strategically located in Vaughan, Ontario, 
+              allowing us to provide efficient, cost-effective shipping to customers throughout Canada.
             </p>
           </motion.div>
           

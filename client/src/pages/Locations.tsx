@@ -144,7 +144,7 @@ const Locations: React.FC = () => {
         <div className="absolute inset-0 z-0 opacity-20">
           <OptimizedImage 
             src="https://images.unsplash.com/photo-1609867053361-e5ebb5a2f129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-            alt="TSG Fulfillment network of warehouse locations"
+            alt="TSG Fulfillment Vaughan facility"
             width={1920}
             height={1080}
             className="w-full h-full object-cover"
@@ -167,12 +167,12 @@ const Locations: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Our <span className="font-light">Facilities</span>
+              Our <span className="font-light">Facility</span>
             </h1>
             
             <p className="text-xl text-white/90 mb-8 max-w-3xl">
-              TSG Fulfillment operates strategically located facilities across the United States, 
-              providing comprehensive coverage to minimize shipping times and costs for businesses of all sizes.
+              TSG Fulfillment operates a state-of-the-art facility in Vaughan, Ontario,
+              providing comprehensive logistics services to minimize shipping times and costs for businesses of all sizes.
             </p>
           </motion.div>
         </div>
