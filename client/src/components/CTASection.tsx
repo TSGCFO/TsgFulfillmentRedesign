@@ -47,10 +47,10 @@ const CTASection: React.FC = () => {
             </Button>
             <Button 
               variant="outline" 
-              className="btn-secondary bg-transparent text-white dark:text-white hover:bg-white/10 hover:text-primary border-2 border-white px-8 py-7 font-medium text-base"
+              className="btn-secondary bg-primary/80 text-white hover:bg-white hover:text-primary border-2 border-white px-8 py-7 font-medium text-base"
               onClick={() => scrollTo('services')}
             >
-              <span className="dark:text-white text-primary-foreground">Learn More</span>
+              Learn More
             </Button>
           </div>
         </motion.div>

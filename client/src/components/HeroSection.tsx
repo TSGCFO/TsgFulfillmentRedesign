@@ -113,7 +113,7 @@ const HeroSection: React.FC = () => {
             </Button>
             <Button 
               variant="outline" 
-              className="border-2 border-white text-white dark:text-white hover:bg-white/10 hover:text-primary font-semibold text-base px-8 py-6 transition-all"
+              className="border-2 border-white bg-primary/80 text-white hover:bg-white hover:text-primary font-semibold text-base px-8 py-6 transition-all"
               onClick={() => scrollTo('services')}
               aria-label="Learn more about our services"
             >
@@ -126,7 +126,7 @@ const HeroSection: React.FC = () => {
       {/* Scroll down indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
         <motion.button
-          className="text-white flex flex-col items-center cursor-pointer"
+          className="flex flex-col items-center cursor-pointer bg-primary/50 px-4 py-2 rounded-full"
           onClick={() => scrollTo('services')}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
@@ -135,7 +135,7 @@ const HeroSection: React.FC = () => {
             transition: { delay: 1, duration: 0.6 }
           }}
         >
-          <span className="text-sm mb-2 opacity-80">Scroll Down</span>
+          <span className="text-sm mb-2 text-white">Scroll Down</span>
           <motion.div
             animate={{
               y: [0, 8, 0],
@@ -146,7 +146,7 @@ const HeroSection: React.FC = () => {
               }
             }}
           >
-            <ChevronDown className="h-6 w-6" />
+            <ChevronDown className="h-6 w-6 text-white" />
           </motion.div>
         </motion.button>
       </div>
