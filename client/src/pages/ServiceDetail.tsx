@@ -338,135 +338,20 @@ const ServiceDetail = () => {
     const prevIndex = currentServiceIndex === 0 ? serviceDetails.length - 1 : currentServiceIndex - 1;
     setPrevService(serviceDetails[prevIndex]);
     
-    // Update document title and meta tags for SEO
-    document.title = `${currentService.title} | TSG Fulfillment Services`;
+    // We've replaced all the manual DOM manipulations with our modern Seo component
+    // This approach is cleaner, more React-friendly, and eliminates the deprecation warnings
     
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
+    // The Seo component now handles all meta tags and structured data dynamically
+    // based on the current service data
     
-    // Update Open Graph meta tags
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    const ogDescription = document.querySelector('meta[property="og:description"]');
-    const ogImage = document.querySelector('meta[property="og:image"]');
-    const ogUrl = document.querySelector('meta[property="og:url"]');
-    const ogType = document.querySelector('meta[property="og:type"]');
+    // Navigation links are now handled by our Seo component
+    // We'll use our modern SEO approach instead of direct DOM manipulation
     
-    if (ogTitle) {
-      ogTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
-    }
-    
-    if (ogDescription) {
-      ogDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
-    
-    if (ogImage && currentService.featuredImage) {
-      ogImage.setAttribute('content', currentService.featuredImage);
-    }
-    
-    if (ogUrl) {
-      ogUrl.setAttribute('content', `https://tsgfulfillment.com/services/${currentService.slug}`);
-    }
-    
-    if (ogType) {
-      ogType.setAttribute('content', 'website');
-    }
-    
-    // Update Twitter card meta tags if they exist
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
-    const twitterImage = document.querySelector('meta[name="twitter:image"]');
-    
-    if (twitterTitle) {
-      twitterTitle.setAttribute('content', `${currentService.title} | TSG Fulfillment Services`);
-    }
-    
-    if (twitterDescription) {
-      twitterDescription.setAttribute('content', `${currentService.description} Learn more about TSG Fulfillment's ${currentService.title.toLowerCase()} services.`);
-    }
-    
-    if (twitterImage && currentService.featuredImage) {
-      twitterImage.setAttribute('content', currentService.featuredImage);
-    }
-    
-    // Update canonical URL
-    const canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.setAttribute('href', `https://tsgfulfillment.com/services/${currentService.slug}`);
-    }
-    
-    // Add rel="next" and rel="prev" links for paginated content
-    let nextLink = document.querySelector('link[rel="next"]');
-    let prevLink = document.querySelector('link[rel="prev"]');
-    
-    // If next service exists, add/update the next link
-    if (nextService) {
-      if (!nextLink) {
-        nextLink = document.createElement('link');
-        nextLink.setAttribute('rel', 'next');
-        document.head.appendChild(nextLink);
-      }
-      nextLink.setAttribute('href', `https://tsgfulfillment.com/services/${nextService.slug}`);
-    } else if (nextLink) {
-      // If no next service but link exists, remove it
-      nextLink.remove();
-    }
-    
-    // If previous service exists, add/update the prev link
-    if (prevService) {
-      if (!prevLink) {
-        prevLink = document.createElement('link');
-        prevLink.setAttribute('rel', 'prev');
-        document.head.appendChild(prevLink);
-      }
-      prevLink.setAttribute('href', `https://tsgfulfillment.com/services/${prevService.slug}`);
-    } else if (prevLink) {
-      // If no previous service but link exists, remove it
-      prevLink.remove();
-    }
-    
-    // Scroll to top when service changes
+    // Scroll to top when service changes 
     window.scrollTo(0, 0);
     
-    // Add JSON-LD structured data for this service
-    const existingScript = document.getElementById('service-jsonld');
-    if (existingScript) {
-      existingScript.remove();
-    }
-    
-    const script = document.createElement('script');
-    script.id = 'service-jsonld';
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      'name': `${currentService.title}`,
-      'description': currentService.description,
-      'provider': {
-        '@type': 'Organization',
-        'name': 'TSG Fulfillment Services',
-        'url': 'https://tsgfulfillment.com'
-      },
-      'serviceType': currentService.title,
-      'url': `https://tsgfulfillment.com/services/${currentService.slug}`,
-      'termsOfService': 'https://tsgfulfillment.com/terms',
-      ...(currentService.featuredImage && {
-        'image': currentService.featuredImage
-      }),
-      'audience': {
-        '@type': 'BusinessAudience',
-        'audienceType': 'eCommerce and retail businesses'
-      },
-      'offers': {
-        '@type': 'Offer',
-        'availability': 'https://schema.org/InStock',
-        'url': `https://tsgfulfillment.com/services/${currentService.slug}#contact`
-      }
-    });
-    
-    document.head.appendChild(script);
+    // We no longer need to manually add JSON-LD structured data
+    // The Seo component now handles this for us with the structuredData prop
   }, [params, setLocation]);
 
   if (!service) {

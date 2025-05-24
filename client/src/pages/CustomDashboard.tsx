@@ -37,6 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import AnalyticsLayout from '@/components/analytics/Layout';
+import Seo from '@/components/SEO/Seo';
 
 // Colors for visualizations
 const COLORS = {
@@ -814,14 +815,50 @@ const CustomDashboard: React.FC = () => {
     }
   };
   
+  // Define structured data for custom dashboard
+  const customDashboardStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "TSG Fulfillment Custom Dashboard Builder",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web-based",
+    "description": "Personalized dashboard builder for logistics and fulfillment operations, allowing businesses to create customized views of their supply chain metrics and KPIs.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "Logistics and Supply Chain Professionals"
+    }
+  };
+
   return (
     <AnalyticsLayout title="Custom Dashboard">
+      <Seo
+        title="Custom Logistics Dashboard | TSG Fulfillment"
+        description="Build your own personalized logistics dashboard with customizable widgets. Monitor the KPIs and metrics that matter most to your business in real-time."
+        keywords="custom dashboard, logistics KPIs, supply chain metrics, personalized analytics, fulfillment tracking, customizable widgets, business intelligence"
+        canonical="https://tsgfulfillment.com/analytics/custom-dashboard"
+        ogType="website" 
+        ogUrl="https://tsgfulfillment.com/analytics/custom-dashboard"
+        ogImage="https://tsgfulfillment.com/images/analytics-dashboard.jpg"
+        twitterCard="summary_large_image"
+        twitterTitle="Custom Logistics Dashboard | TSG Fulfillment"
+        twitterDescription="Design your own personalized logistics dashboard with the metrics that matter most to your business."
+        structuredData={customDashboardStructuredData}
+      />
       <div className="p-6 max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-2">Custom Dashboard</h1>
               <p className="text-gray-600">Create and customize your own analytics dashboard</p>
+              <div className="mt-4 text-sm text-gray-500">
+                <p>Build a personalized view of your logistics operations with our intuitive dashboard builder. Select from a variety of widgets including KPI cards, charts, and visualizations to monitor the metrics that matter most to your business.</p>
+                <p className="mt-2">Drag and drop widgets to arrange your ideal layout, set custom refresh intervals, and focus on the data that provides the most valuable insights for optimizing your supply chain operations.</p>
+              </div>
             </div>
             <div className="flex space-x-2">
               <Link href="/analytics">

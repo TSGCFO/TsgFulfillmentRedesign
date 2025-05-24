@@ -43,11 +43,11 @@ const CTASection: React.FC = () => {
               onClick={() => scrollTo('contact')}
               className="btn-primary bg-white text-primary hover:bg-gray-100 px-8 py-7 font-medium text-base"
             >
-              Get a Free Quote
+              <span className="text-primary">Get a Free Quote</span>
             </Button>
             <Button 
               variant="outline" 
-              className="btn-secondary bg-transparent text-white hover:bg-white/10 border-2 border-white px-8 py-7 font-medium text-base"
+              className="btn-secondary bg-primary/80 text-white hover:bg-white hover:text-primary border-2 border-white px-8 py-7 font-medium text-base"
               onClick={() => scrollTo('services')}
             >
               Learn More

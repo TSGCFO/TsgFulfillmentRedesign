@@ -8,7 +8,7 @@ import Navbar from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import { Helmet } from 'react-helmet';
+import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -542,24 +542,19 @@ const IndustryDetail: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{industry.title} Logistics & Fulfillment Solutions | TSG Fulfillment</title>
-        <meta name="description" content={industry.metaDescription} />
-        <meta name="keywords" content={`${industry.title.toLowerCase()} fulfillment, ${industry.title.toLowerCase()} logistics, warehouse solutions, supply chain, canadian fulfillment, order processing, inventory management, vaughan ontario`} />
-        <meta property="og:title" content={`${industry.title} Logistics & Fulfillment Solutions | TSG Fulfillment`} />
-        <meta property="og:description" content={industry.metaDescription} />
-        <meta property="og:image" content={industry.headerImage} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://tsgfulfillment.com/industries/${industry.slug}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${industry.title} Logistics & Fulfillment Solutions | TSG Fulfillment`} />
-        <meta name="twitter:description" content={industry.metaDescription} />
-        <meta name="twitter:image" content={industry.headerImage} />
-        <link rel="canonical" href={`https://tsgfulfillment.com/industries/${industry.slug}`} />
-        <script type="application/ld+json">
-          {JSON.stringify(industrySchema)}
-        </script>
-      </Helmet>
+      <Seo
+        title={`${industry.title} Logistics & Fulfillment Solutions | TSG Fulfillment`}
+        description={industry.metaDescription}
+        keywords={`${industry.title.toLowerCase()} fulfillment, ${industry.title.toLowerCase()} logistics, warehouse solutions, supply chain, canadian fulfillment, order processing, inventory management, vaughan ontario`}
+        canonical={`https://tsgfulfillment.com/industries/${industry.slug}`}
+        ogType="website"
+        ogUrl={`https://tsgfulfillment.com/industries/${industry.slug}`}
+        ogImage={industry.headerImage}
+        twitterCard="summary_large_image"
+        twitterTitle={`${industry.title} Logistics & Fulfillment Solutions | TSG Fulfillment`}
+        twitterDescription={industry.metaDescription}
+        structuredData={industrySchema}
+      />
       
       <Navbar />
       

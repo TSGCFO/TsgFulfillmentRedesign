@@ -21,6 +21,7 @@ import {
   SelectTrigger, SelectValue
 } from '@/components/ui/select';
 import AnalyticsLayout from '@/components/analytics/Layout';
+import Seo from '@/components/SEO/Seo';
 
 // Analytics colors
 const COLORS = {
@@ -113,7 +114,7 @@ const ComparisonChart: React.FC<{
               tickFormatter={(entry) => entry}
             />
             <YAxis />
-            <Tooltip formatter={(value) => [value.toFixed(1), dataKey]} />
+            <Tooltip formatter={(value) => [typeof value === 'number' ? value.toFixed(1) : value, dataKey]} />
             <Legend />
             <Bar 
               name="Period A" 
@@ -142,7 +143,7 @@ const MetricOverviewCard: React.FC<{
     <Card className="p-6 shadow-md">
       <h3 className="text-lg font-semibold mb-2">{summary.title}</h3>
       <div className="space-y-3">
-        {summary.metrics.map((metric) => (
+        {summary.metrics.map((metric: any) => (
           <div key={metric.key} className="grid grid-cols-12 items-center">
             <div className="col-span-4 text-sm font-medium">{metric.name}</div>
             <div className="col-span-8">
@@ -228,15 +229,51 @@ const PerformanceComparison: React.FC = () => {
     if (!start || !end) return 'Select dates';
     return `${format(start, 'MMM d, yyyy')} - ${format(end, 'MMM d, yyyy')}`;
   };
+  
+  // Define structured data for performance comparison page
+  const performanceComparisonStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TSG Fulfillment Performance Comparison Tool",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "description": "Advanced analytics tool for comparing logistics and fulfillment performance metrics across different time periods to identify trends and optimize operations.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "Supply Chain and Logistics Managers"
+    }
+  };
 
   return (
     <AnalyticsLayout title="Performance Comparison">
+      <Seo
+        title="Logistics Performance Comparison | TSG Fulfillment"
+        description="Compare logistics performance metrics across different time periods. Track improvements, identify trends, and optimize your supply chain operations with advanced analytics."
+        keywords="logistics comparison, fulfillment metrics, performance tracking, supply chain analytics, logistics benchmarking, shipping metrics, inventory comparison"
+        canonical="https://tsgfulfillment.com/analytics/performance-comparison"
+        ogType="website" 
+        ogUrl="https://tsgfulfillment.com/analytics/performance-comparison"
+        ogImage="https://tsgfulfillment.com/images/analytics-performance.jpg"
+        twitterCard="summary_large_image"
+        twitterTitle="Logistics Performance Comparison | TSG Fulfillment"
+        twitterDescription="Track your logistics performance improvements over time with our advanced comparison tools."
+        structuredData={performanceComparisonStructuredData}
+      />
       <div className="p-6 max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-2">Performance Comparison</h1>
               <p className="text-gray-600">Compare key metrics between different time periods</p>
+              <div className="mt-4 text-sm text-gray-500">
+                <p>Our performance comparison tool helps you track improvements, identify trends, and optimize your logistics operations over time. Compare key metrics like shipping accuracy, inventory turnover, order fulfillment rates, and processing times across different periods to make data-driven decisions.</p>
+                <p className="mt-2">Identify seasonal patterns, measure the impact of operational changes, and demonstrate ROI with clear visual comparisons and detailed analytical reports.</p>
+              </div>
             </div>
             <div className="flex space-x-2">
               <Link href="/analytics">
