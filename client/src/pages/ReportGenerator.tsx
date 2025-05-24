@@ -33,6 +33,7 @@ import {
   DialogTitle, DialogFooter, DialogClose
 } from '@/components/ui/dialog';
 import AnalyticsLayout from '@/components/analytics/Layout';
+import Seo from '@/components/SEO/Seo';
 
 // Analytics colors
 const COLORS = {
@@ -929,14 +930,50 @@ const ReportGenerator: React.FC = () => {
     }
   });
   
+  // Define structured data for report generator page
+  const reportGeneratorStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "TSG Fulfillment Report Generator",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "description": "Powerful report generator for creating customized logistics and fulfillment reports with comprehensive analytics, visualizations, and actionable insights.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "audience": {
+      "@type": "BusinessAudience",
+      "audienceType": "Supply Chain and Logistics Professionals"
+    }
+  };
+
   return (
     <AnalyticsLayout title="Report Generator">
+      <Seo
+        title="Logistics Report Generator | TSG Fulfillment"
+        description="Create comprehensive, customized reports for your logistics and fulfillment operations. Generate detailed analytics with automated data analysis and visualization tools."
+        keywords="logistics reporting, supply chain analytics, fulfillment reports, inventory reporting, shipping performance, order processing reports, custom reports"
+        canonical="https://tsgfulfillment.com/analytics/report-generator"
+        ogType="website" 
+        ogUrl="https://tsgfulfillment.com/analytics/report-generator"
+        ogImage="https://tsgfulfillment.com/images/report-generator.jpg"
+        twitterCard="summary_large_image"
+        twitterTitle="Logistics Report Generator | TSG Fulfillment"
+        twitterDescription="Create professional, data-driven reports to optimize your logistics and fulfillment operations."
+        structuredData={reportGeneratorStructuredData}
+      />
       <div className="p-6 max-w-7xl mx-auto">
         <header className="mb-8">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold mb-2">Report Generator</h1>
               <p className="text-gray-600">Create customized reports with exactly the data you need</p>
+              <div className="mt-4 text-sm text-gray-500">
+                <p>Our advanced report generator provides comprehensive insights into your logistics and fulfillment operations. Configure reports with the metrics that matter most to your business and generate professional, data-driven documents that can be shared with stakeholders.</p>
+                <p className="mt-2">Choose from various report types including inventory status, shipment performance, order processing, and KPI tracking. Include charts, tables, alerts, and recommendations to create truly informative reports.</p>
+              </div>
             </div>
             <div className="flex space-x-2">
               <Link href="/analytics">

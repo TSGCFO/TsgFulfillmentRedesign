@@ -171,8 +171,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
             
             <div className="py-4">
-              <Button className="w-full bg-[#0056B3] hover:bg-[#004494] text-white">
-                Get a Quote
+              <Button className="w-full bg-[#0056B3] hover:bg-[#004494]">
+                <span className="text-white">Get a Quote</span>
               </Button>
             </div>
             

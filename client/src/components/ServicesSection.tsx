@@ -107,7 +107,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
           <Button 
             variant="outline" 
             onClick={handleLearnMore}
-            className="border-white text-white hover:bg-white hover:text-primary transition-all duration-300 group-hover:translate-y-0 flex items-center"
+            className="border-white bg-primary/80 text-white hover:bg-white hover:text-primary transition-all duration-300 group-hover:translate-y-0 flex items-center"
             aria-label={`Learn more about ${title}`}
           >
             Learn More
