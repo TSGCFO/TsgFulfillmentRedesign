@@ -45,7 +45,7 @@ jobs:
       
       - name: Run TSG Content Linter with Claude
         id: content-lint
-        uses: anthropics/claude-code-action@beta
+        uses: anthropics/claude-code-base-action@v0.0.4
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
