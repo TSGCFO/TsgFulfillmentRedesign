@@ -1,0 +1,132 @@
+name: TSG Content Linter
+
+on:
+  push:
+    branches: [ main, claude ]
+    paths:
+      - 'client/src/**/*.tsx'
+      - 'client/src/**/*.jsx'
+      - 'client/src/**/*.ts'
+      - 'client/src/**/*.js'
+  pull_request:
+    branches: [ main, claude ]
+    paths:
+      - 'client/src/**/*.tsx'
+      - 'client/src/**/*.jsx'
+      - 'client/src/**/*.ts'
+      - 'client/src/**/*.js'
+
+jobs:
+  content-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install required packages for linter
+        run: npm install -g glob ignore chokidar
+      
+      - name: Run TSG Content Linter with Claude
+        id: content-lint
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            You are a professional content editor and proofreader specializing in business websites. 
+            Analyze the following content for TSG Fulfillment Services Inc. and identify any issues with accuracy, grammar, spelling, and brand consistency.
+
+            COMPANY INFORMATION TO VERIFY AGAINST:
+            - Company Name: TSG Fulfillment Services Inc.
+            - Address: 6750 Langstaff Road, Unit 1-2, Vaughan, ON L4H 5K2, Canada
+            - Business Hours: Monday to Friday: 9:00 AM – 5:00 PM
+            - Positioning: Boutique Fulfillment Center with highly customized services tailored to each client
+            - Services: warehousing solutions, logistics services, fulfillment services, e-commerce fulfillment, retail fulfillment
+
+            Please analyze all React component files (client/src/**/*.tsx, client/src/**/*.jsx) for:
+
+            1. CRITICAL CONTENT ISSUES:
+               - Incorrect company name, address, or contact information
+               - Misspelled words or grammatical errors
+               - Inaccurate service descriptions
+               - Wrong business hours or location details
+               - Inconsistent company positioning or branding
+
+            2. IMPORTANT CONTENT ISSUES:
+               - Terminology inconsistencies across pages
+               - Missing key differentiators (boutique fulfillment center)
+               - Unclear or confusing service descriptions
+               - Poor readability or flow
+               - Missing calls-to-action or contact information
+
+            3. MINOR CONTENT ISSUES:
+               - Style inconsistencies (capitalization, punctuation)
+               - Redundant or repetitive content
+               - Opportunities for better SEO keywords
+               - Minor formatting improvements
+
+            For each issue found, format your response as:
+            FILENAME:LINE_NUMBER
+            ISSUE: Brief description of the content problem
+            FIX: Specific recommendation on how to fix it
+            SEVERITY: [Critical/High/Medium/Low]
+            CATEGORY: [Accuracy/Grammar/Spelling/Branding/SEO/Style]
+            ---
+
+            Focus on content within JSX elements, alt text, titles, and string literals that appear to be user-facing content.
+            
+      - name: Add comment to PR with linting results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const output = `${{ steps.content-lint.outputs.response }}`;
+            
+            if (output && output.trim()) {
+              const comment = `## 📝 TSG Content Linting Results
+              
+              The following content issues were found:
+              
+              \`\`\`
+              ${output}
+              \`\`\`
+              
+              Please review and address any critical or high severity issues before merging.
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } else {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '## ✅ TSG Content Linting Results\n\nNo content issues found! All TSG company information appears accurate and content is well-formatted.'
+              });
+            }
+
+      - name: Fail workflow if critical issues found
+        if: contains(steps.content-lint.outputs.response, 'SEVERITY: Critical')
+        run: |
+          echo "Critical content issues found. Please fix before merging."
+          exit 1
