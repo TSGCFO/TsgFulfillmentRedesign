@@ -370,8 +370,8 @@ const industries: IndustryData[] = [
     ],
     solutions: [
       {
-        title: "Temperature-Controlled Facilities",
-        description: "Specialized storage areas for ambient, refrigerated, and frozen products with continuous temperature monitoring and alerting systems."
+        title: "Specialized Storage Solutions",
+        description: "Optimized storage areas for various product types with advanced monitoring and alerting systems."
       },
       {
         title: "Regulatory Compliance Systems",
@@ -387,7 +387,7 @@ const industries: IndustryData[] = [
       }
     ],
     benefits: [
-      "Maintain product quality through appropriate temperature control",
+      "Maintain product quality with proper storage solutions",
       "Ensure regulatory compliance with proper documentation and processes",
       "Reduce product waste through effective expiration date management",
       "Manage recalls efficiently if they occur",

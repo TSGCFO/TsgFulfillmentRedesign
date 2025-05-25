@@ -97,15 +97,15 @@ const serviceDetails: ServiceData[] = [
   {
     icon: <Warehouse className="text-primary text-4xl" />,
     title: "Warehousing Services",
-    description: "Our climate-controlled warehousing facility offers secure storage solutions with advanced inventory management systems to help you consolidate your supply chains.",
+    description: "Our modern warehousing facility offers secure storage solutions with advanced inventory management systems to help you consolidate your supply chains.",
     slug: "warehousing-services",
     longDescription: [
-      "TSG Fulfillment offers a modern, climate-controlled warehousing facility designed to protect your products and optimize your supply chain. Our facility is equipped with state-of-the-art security systems and staffed by experienced professionals.",
+      "TSG Fulfillment offers a modern warehousing facility designed to protect your products and optimize your supply chain. Our facility is equipped with state-of-the-art security systems and staffed by experienced professionals.",
       "Our warehousing services are scalable to accommodate your business's changing needs. Whether you require short-term storage for seasonal inventory or long-term solutions, we have options to fit your requirements and budget.",
       "Our advanced inventory management system provides real-time visibility into your stock levels, allowing you to make informed decisions about reordering and product allocation. We maintain strict quality control standards to ensure your products are handled with care."
     ],
     features: [
-      "Climate-controlled facility",
+      "Modern warehouse facility",
       "24/7 security monitoring",
       "Barcode scanning systems",
       "Advanced inventory management",
