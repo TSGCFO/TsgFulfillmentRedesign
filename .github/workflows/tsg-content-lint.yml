@@ -252,33 +252,26 @@ jobs:
           # Read the execution results
           if [ -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
             echo "📋 Analyzing Claude execution output..."
-            
+
             # Debug: Show file structure (first 10 lines)
             echo "🔍 Execution file structure preview:"
             head -10 "${{ steps.claude-review.outputs.execution_file }}" || echo "Could not preview file"
-            
+
             # Try to determine the JSON structure and extract content
-            # First, try the documented format (object with messages array)
             REVIEW_CONTENT=$(jq -r 'map(select(.role == "assistant")) | last | .content' "${{ steps.claude-review.outputs.execution_file }}")
-            
-            # If that fails, try array format (root is array of messages)
+
+            # If that fails, try direct array access
             if [ -z "$REVIEW_CONTENT" ]; then
-              echo "⚠️ Object format failed, trying array format..."
-              REVIEW_CONTENT=$(jq -r 'map(select(.role == "assistant")) | last | .content // empty' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
-            fi
-            
-            # If both fail, try simple array index
-            if [ -z "$REVIEW_CONTENT" ]; then
-              echo "⚠️ Structured format failed, trying direct array access..."
+              echo "⚠️ Object format failed, trying direct array access..."
               REVIEW_CONTENT=$(jq -r '.[-1].content // .[-1] // empty' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
             fi
-            
+
             # Final fallback: extract any text content found
             if [ -z "$REVIEW_CONTENT" ]; then
               echo "⚠️ All JSON parsing failed, attempting text extraction..."
-              REVIEW_CONTENT=$(jq -r 'if type == "array" then .[] else . end | if type == "object" then .content // .text // . else . end' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null | tail -1)
+              REVIEW_CONTENT=$(jq -r 'if type == "array" then .[] else . end | if type == "object" then .content // .text // . else . end' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
             fi
-            
+
             # Validate we got some content
             if [ -z "$REVIEW_CONTENT" ] || [ "$REVIEW_CONTENT" = "null" ] || [ "$REVIEW_CONTENT" = "empty" ]; then
               echo "❌ Failed to extract review content from execution file"
@@ -286,12 +279,17 @@ jobs:
               cat "${{ steps.claude-review.outputs.execution_file }}"
               exit 1
             fi
-            
+
             echo "✅ Successfully extracted review content (${#REVIEW_CONTENT} characters)"
-            
-            # Extract different sections from the review
+
+            # Process the review content
             CRITICAL_ISSUES=$(echo "$REVIEW_CONTENT" | sed -n '/🔴 Critical Issues/,/🟡 Recommendations/p' | grep -v '🟡 Recommendations' | head -20)
             RECOMMENDATIONS=$(echo "$REVIEW_CONTENT" | sed -n '/🟡 Recommendations/,/🟢 Positive Observations/p' | grep -v '🟢 Positive Observations' | head -20)
+
+            echo "Critical Issues:"
+            echo "$CRITICAL_ISSUES"
+            echo "Recommendations:"
+            echo "$RECOMMENDATIONS"
             
             # Check if there are critical issues
             if echo "$CRITICAL_ISSUES" | grep -q "[[:alnum:]]"; then
