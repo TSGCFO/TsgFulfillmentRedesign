@@ -1,132 +1,358 @@
-name: TSG Content Linter
+name: TSG Fulfillment Content Review
+run-name: Content review by ${{ github.actor }} on ${{ github.ref_name }}
 
+# Workflow triggers on push and pull request events
 on:
   push:
-    branches: [ main, claude ]
+    branches:
+      - main
+      - claude
+      - 'feature/**'
     paths:
       - 'client/src/**/*.tsx'
       - 'client/src/**/*.jsx'
       - 'client/src/**/*.ts'
       - 'client/src/**/*.js'
+      - 'claude.md'  # Trigger when standards are updated
   pull_request:
-    branches: [ main, claude ]
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - develop
     paths:
       - 'client/src/**/*.tsx'
       - 'client/src/**/*.jsx'
       - 'client/src/**/*.ts'
       - 'client/src/**/*.js'
+  workflow_dispatch:
+    inputs:
+      review_depth:
+        description: 'Content review thoroughness'
+        required: false
+        default: 'comprehensive'
+        type: choice
+        options:
+          - quick
+          - standard
+          - comprehensive
+
+# Global environment variables
+env:
+  NODE_VERSION: '18'
+  REVIEW_TIMEOUT: '30'
+  CLAUDE_MODEL: 'claude-3-7-sonnet-20250219'
+
+# Repository permissions
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
 
 jobs:
-  content-lint:
+  # Job 1: Detect and validate changed files
+  path-detection:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: write
-      id-token: write
-    
+    outputs:
+      has-changes: ${{ steps.filter.outputs.changes }}
+      tsx-files: ${{ steps.filter.outputs.tsx_files }}
+      jsx-files: ${{ steps.filter.outputs.jsx_files }}
+      ts-files: ${{ steps.filter.outputs.ts_files }}
+      js-files: ${{ steps.filter.outputs.js_files }}
+      all-files: ${{ steps.filter.outputs.all_files }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 10
-      
-      - name: Setup Node.js
+          fetch-depth: 0  # Full history for better diff analysis
+
+      - name: Detect changed files
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          list-files: json
+          filters: |
+            changes:
+              - 'client/src/**/*.tsx'
+              - 'client/src/**/*.jsx'
+              - 'client/src/**/*.ts'
+              - 'client/src/**/*.js'
+            tsx:
+              - added|modified: 'client/src/**/*.tsx'
+            jsx:
+              - added|modified: 'client/src/**/*.jsx'
+            ts:
+              - added|modified: 'client/src/**/*.ts'
+            js:
+              - added|modified: 'client/src/**/*.js'
+
+  # Job 2: Load and validate company standards
+  load-standards:
+    runs-on: ubuntu-latest
+    outputs:
+      standards-content: ${{ steps.read-standards.outputs.content }}
+      config-valid: ${{ steps.validate.outputs.valid }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read TSG standards from claude.md
+        id: read-standards
+        run: |
+          if [ -f "claude.md" ]; then
+            # Read the entire claude.md file
+            CLAUDE_CONTENT=$(cat claude.md)
+            
+            # Set multiline output
+            echo "content<<EOF" >> $GITHUB_OUTPUT
+            echo "$CLAUDE_CONTENT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            echo "✅ Found claude.md standards file"
+          else
+            echo "⚠️ claude.md not found, using default standards"
+            echo "content<<EOF" >> $GITHUB_OUTPUT
+            cat << 'DEFAULT_STANDARDS' >> $GITHUB_OUTPUT
+          # TSG Fulfillment Services Default Standards
+          
+          ## Brand Voice
+          - Professional yet approachable
+          - Customer-centric language
+          - Clear and concise communication
+          
+          ## Content Guidelines
+          - Avoid superlatives without data backing
+          - Focus on value propositions
+          - Use active voice
+          - Maintain consistent terminology
+          
+          ## SEO Requirements
+          - Include relevant keywords naturally
+          - Optimize meta descriptions (150-160 chars)
+          - Use descriptive headings
+          - Ensure mobile-friendly content
+          DEFAULT_STANDARDS
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate configuration
+        id: validate
+        run: |
+          # Validate that standards contain required sections
+          if grep -q "Brand Voice\|Content Guidelines\|SEO Requirements" <<< "${{ steps.read-standards.outputs.content }}"; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Job 3: Main content review using Claude
+  content-review:
+    needs: [path-detection, load-standards]
+    if: needs.path-detection.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js cache
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Install required packages for linter
-        run: npm install -g glob ignore chokidar
-      
-      - name: Run TSG Content Linter with Claude
-        id: content-lint
-        uses: anthropics/claude-code-base-action@v0.0.4
+          cache-dependency-path: client/package-lock.json
+
+      - name: Create comprehensive review prompt
+        id: create-prompt
+        run: |
+          # Create a comprehensive prompt incorporating TSG standards
+          cat << 'PROMPT_EOF' > review_prompt.txt
+          You are an expert content reviewer for TSG Fulfillment Services. Review the code changes in this pull request focusing on content within React/TypeScript components.
+
+          ## Company Standards from claude.md:
+          ${{ needs.load-standards.outputs.standards-content }}
+
+          ## Your Review Tasks:
+
+          ### 1. Grammar and Spelling Review
+          - Check all text content, comments, and string literals for grammar and spelling errors
+          - Ensure proper punctuation and sentence structure
+          - Verify consistency in capitalization and formatting
+          - Pay special attention to customer-facing text in UI components
+
+          ### 2. Content Accuracy and Anti-Exaggeration
+          - Flag any unsubstantiated claims or superlatives (e.g., "best", "fastest", "only")
+          - Ensure technical specifications are accurate
+          - Verify that features described actually exist in the code
+          - Check for misleading or potentially false advertising
+
+          ### 3. SEO Optimization Analysis
+          - Review meta tags, page titles, and descriptions in components
+          - Check for proper heading hierarchy (H1-H6)
+          - Analyze keyword usage and density
+          - Suggest improvements for search visibility
+          - Verify image alt texts and aria-labels
+          - Check for SEO-friendly URL structures in routing
+
+          ### 4. Brand Consistency Check
+          - Ensure content aligns with TSG Fulfillment Services brand voice
+          - Verify consistent use of company terminology
+          - Check that tone matches our professional yet approachable standard
+          - Flag any content that doesn't align with our customer-centric approach
+
+          ### 5. Technical Content Review
+          - Verify that component prop descriptions are accurate
+          - Check that error messages are helpful and user-friendly
+          - Ensure loading states have appropriate messaging
+          - Review any hardcoded text that should be internationalized
+
+          ## Output Format:
+          Provide your feedback in the following structured format:
+
+          ### 🔴 Critical Issues (Must Fix)
+          List any critical issues that must be addressed before merging.
+
+          ### 🟡 Recommendations (Should Consider)
+          List improvements that would enhance content quality.
+
+          ### 🟢 Positive Observations
+          Highlight well-written content or good practices observed.
+
+          ### 📊 SEO Metrics
+          - Keyword optimization score
+          - Content readability assessment
+          - Technical SEO compliance
+
+          ### 🎯 Action Items
+          Provide a numbered list of specific actions to take.
+
+          Focus on the following changed files:
+          ${{ needs.path-detection.outputs.all-files }}
+
+          Be specific with line numbers and provide exact text corrections where applicable.
+          PROMPT_EOF
+
+      - name: Execute Claude content review
+        id: claude-review
+        uses: anthropics/claude-code-base-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            You are a professional content editor and proofreader specializing in business websites. 
-            Analyze the following content for TSG Fulfillment Services Inc. and identify any issues with accuracy, grammar, spelling, and brand consistency.
+          anthropic_model: ${{ env.CLAUDE_MODEL }}
+          prompt_file: review_prompt.txt
+          allowed_tools: |
+            View,GlobTool,GrepTool,Bash(git diff --name-only origin/main...HEAD),
+            Bash(git diff origin/main...HEAD -- $file),Bash(grep -n ""),
+            Bash(find client/src -name "*.tsx" -o -name "*.jsx" | head -20)
+          timeout_minutes: ${{ env.REVIEW_TIMEOUT }}
+          max_turns: 10
 
-            COMPANY INFORMATION TO VERIFY AGAINST:
-            - Company Name: TSG Fulfillment Services Inc.
-            - Address: 6750 Langstaff Road, Unit 1-2, Vaughan, ON L4H 5K2, Canada
-            - Business Hours: Monday to Friday: 9:00 AM – 5:00 PM
-            - Positioning: Boutique Fulfillment Center with highly customized services tailored to each client
-            - Services: warehousing solutions, logistics services, fulfillment services, e-commerce fulfillment, retail fulfillment
-
-            Please analyze all React component files (client/src/**/*.tsx, client/src/**/*.jsx) for:
-
-            1. CRITICAL CONTENT ISSUES:
-               - Incorrect company name, address, or contact information
-               - Misspelled words or grammatical errors
-               - Inaccurate service descriptions
-               - Wrong business hours or location details
-               - Inconsistent company positioning or branding
-
-            2. IMPORTANT CONTENT ISSUES:
-               - Terminology inconsistencies across pages
-               - Missing key differentiators (boutique fulfillment center)
-               - Unclear or confusing service descriptions
-               - Poor readability or flow
-               - Missing calls-to-action or contact information
-
-            3. MINOR CONTENT ISSUES:
-               - Style inconsistencies (capitalization, punctuation)
-               - Redundant or repetitive content
-               - Opportunities for better SEO keywords
-               - Minor formatting improvements
-
-            For each issue found, format your response as:
-            FILENAME:LINE_NUMBER
-            ISSUE: Brief description of the content problem
-            FIX: Specific recommendation on how to fix it
-            SEVERITY: [Critical/High/Medium/Low]
-            CATEGORY: [Accuracy/Grammar/Spelling/Branding/SEO/Style]
-            ---
-
-            Focus on content within JSX elements, alt text, titles, and string literals that appear to be user-facing content.
+      - name: Parse Claude review results
+        id: parse-results
+        run: |
+          # Read the execution results
+          if [ -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
+            REVIEW_CONTENT=$(jq -r '.messages[-1].content' "${{ steps.claude-review.outputs.execution_file }}")
             
-      - name: Add comment to PR with linting results
+            # Extract different sections
+            CRITICAL_ISSUES=$(echo "$REVIEW_CONTENT" | sed -n '/🔴 Critical Issues/,/🟡 Recommendations/p' | grep -v '🟡 Recommendations')
+            RECOMMENDATIONS=$(echo "$REVIEW_CONTENT" | sed -n '/🟡 Recommendations/,/🟢 Positive Observations/p' | grep -v '🟢 Positive Observations')
+            
+            # Check if there are critical issues
+            if echo "$CRITICAL_ISSUES" | grep -q "[[:alnum:]]"; then
+              echo "has_critical_issues=true" >> $GITHUB_OUTPUT
+            else
+              echo "has_critical_issues=false" >> $GITHUB_OUTPUT
+            fi
+            
+            # Save full review for comment
+            echo "review_content<<EOF" >> $GITHUB_OUTPUT
+            echo "$REVIEW_CONTENT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Post review as PR comment
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `${{ steps.content-lint.outputs.response }}`;
+            const review_content = `${{ steps.parse-results.outputs.review_content }}`;
+            const has_critical = ${{ steps.parse-results.outputs.has_critical_issues }};
             
-            if (output && output.trim()) {
-              const comment = `## 📝 TSG Content Linting Results
-              
-              The following content issues were found:
-              
-              \`\`\`
-              ${output}
-              \`\`\`
-              
-              Please review and address any critical or high severity issues before merging.
-              `;
-              
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
-            } else {
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: '## ✅ TSG Content Linting Results\n\nNo content issues found! All TSG company information appears accurate and content is well-formatted.'
-              });
-            }
+            // Create the comment header
+            const header = `## 🤖 TSG Fulfillment Content Review Report
+            
+            **Reviewer**: Claude AI (Model: ${{ env.CLAUDE_MODEL }})
+            **Review Type**: ${{ github.event.inputs.review_depth || 'comprehensive' }}
+            **Files Reviewed**: ${{ needs.path-detection.outputs.all-files }}
+            
+            ---
+            
+            `;
+            
+            // Add review content
+            const full_comment = header + review_content + `
+            
+            ---
+            
+            *This automated review follows TSG Fulfillment Services content standards. Please address all critical issues before merging.*
+            
+            <details>
+            <summary>📋 Review Configuration</summary>
+            
+            - Grammar and spelling check: ✅
+            - Content accuracy verification: ✅
+            - SEO optimization analysis: ✅
+            - Brand consistency check: ✅
+            - Standards file: \`claude.md\`
+            
+            </details>`;
+            
+            // Post the comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: full_comment
+            });
+            
+            // Set PR status based on critical issues
+            const status = has_critical ? 'failure' : 'success';
+            const description = has_critical 
+              ? 'Critical content issues found - review required' 
+              : 'Content review passed - no critical issues';
+            
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: status,
+              context: 'TSG Content Review',
+              description: description,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/pull/${context.issue.number}#issuecomment-new`
+            });
 
-      - name: Fail workflow if critical issues found
-        if: contains(steps.content-lint.outputs.response, 'SEVERITY: Critical')
+  # Job 4: Summary and notifications
+  review-summary:
+    needs: [content-review, path-detection]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create review summary
         run: |
-          echo "Critical content issues found. Please fix before merging."
+          echo "## 📊 Content Review Summary"
+          echo ""
+          echo "**Total files reviewed**: $(echo '${{ needs.path-detection.outputs.all-files }}' | jq -r '. | length')"
+          echo "**Review status**: ${{ needs.content-review.result }}"
+          echo ""
+          echo "### File type breakdown:"
+          echo "- TSX files: $(echo '${{ needs.path-detection.outputs.tsx-files }}' | jq -r '. | length // 0')"
+          echo "- JSX files: $(echo '${{ needs.path-detection.outputs.jsx-files }}' | jq -r '. | length // 0')"
+          echo "- TS files: $(echo '${{ needs.path-detection.outputs.ts-files }}' | jq -r '. | length // 0')"
+          echo "- JS files: $(echo '${{ needs.path-detection.outputs.js-files }}' | jq -r '. | length // 0')"
+
+      - name: Notify on failure
+        if: needs.content-review.result == 'failure'
+        run: |
+          echo "⚠️ Content review workflow failed. Please check the logs for details."
           exit 1
