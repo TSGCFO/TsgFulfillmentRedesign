@@ -172,7 +172,7 @@ const serviceDetails: ServiceData[] = [
     callToAction:
       "Ready to optimize your transportation and logistics? Contact us today to learn how our transportation services can improve your delivery performance and reduce costs.",
     featuredImage:
-      "https://images.unsplash.com/photo-1507308820779-5b6fa128020c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Package className="text-primary text-4xl" />,
