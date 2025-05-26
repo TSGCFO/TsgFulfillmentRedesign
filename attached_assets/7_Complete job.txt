@@ -1,0 +1,7 @@
+﻿2025-05-26T15:08:22.1609553Z Evaluate and set job outputs
+2025-05-26T15:08:22.1620636Z Set output 'has-changes'
+2025-05-26T15:08:22.1623793Z Set output 'tsx-files'
+2025-05-26T15:08:22.1624953Z Set output 'jsx-files'
+2025-05-26T15:08:22.1625662Z Set output 'ts-files'
+2025-05-26T15:08:22.1626358Z Set output 'js-files'
+2025-05-26T15:08:22.1627668Z Cleaning up orphan processes

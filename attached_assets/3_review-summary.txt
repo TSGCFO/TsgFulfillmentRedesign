@@ -1,0 +1,64 @@
+﻿2025-05-26T15:10:23.1023404Z Current runner version: '2.324.0'
+2025-05-26T15:10:23.1048174Z ##[group]Operating System
+2025-05-26T15:10:23.1048929Z Ubuntu
+2025-05-26T15:10:23.1049524Z 24.04.2
+2025-05-26T15:10:23.1049957Z LTS
+2025-05-26T15:10:23.1050428Z ##[endgroup]
+2025-05-26T15:10:23.1050996Z ##[group]Runner Image
+2025-05-26T15:10:23.1051655Z Image: ubuntu-24.04
+2025-05-26T15:10:23.1052158Z Version: 20250511.1.0
+2025-05-26T15:10:23.1053625Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250511.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-05-26T15:10:23.1055009Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250511.1
+2025-05-26T15:10:23.1055915Z ##[endgroup]
+2025-05-26T15:10:23.1056551Z ##[group]Runner Image Provisioner
+2025-05-26T15:10:23.1057155Z 2.0.437.1
+2025-05-26T15:10:23.1057674Z ##[endgroup]
+2025-05-26T15:10:23.1058893Z ##[group]GITHUB_TOKEN Permissions
+2025-05-26T15:10:23.1060684Z Checks: write
+2025-05-26T15:10:23.1061402Z Contents: read
+2025-05-26T15:10:23.1062054Z Metadata: read
+2025-05-26T15:10:23.1063153Z PullRequests: write
+2025-05-26T15:10:23.1063646Z ##[endgroup]
+2025-05-26T15:10:23.1066870Z Secret source: Actions
+2025-05-26T15:10:23.1067558Z Prepare workflow directory
+2025-05-26T15:10:23.1433100Z Prepare all required actions
+2025-05-26T15:10:23.1485521Z Complete job name: review-summary
+2025-05-26T15:10:23.2356475Z ##[group]Run echo "## 📊 Content Review Summary"
+2025-05-26T15:10:23.2357204Z [36;1mecho "## 📊 Content Review Summary"[0m
+2025-05-26T15:10:23.2357755Z [36;1mecho ""[0m
+2025-05-26T15:10:23.2358341Z [36;1mecho "**Total files reviewed**: $(echo '' | jq -r '. | length')"[0m
+2025-05-26T15:10:23.2359036Z [36;1mecho "**Review status**: failure"[0m
+2025-05-26T15:10:23.2359542Z [36;1mecho ""[0m
+2025-05-26T15:10:23.2359963Z [36;1mecho "### File type breakdown:"[0m
+2025-05-26T15:10:23.2361564Z [36;1mecho "- TSX files: $(echo '["client/src/pages/About.tsx","client/src/pages/Contact.tsx","client/src/pages/IndustryDetail.tsx","client/src/pages/Locations.tsx","client/src/pages/ServiceDetail.tsx"]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2363641Z [36;1mecho "- JSX files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2364352Z [36;1mecho "- TS files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2365082Z [36;1mecho "- JS files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2716678Z shell: /usr/bin/bash -e {0}
+2025-05-26T15:10:23.2717472Z env:
+2025-05-26T15:10:23.2717864Z   NODE_VERSION: 18
+2025-05-26T15:10:23.2718273Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:10:23.2718725Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:10:23.2719239Z ##[endgroup]
+2025-05-26T15:10:23.3038498Z ## 📊 Content Review Summary
+2025-05-26T15:10:23.3038901Z 
+2025-05-26T15:10:23.3039149Z **Total files reviewed**: 
+2025-05-26T15:10:23.3039626Z **Review status**: failure
+2025-05-26T15:10:23.3039904Z 
+2025-05-26T15:10:23.3040092Z ### File type breakdown:
+2025-05-26T15:10:23.3040540Z - TSX files: 5
+2025-05-26T15:10:23.3040984Z - JSX files: 0
+2025-05-26T15:10:23.3063079Z - TS files: 0
+2025-05-26T15:10:23.3093736Z - JS files: 0
+2025-05-26T15:10:23.3206919Z ##[group]Run echo "⚠️ Content review workflow failed. Please check the logs for details."
+2025-05-26T15:10:23.3208676Z [36;1mecho "⚠️ Content review workflow failed. Please check the logs for details."[0m
+2025-05-26T15:10:23.3209904Z [36;1mexit 1[0m
+2025-05-26T15:10:23.3263715Z shell: /usr/bin/bash -e {0}
+2025-05-26T15:10:23.3264201Z env:
+2025-05-26T15:10:23.3264637Z   NODE_VERSION: 18
+2025-05-26T15:10:23.3265050Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:10:23.3265505Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:10:23.3266026Z ##[endgroup]
+2025-05-26T15:10:23.3337199Z ⚠️ Content review workflow failed. Please check the logs for details.
+2025-05-26T15:10:23.3348568Z ##[error]Process completed with exit code 1.
+2025-05-26T15:10:23.3410856Z Cleaning up orphan processes

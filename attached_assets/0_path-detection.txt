@@ -1,0 +1,201 @@
+﻿2025-05-26T15:08:18.8547020Z Current runner version: '2.324.0'
+2025-05-26T15:08:18.8573918Z ##[group]Operating System
+2025-05-26T15:08:18.8574711Z Ubuntu
+2025-05-26T15:08:18.8575344Z 24.04.2
+2025-05-26T15:08:18.8575852Z LTS
+2025-05-26T15:08:18.8576409Z ##[endgroup]
+2025-05-26T15:08:18.8577197Z ##[group]Runner Image
+2025-05-26T15:08:18.8577877Z Image: ubuntu-24.04
+2025-05-26T15:08:18.8578485Z Version: 20250511.1.0
+2025-05-26T15:08:18.8579544Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250511.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-05-26T15:08:18.8580959Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250511.1
+2025-05-26T15:08:18.8581946Z ##[endgroup]
+2025-05-26T15:08:18.8582483Z ##[group]Runner Image Provisioner
+2025-05-26T15:08:18.8583080Z 2.0.437.1
+2025-05-26T15:08:18.8583638Z ##[endgroup]
+2025-05-26T15:08:18.8584842Z ##[group]GITHUB_TOKEN Permissions
+2025-05-26T15:08:18.8587125Z Checks: write
+2025-05-26T15:08:18.8587772Z Contents: read
+2025-05-26T15:08:18.8588559Z Metadata: read
+2025-05-26T15:08:18.8589174Z PullRequests: write
+2025-05-26T15:08:18.8589687Z ##[endgroup]
+2025-05-26T15:08:18.8592931Z Secret source: Actions
+2025-05-26T15:08:18.8593670Z Prepare workflow directory
+2025-05-26T15:08:18.8977643Z Prepare all required actions
+2025-05-26T15:08:18.9014372Z Getting action download info
+2025-05-26T15:08:19.1330181Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-05-26T15:08:19.1331316Z Version: 4.2.2
+2025-05-26T15:08:19.1332479Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-05-26T15:08:19.1333750Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-05-26T15:08:19.1334595Z ##[endgroup]
+2025-05-26T15:08:19.2215246Z Download action repository 'dorny/paths-filter@v3' (SHA:de90cc6fb38fc0963ad72b210f1f284cd68cea36)
+2025-05-26T15:08:19.7220442Z Complete job name: path-detection
+2025-05-26T15:08:19.7954915Z ##[group]Run actions/checkout@v4
+2025-05-26T15:08:19.7955763Z with:
+2025-05-26T15:08:19.7956158Z   fetch-depth: 0
+2025-05-26T15:08:19.7956640Z   repository: TSGCFO/TsgFulfillmentRedesign
+2025-05-26T15:08:19.7957762Z   token: ***
+2025-05-26T15:08:19.7958162Z   ssh-strict: true
+2025-05-26T15:08:19.7958564Z   ssh-user: git
+2025-05-26T15:08:19.7958976Z   persist-credentials: true
+2025-05-26T15:08:19.7959444Z   clean: true
+2025-05-26T15:08:19.7959859Z   sparse-checkout-cone-mode: true
+2025-05-26T15:08:19.7960348Z   fetch-tags: false
+2025-05-26T15:08:19.7960761Z   show-progress: true
+2025-05-26T15:08:19.7961165Z   lfs: false
+2025-05-26T15:08:19.7961542Z   submodules: false
+2025-05-26T15:08:19.7961960Z   set-safe-directory: true
+2025-05-26T15:08:19.7962682Z env:
+2025-05-26T15:08:19.7963053Z   NODE_VERSION: 18
+2025-05-26T15:08:19.7963481Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:08:19.7963937Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:08:19.7964458Z ##[endgroup]
+2025-05-26T15:08:20.0770375Z Syncing repository: TSGCFO/TsgFulfillmentRedesign
+2025-05-26T15:08:20.0772847Z ##[group]Getting Git version info
+2025-05-26T15:08:20.0774076Z Working directory is '/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign'
+2025-05-26T15:08:20.0775442Z [command]/usr/bin/git version
+2025-05-26T15:08:20.0863148Z git version 2.49.0
+2025-05-26T15:08:20.0893291Z ##[endgroup]
+2025-05-26T15:08:20.0915411Z Temporarily overriding HOME='/home/runner/work/_temp/67cc6d4d-c41b-473e-8b73-c2aa4dcbfdd2' before making global git config changes
+2025-05-26T15:08:20.0917066Z Adding repository directory to the temporary git global config as a safe directory
+2025-05-26T15:08:20.0921385Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign
+2025-05-26T15:08:20.0959434Z Deleting the contents of '/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign'
+2025-05-26T15:08:20.0963045Z ##[group]Initializing the repository
+2025-05-26T15:08:20.0967567Z [command]/usr/bin/git init /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign
+2025-05-26T15:08:20.1048107Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-05-26T15:08:20.1049814Z hint: is subject to change. To configure the initial branch name to use in all
+2025-05-26T15:08:20.1050833Z hint: of your new repositories, which will suppress this warning, call:
+2025-05-26T15:08:20.1051687Z hint:
+2025-05-26T15:08:20.1052283Z hint: 	git config --global init.defaultBranch <name>
+2025-05-26T15:08:20.1052930Z hint:
+2025-05-26T15:08:20.1053910Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-05-26T15:08:20.1055549Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-05-26T15:08:20.1057138Z hint:
+2025-05-26T15:08:20.1057986Z hint: 	git branch -m <name>
+2025-05-26T15:08:20.1059784Z Initialized empty Git repository in /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/.git/
+2025-05-26T15:08:20.1070574Z [command]/usr/bin/git remote add origin https://github.com/TSGCFO/TsgFulfillmentRedesign
+2025-05-26T15:08:20.1120768Z ##[endgroup]
+2025-05-26T15:08:20.1122113Z ##[group]Disabling automatic garbage collection
+2025-05-26T15:08:20.1123212Z [command]/usr/bin/git config --local gc.auto 0
+2025-05-26T15:08:20.1153349Z ##[endgroup]
+2025-05-26T15:08:20.1154574Z ##[group]Setting up auth
+2025-05-26T15:08:20.1161896Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-05-26T15:08:20.1194521Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-05-26T15:08:20.1545897Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-05-26T15:08:20.1581511Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-05-26T15:08:20.1819168Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-05-26T15:08:20.1876127Z ##[endgroup]
+2025-05-26T15:08:20.1877592Z ##[group]Fetching the repository
+2025-05-26T15:08:20.1887537Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2025-05-26T15:08:21.6531148Z From https://github.com/TSGCFO/TsgFulfillmentRedesign
+2025-05-26T15:08:21.6533612Z  * [new branch]      add-claude-github-actions-1748222981731 -> origin/add-claude-github-actions-1748222981731
+2025-05-26T15:08:21.6535873Z  * [new branch]      claude     -> origin/claude
+2025-05-26T15:08:21.6537160Z  * [new branch]      codex      -> origin/codex
+2025-05-26T15:08:21.6539894Z  * [new branch]      d5tr9e-codex/extract-written-content-from-website-files -> origin/d5tr9e-codex/extract-written-content-from-website-files
+2025-05-26T15:08:21.6542190Z  * [new branch]      main       -> origin/main
+2025-05-26T15:08:21.6543361Z  * [new branch]      replit     -> origin/replit
+2025-05-26T15:08:21.6588326Z [command]/usr/bin/git branch --list --remote origin/replit
+2025-05-26T15:08:21.6613034Z   origin/replit
+2025-05-26T15:08:21.6621770Z [command]/usr/bin/git rev-parse refs/remotes/origin/replit
+2025-05-26T15:08:21.6643268Z 91c01f2351257655d5889d25531ea40b3cf4df70
+2025-05-26T15:08:21.6648907Z ##[endgroup]
+2025-05-26T15:08:21.6650111Z ##[group]Determining the checkout info
+2025-05-26T15:08:21.6651432Z ##[endgroup]
+2025-05-26T15:08:21.6654973Z [command]/usr/bin/git sparse-checkout disable
+2025-05-26T15:08:21.6696573Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-05-26T15:08:21.6723684Z ##[group]Checking out the ref
+2025-05-26T15:08:21.6728570Z [command]/usr/bin/git checkout --progress --force -B replit refs/remotes/origin/replit
+2025-05-26T15:08:21.7949717Z Switched to a new branch 'replit'
+2025-05-26T15:08:21.7951233Z branch 'replit' set up to track 'origin/replit'.
+2025-05-26T15:08:21.7972239Z ##[endgroup]
+2025-05-26T15:08:21.8014140Z [command]/usr/bin/git log -1 --format=%H
+2025-05-26T15:08:21.8038667Z 91c01f2351257655d5889d25531ea40b3cf4df70
+2025-05-26T15:08:21.8261758Z ##[group]Run dorny/paths-filter@v3
+2025-05-26T15:08:21.8262426Z with:
+2025-05-26T15:08:21.8262874Z   list-files: json
+2025-05-26T15:08:21.8264526Z   filters: changes:
+  - 'client/src/**/*.tsx'
+  - 'client/src/**/*.jsx'
+  - 'client/src/**/*.ts'
+  - 'client/src/**/*.js'
+tsx:
+  - added|modified: 'client/src/**/*.tsx'
+jsx:
+  - added|modified: 'client/src/**/*.jsx'
+ts:
+  - added|modified: 'client/src/**/*.ts'
+js:
+  - added|modified: 'client/src/**/*.js'
+
+2025-05-26T15:08:21.8266395Z   token: ***
+2025-05-26T15:08:21.8267034Z   initial-fetch-depth: 100
+2025-05-26T15:08:21.8267580Z env:
+2025-05-26T15:08:21.8268053Z   NODE_VERSION: 18
+2025-05-26T15:08:21.8268535Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:08:21.8269064Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:08:21.8269679Z ##[endgroup]
+2025-05-26T15:08:21.9219832Z ##[group]Get current git ref
+2025-05-26T15:08:21.9261932Z [command]/usr/bin/git branch --show-current
+2025-05-26T15:08:21.9299584Z replit
+2025-05-26T15:08:21.9323638Z ##[endgroup]
+2025-05-26T15:08:21.9324649Z Changes will be detected between main and replit
+2025-05-26T15:08:21.9327319Z ##[group]Searching for merge-base main...replit
+2025-05-26T15:08:21.9339629Z [command]/usr/bin/git show-ref main
+2025-05-26T15:08:21.9365864Z d781f024cd0079cf6fd5b109fcbf218824dac62d refs/remotes/origin/main
+2025-05-26T15:08:21.9384683Z [command]/usr/bin/git show-ref replit
+2025-05-26T15:08:21.9409307Z 91c01f2351257655d5889d25531ea40b3cf4df70 refs/heads/replit
+2025-05-26T15:08:21.9410437Z 91c01f2351257655d5889d25531ea40b3cf4df70 refs/remotes/origin/replit
+2025-05-26T15:08:21.9426048Z [command]/usr/bin/git merge-base refs/remotes/origin/main refs/remotes/origin/replit
+2025-05-26T15:08:21.9456620Z 0f26d09ed75ee1cf8c09b587532e7378c0c13f65
+2025-05-26T15:08:21.9463211Z ##[endgroup]
+2025-05-26T15:08:21.9465028Z ##[group]Change detection refs/remotes/origin/main...refs/remotes/origin/replit
+2025-05-26T15:08:21.9483496Z [command]/usr/bin/git diff --no-renames --name-status -z refs/remotes/origin/main...refs/remotes/origin/replit
+2025-05-26T15:08:21.9524329Z A .github/workflows/claude.yml D .github/workflows/main.yml A .github/workflows/tsg-content-lint.yml M .replit A CLAUDE.md A attached_assets/Screenshot_20250526-103616_Edge.jpg A attached_assets/Screenshot_20250526-104215_Edge.jpg M client/index.html M client/src/pages/About.tsx M client/src/pages/Contact.tsx M client/src/pages/IndustryDetail.tsx M client/src/pages/Locations.tsx M client/src/pages/ServiceDetail.tsx 
+2025-05-26T15:08:21.9528097Z ##[endgroup]
+2025-05-26T15:08:21.9528592Z Detected 13 changed files
+2025-05-26T15:08:21.9531530Z Results:
+2025-05-26T15:08:21.9533062Z ##[group]Filter changes = true
+2025-05-26T15:08:21.9533860Z Matching files:
+2025-05-26T15:08:21.9534753Z client/src/pages/About.tsx [modified]
+2025-05-26T15:08:21.9535869Z client/src/pages/Contact.tsx [modified]
+2025-05-26T15:08:21.9537207Z client/src/pages/IndustryDetail.tsx [modified]
+2025-05-26T15:08:21.9538139Z client/src/pages/Locations.tsx [modified]
+2025-05-26T15:08:21.9538823Z client/src/pages/ServiceDetail.tsx [modified]
+2025-05-26T15:08:21.9545638Z ##[endgroup]
+2025-05-26T15:08:21.9547167Z ##[group]Filter tsx = true
+2025-05-26T15:08:21.9548148Z Matching files:
+2025-05-26T15:08:21.9549013Z client/src/pages/About.tsx [modified]
+2025-05-26T15:08:21.9550069Z client/src/pages/Contact.tsx [modified]
+2025-05-26T15:08:21.9551198Z client/src/pages/IndustryDetail.tsx [modified]
+2025-05-26T15:08:21.9552327Z client/src/pages/Locations.tsx [modified]
+2025-05-26T15:08:21.9553466Z client/src/pages/ServiceDetail.tsx [modified]
+2025-05-26T15:08:21.9555106Z ##[endgroup]
+2025-05-26T15:08:21.9556393Z ##[group]Filter jsx = false
+2025-05-26T15:08:21.9557442Z Matching files: none
+2025-05-26T15:08:21.9558460Z ##[endgroup]
+2025-05-26T15:08:21.9559208Z ##[group]Filter ts = false
+2025-05-26T15:08:21.9559754Z Matching files: none
+2025-05-26T15:08:21.9560502Z ##[endgroup]
+2025-05-26T15:08:21.9561565Z ##[group]Filter js = false
+2025-05-26T15:08:21.9562083Z Matching files: none
+2025-05-26T15:08:21.9563077Z ##[endgroup]
+2025-05-26T15:08:21.9563755Z Cannot set changes output variable - name already used by filter output
+2025-05-26T15:08:21.9817184Z Post job cleanup.
+2025-05-26T15:08:22.0791747Z [command]/usr/bin/git version
+2025-05-26T15:08:22.0831970Z git version 2.49.0
+2025-05-26T15:08:22.0878085Z Temporarily overriding HOME='/home/runner/work/_temp/27252c93-caaf-46dc-8592-8edce205e9f3' before making global git config changes
+2025-05-26T15:08:22.0881259Z Adding repository directory to the temporary git global config as a safe directory
+2025-05-26T15:08:22.0884341Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign
+2025-05-26T15:08:22.0923548Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-05-26T15:08:22.0957657Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-05-26T15:08:22.1195803Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-05-26T15:08:22.1217544Z http.https://github.com/.extraheader
+2025-05-26T15:08:22.1231644Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-05-26T15:08:22.1269118Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-05-26T15:08:22.1609582Z Evaluate and set job outputs
+2025-05-26T15:08:22.1620660Z Set output 'has-changes'
+2025-05-26T15:08:22.1623815Z Set output 'tsx-files'
+2025-05-26T15:08:22.1624963Z Set output 'jsx-files'
+2025-05-26T15:08:22.1625673Z Set output 'ts-files'
+2025-05-26T15:08:22.1626362Z Set output 'js-files'
+2025-05-26T15:08:22.1627682Z Cleaning up orphan processes

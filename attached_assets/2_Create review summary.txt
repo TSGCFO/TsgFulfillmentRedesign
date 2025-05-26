@@ -1,0 +1,27 @@
+﻿2025-05-26T15:10:23.2356449Z ##[group]Run echo "## 📊 Content Review Summary"
+2025-05-26T15:10:23.2357198Z [36;1mecho "## 📊 Content Review Summary"[0m
+2025-05-26T15:10:23.2357751Z [36;1mecho ""[0m
+2025-05-26T15:10:23.2358337Z [36;1mecho "**Total files reviewed**: $(echo '' | jq -r '. | length')"[0m
+2025-05-26T15:10:23.2359033Z [36;1mecho "**Review status**: failure"[0m
+2025-05-26T15:10:23.2359539Z [36;1mecho ""[0m
+2025-05-26T15:10:23.2359960Z [36;1mecho "### File type breakdown:"[0m
+2025-05-26T15:10:23.2361559Z [36;1mecho "- TSX files: $(echo '["client/src/pages/About.tsx","client/src/pages/Contact.tsx","client/src/pages/IndustryDetail.tsx","client/src/pages/Locations.tsx","client/src/pages/ServiceDetail.tsx"]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2363634Z [36;1mecho "- JSX files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2364349Z [36;1mecho "- TS files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2365054Z [36;1mecho "- JS files: $(echo '[]' | jq -r '. | length // 0')"[0m
+2025-05-26T15:10:23.2716653Z shell: /usr/bin/bash -e {0}
+2025-05-26T15:10:23.2717464Z env:
+2025-05-26T15:10:23.2717860Z   NODE_VERSION: 18
+2025-05-26T15:10:23.2718270Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:10:23.2718721Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:10:23.2719236Z ##[endgroup]
+2025-05-26T15:10:23.3038461Z ## 📊 Content Review Summary
+2025-05-26T15:10:23.3038896Z 
+2025-05-26T15:10:23.3039145Z **Total files reviewed**: 
+2025-05-26T15:10:23.3039622Z **Review status**: failure
+2025-05-26T15:10:23.3039901Z 
+2025-05-26T15:10:23.3040087Z ### File type breakdown:
+2025-05-26T15:10:23.3040536Z - TSX files: 5
+2025-05-26T15:10:23.3040980Z - JSX files: 0
+2025-05-26T15:10:23.3063051Z - TS files: 0
+2025-05-26T15:10:23.3093710Z - JS files: 0

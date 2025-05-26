@@ -1,0 +1,43 @@
+﻿2025-05-26T15:08:20.6773565Z ##[group]Run if [ -f "claude.md" ]; then
+2025-05-26T15:08:20.6775131Z [36;1mif [ -f "claude.md" ]; then[0m
+2025-05-26T15:08:20.6776497Z [36;1m  # Read the entire claude.md file[0m
+2025-05-26T15:08:20.6777928Z [36;1m  CLAUDE_CONTENT=$(cat claude.md)[0m
+2025-05-26T15:08:20.6779211Z [36;1m  [0m
+2025-05-26T15:08:20.6780150Z [36;1m  # Set multiline output[0m
+2025-05-26T15:08:20.6781649Z [36;1m  echo "content<<EOF" >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6783148Z [36;1m  echo "$CLAUDE_CONTENT" >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6784603Z [36;1m  echo "EOF" >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6785847Z [36;1m  [0m
+2025-05-26T15:08:20.6786883Z [36;1m  echo "✅ Found claude.md standards file"[0m
+2025-05-26T15:08:20.6788484Z [36;1melse[0m
+2025-05-26T15:08:20.6789714Z [36;1m  echo "⚠️ claude.md not found, using default standards"[0m
+2025-05-26T15:08:20.6791462Z [36;1m  echo "content<<EOF" >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6792934Z [36;1m  cat << 'DEFAULT_STANDARDS' >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6794519Z [36;1m# TSG Fulfillment Services Default Standards[0m
+2025-05-26T15:08:20.6795901Z [36;1m[0m
+2025-05-26T15:08:20.6796776Z [36;1m## Brand Voice[0m
+2025-05-26T15:08:20.6797916Z [36;1m- Professional yet approachable[0m
+2025-05-26T15:08:20.6799238Z [36;1m- Customer-centric language[0m
+2025-05-26T15:08:20.6800731Z [36;1m- Clear and concise communication[0m
+2025-05-26T15:08:20.6802008Z [36;1m[0m
+2025-05-26T15:08:20.6802921Z [36;1m## Content Guidelines[0m
+2025-05-26T15:08:20.6804233Z [36;1m- Avoid superlatives without data backing[0m
+2025-05-26T15:08:20.6805706Z [36;1m- Focus on value propositions[0m
+2025-05-26T15:08:20.6807002Z [36;1m- Use active voice[0m
+2025-05-26T15:08:20.6808254Z [36;1m- Maintain consistent terminology[0m
+2025-05-26T15:08:20.6809536Z [36;1m[0m
+2025-05-26T15:08:20.6810541Z [36;1m## SEO Requirements[0m
+2025-05-26T15:08:20.6811794Z [36;1m- Include relevant keywords naturally[0m
+2025-05-26T15:08:20.6813316Z [36;1m- Optimize meta descriptions (150-160 chars)[0m
+2025-05-26T15:08:20.6814769Z [36;1m- Use descriptive headings[0m
+2025-05-26T15:08:20.6816052Z [36;1m- Ensure mobile-friendly content[0m
+2025-05-26T15:08:20.6817357Z [36;1mDEFAULT_STANDARDS[0m
+2025-05-26T15:08:20.6818514Z [36;1m  echo "EOF" >> $GITHUB_OUTPUT[0m
+2025-05-26T15:08:20.6819731Z [36;1mfi[0m
+2025-05-26T15:08:20.7045976Z shell: /usr/bin/bash -e {0}
+2025-05-26T15:08:20.7047251Z env:
+2025-05-26T15:08:20.7048135Z   NODE_VERSION: 18
+2025-05-26T15:08:20.7049107Z   REVIEW_TIMEOUT: 30
+2025-05-26T15:08:20.7050184Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T15:08:20.7051637Z ##[endgroup]
+2025-05-26T15:08:20.7161814Z ⚠️ claude.md not found, using default standards

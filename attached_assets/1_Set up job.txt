@@ -1,0 +1,25 @@
+﻿2025-05-26T15:10:23.1022671Z Current runner version: '2.324.0'
+2025-05-26T15:10:23.1048149Z ##[group]Operating System
+2025-05-26T15:10:23.1048923Z Ubuntu
+2025-05-26T15:10:23.1049520Z 24.04.2
+2025-05-26T15:10:23.1049955Z LTS
+2025-05-26T15:10:23.1050425Z ##[endgroup]
+2025-05-26T15:10:23.1050992Z ##[group]Runner Image
+2025-05-26T15:10:23.1051651Z Image: ubuntu-24.04
+2025-05-26T15:10:23.1052156Z Version: 20250511.1.0
+2025-05-26T15:10:23.1053616Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250511.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-05-26T15:10:23.1055005Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250511.1
+2025-05-26T15:10:23.1055912Z ##[endgroup]
+2025-05-26T15:10:23.1056547Z ##[group]Runner Image Provisioner
+2025-05-26T15:10:23.1057152Z 2.0.437.1
+2025-05-26T15:10:23.1057671Z ##[endgroup]
+2025-05-26T15:10:23.1058889Z ##[group]GITHUB_TOKEN Permissions
+2025-05-26T15:10:23.1060665Z Checks: write
+2025-05-26T15:10:23.1061398Z Contents: read
+2025-05-26T15:10:23.1061906Z Metadata: read
+2025-05-26T15:10:23.1063145Z PullRequests: write
+2025-05-26T15:10:23.1063643Z ##[endgroup]
+2025-05-26T15:10:23.1066850Z Secret source: Actions
+2025-05-26T15:10:23.1067553Z Prepare workflow directory
+2025-05-26T15:10:23.1433076Z Prepare all required actions
+2025-05-26T15:10:23.1485504Z Complete job name: review-summary
