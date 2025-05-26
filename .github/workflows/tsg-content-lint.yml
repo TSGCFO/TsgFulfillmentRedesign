@@ -246,7 +246,7 @@ jobs:
           timeout_minutes: ${{ env.REVIEW_TIMEOUT }}
           max_turns: 100
 
-          - name: Parse Claude review results
+      - name: Parse Claude review results
             id: parse-results
             run: |
               if [ ! -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
