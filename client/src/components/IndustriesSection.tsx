@@ -106,7 +106,7 @@ const IndustriesSection: React.FC = () => {
       description:
         "Specialized handling, storage, and fulfillment services for health, beauty, and personal care products with full regulatory compliance.",
       image:
-        "https://images.unsplash.com/photo-1614859638024-82f09fca5668?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+        "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
       slug: "health-beauty",
     },
     {
