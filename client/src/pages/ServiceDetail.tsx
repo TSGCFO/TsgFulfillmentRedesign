@@ -17,6 +17,8 @@ import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { EnhancedImage } from "@/components/ui/enhanced-image";
+import { getServiceImage } from "@/lib/images";
 
 import Seo from "@/components/SEO/Seo";
 
@@ -38,7 +40,6 @@ interface ServiceData {
   features: string[];
   benefits: string[];
   callToAction: string;
-  featuredImage?: string;
 }
 
 const serviceDetails: ServiceData[] = [
@@ -72,8 +73,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Ready to enhance your products with our value-added services? Contact us today to discuss how we can help you create custom solutions that delight your customers.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1516733968668-dbdce39c4651?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Package className="text-primary text-4xl" />,
@@ -105,8 +104,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Ready to streamline your order fulfillment process? Contact us today for a customized solution that fits your business needs.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Warehouse className="text-primary text-4xl" />,
@@ -473,10 +470,7 @@ const ServiceDetail = () => {
         canonical={`https://tsgfulfillment.com/services/${service.slug}`}
         ogType="website"
         ogUrl={`https://tsgfulfillment.com/services/${service.slug}`}
-        ogImage={
-          service.featuredImage ||
-          "https://tsgfulfillment.com/images/og-image.jpg"
-        }
+        ogImage={getServiceImage(service.slug)}
         twitterCard="summary_large_image"
         twitterTitle={`${service.title} - TSG Fulfillment Services`}
         twitterDescription={service.description}
@@ -539,18 +533,17 @@ const ServiceDetail = () => {
               </p>
 
               {/* Featured image with optimized loading */}
-              {service.featuredImage && (
-                <div className="mt-8 mb-12 overflow-hidden rounded-xl shadow-lg">
-                  <img
-                    src={service.featuredImage}
-                    alt={`${service.title} - TSG Fulfillment Services`}
-                    width={1200}
-                    height={600}
-                    className="w-full h-auto object-cover"
-                    loading="eager"
-                  />
-                </div>
-              )}
+              <div className="mt-8 mb-12 overflow-hidden rounded-xl shadow-lg">
+                <EnhancedImage
+                  src={getServiceImage(service.slug)}
+                  alt={`${service.title} - TSG Fulfillment Services`}
+                  width={1200}
+                  height={600}
+                  className="w-full h-auto object-cover"
+                  fallbackCategory="service"
+                  priority={true}
+                />
+              </div>
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
