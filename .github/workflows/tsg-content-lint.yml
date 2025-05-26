@@ -378,6 +378,69 @@ jobs:
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/pull/${context.issue.number}#issuecomment-new`
             });
 
+      - name: Post review as commit comment
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const review_content = `${{ steps.parse-results.outputs.review_content }}`;
+            const has_critical = ${{ steps.parse-results.outputs.has_critical_issues }};
+            
+            // Create the comment header
+            const header = `## 🤖 TSG Fulfillment Content Review Report
+            
+            **Reviewer**: Claude AI (Model: ${{ env.CLAUDE_MODEL }})
+            **Review Type**: ${{ github.event.inputs.review_depth || 'comprehensive' }}
+            **Files Reviewed**: ${{ needs.path-detection.outputs.all-files }}
+            **Commit**: ${context.sha.substring(0, 7)}
+            
+            ---
+            
+            `;
+            
+            // Add review content
+            const full_comment = header + review_content + `
+            
+            ---
+            
+            *This automated review follows TSG Fulfillment Services content standards. Consider addressing issues for better content quality.*
+            
+            <details>
+            <summary>📋 Review Configuration</summary>
+            
+            - Grammar and spelling check: ✅
+            - Content accuracy verification: ✅
+            - SEO optimization analysis: ✅
+            - Brand consistency check: ✅
+            - Standards file: \`claude.md\`
+            
+            </details>`;
+            
+            // Post commit comment
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: full_comment
+            });
+            
+            // Set commit status based on critical issues
+            const status = has_critical ? 'failure' : 'success';
+            const description = has_critical 
+              ? 'Critical content issues found - review recommended' 
+              : 'Content review passed - no critical issues';
+            
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: status,
+              context: 'TSG Content Review',
+              description: description,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}#commitcomment-new`
+            });
+
   # Job 4: Summary and notifications
   review-summary:
     needs: [content-review, path-detection]
