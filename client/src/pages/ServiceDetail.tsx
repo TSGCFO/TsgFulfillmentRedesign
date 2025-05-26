@@ -135,8 +135,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Looking for reliable warehousing solutions? Contact our team today to discuss how we can help you optimize your storage and inventory management.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Truck className="text-primary text-4xl" />,
@@ -168,8 +166,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Ready to optimize your transportation and logistics? Contact us today to learn how our transportation services can improve your delivery performance and reduce costs.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Package className="text-primary text-4xl" />,
@@ -201,8 +197,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Ready to simplify your product bundling and kitting process? Contact us today to learn how our kitting services can save you time and money.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Package className="text-primary text-4xl" />,
@@ -234,8 +228,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Need expert hand assembly services for your products? Contact us today to discuss how we can support your specialized assembly needs.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <RotateCcw className="text-primary text-4xl" />,
@@ -267,8 +259,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Looking to optimize your returns management process? Contact us today to learn how our reverse logistics solutions can help you improve efficiency and customer satisfaction.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Box className="text-primary text-4xl" />,
@@ -300,8 +290,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Ready to take control of your inventory? Contact us today to learn how our inventory management services can help you optimize your stock levels and improve efficiency.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Truck className="text-primary text-4xl" />,
@@ -333,8 +321,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Need help with international shipping and logistics? Contact us today to discuss how our freight forwarding services can help you optimize your global supply chain.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
   },
   {
     icon: <Stethoscope className="text-primary text-4xl" />,
@@ -366,8 +352,6 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction:
       "Looking for specialized fulfillment services for your healthcare marketing needs? Contact us today to learn how we can help you maintain compliance while improving efficiency.",
-    featuredImage:
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
   },
 ];
 

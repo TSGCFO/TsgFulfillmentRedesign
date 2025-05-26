@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Package, Warehouse, Truck, Clock } from 'lucide-react';
 import { useLocation } from 'wouter';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
+import { getServiceImage } from '@/lib/images';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },

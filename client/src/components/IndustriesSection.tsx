@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { OptimizedImage } from "@/components/ui/optimized-image";
+import { EnhancedImage } from "@/components/ui/enhanced-image";
+import { getIndustryImage } from "@/lib/images";
 import { ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
 
