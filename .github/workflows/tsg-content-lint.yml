@@ -246,28 +246,35 @@ jobs:
           timeout_minutes: ${{ env.REVIEW_TIMEOUT }}
           max_turns: 100
 
-      - name: Parse Claude review results
-        id: parse-results
-        run: |
-          if [ ! -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
-            echo "❌ Execution file not found."
-            exit 1
-          fi
+          - name: Parse Claude review results
+            id: parse-results
+            run: |
+              if [ ! -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
+                echo "❌ Execution file not found."
+                exit 1
+              fi
 
-          echo "📋 Parsing Claude execution output..."
-          REVIEW_CONTENT=$(jq -r '[.[] | select(.type == "assistant" and .message.content)] | last | .message.content | map(select(.type == "text")) | map(.text) | join("\n")' "${{ steps.claude-review.outputs.execution_file }}")
+              echo "📋 Parsing Claude execution output..."
+              if ! jq empty "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null; then
+                echo "❌ Execution file is not valid JSON."
+                echo "Content of execution file:"
+                cat "${{ steps.claude-review.outputs.execution_file }}"
+                exit 1
+              fi
 
-          if [ -z "$REVIEW_CONTENT" ]; then
-            echo "⚠️ Parsing failed. Check the Claude execution file for issues."
-            echo "Content of execution file:"
-            cat "${{ steps.claude-review.outputs.execution_file }}"
-            exit 1
-          fi
+              REVIEW_CONTENT=$(jq -r '[.[] | select(.type == "assistant" and .message.content)] | last | .message.content | map(select(.type == "text")) | map(.text) | join("\n")' "${{ steps.claude-review.outputs.execution_file }}")
 
-          echo "✅ Successfully parsed review content."
-          echo "review_content<<EOF" >> $GITHUB_OUTPUT
-          echo "$REVIEW_CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+              if [ -z "$REVIEW_CONTENT" ]; then
+                echo "⚠️ Parsing failed. Check the Claude execution file for issues."
+                echo "Content of execution file:"
+                cat "${{ steps.claude-review.outputs.execution_file }}"
+                exit 1
+              fi
+
+              echo "✅ Successfully parsed review content."
+              echo "review_content<<EOF" >> $GITHUB_OUTPUT
+              echo "$REVIEW_CONTENT" >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Post review as PR comment
         if: github.event_name == 'pull_request'
