@@ -18,7 +18,7 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-      - repli
+      - replit
     paths:
       - 'client/src/**/*.tsx'
       - 'client/src/**/*.jsx'
