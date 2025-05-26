@@ -244,7 +244,7 @@ jobs:
             Bash(git diff origin/main...HEAD -- $file),Bash(grep -n ""),
             Bash(find client/src -name "*.tsx" -o -name "*.jsx" | head -20)
           timeout_minutes: ${{ env.REVIEW_TIMEOUT }}
-          max_turns: 10
+          max_turns: 100
 
       - name: Parse Claude review results
         id: parse-results
