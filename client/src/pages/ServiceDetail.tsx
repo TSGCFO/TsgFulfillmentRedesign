@@ -65,10 +65,10 @@ const serviceDetails: ServiceData[] = [
     featuredImage: "https://images.unsplash.com/photo-1516733968668-dbdce39c4651?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
   },
   {
-    icon: <Box className="text-primary text-4xl" />,
-    title: "Order Fulfillment",
-    description: "We handle the entire fulfillment process from receiving and storing your inventory to processing orders, picking, packing, and shipping products directly to your customers.",
-    slug: "order-fulfillment",
+    icon: <Package className="text-primary text-4xl" />,
+    title: "Fulfillment",
+    description: "End-to-end order fulfillment services including receiving, storage, pick & pack, and shipping with real-time tracking and reporting.",
+    slug: "fulfillment",
     longDescription: [
       "TSG Fulfillment provides comprehensive order fulfillment services to help businesses streamline their operations and improve customer satisfaction. Our nationwide fulfillment centers are strategically located to optimize shipping times and costs.",
       "We handle all aspects of the order fulfillment process, from inventory management to shipping, allowing you to focus on growing your business. Our team of experts is dedicated to ensuring your orders are processed accurately and efficiently.",
@@ -96,9 +96,9 @@ const serviceDetails: ServiceData[] = [
   },
   {
     icon: <Warehouse className="text-primary text-4xl" />,
-    title: "Warehousing Services",
-    description: "Our modern warehousing facility offers secure storage solutions with advanced inventory management systems to help you consolidate your supply chains.",
-    slug: "warehousing-services",
+    title: "Warehousing",
+    description: "Strategic warehouse facilities optimized for efficient storage and inventory management with climate control and security monitoring.",
+    slug: "warehousing",
     longDescription: [
       "TSG Fulfillment offers a modern warehousing facility designed to protect your products and optimize your supply chain. Our facility is equipped with state-of-the-art security systems and staffed by experienced professionals.",
       "Our warehousing services are scalable to accommodate your business's changing needs. Whether you require short-term storage for seasonal inventory or long-term solutions, we have options to fit your requirements and budget.",
@@ -123,6 +123,36 @@ const serviceDetails: ServiceData[] = [
     ],
     callToAction: "Looking for reliable warehousing solutions? Contact our team today to discuss how we can help you optimize your storage and inventory management.",
     featuredImage: "https://images.unsplash.com/photo-1583302729124-de1f8e61bcf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    icon: <Truck className="text-primary text-4xl" />,
+    title: "Transportation",
+    description: "Comprehensive transportation and logistics solutions with optimized routing and carrier selection for timely delivery and cost efficiency.",
+    slug: "transportation",
+    longDescription: [
+      "TSG Fulfillment's transportation services provide comprehensive logistics solutions designed to get your products to their destination quickly and cost-effectively. We work with a network of trusted carriers to offer flexible shipping options that meet your specific needs.",
+      "Our transportation management system optimizes routing and carrier selection based on factors like delivery speed, cost, and service reliability. We handle everything from local deliveries to nationwide shipping, ensuring your products reach customers safely and on time.",
+      "With real-time tracking and proactive communication, we keep you and your customers informed throughout the shipping process. Our transportation solutions are scalable to handle everything from individual packages to full truckload shipments."
+    ],
+    features: [
+      "Multi-carrier shipping network",
+      "Optimized routing and carrier selection", 
+      "Real-time tracking and updates",
+      "Local and nationwide delivery options",
+      "Expedited and standard shipping",
+      "Full truckload and LTL shipping",
+      "White glove delivery services",
+      "International shipping capabilities"
+    ],
+    benefits: [
+      "Reduce shipping costs through optimized carrier selection",
+      "Improve delivery times with strategic routing",
+      "Enhance customer satisfaction with reliable delivery",
+      "Scale transportation needs without infrastructure investment",
+      "Access to negotiated carrier rates and services"
+    ],
+    callToAction: "Ready to optimize your transportation and logistics? Contact us today to learn how our transportation services can improve your delivery performance and reduce costs.",
+    featuredImage: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
   },
   {
     icon: <Package className="text-primary text-4xl" />,
