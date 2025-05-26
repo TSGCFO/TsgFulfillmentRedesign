@@ -307,7 +307,7 @@ jobs:
               echo "📏 Review content too long (${#REVIEW_CONTENT} chars), truncating..."
               REVIEW_CONTENT="${REVIEW_CONTENT:0:65000}
 
-**[Content truncated due to length - full review available in workflow logs]**"
+[Content truncated due to length - full review available in workflow logs]"
             fi
             
             # Set output using proper multiline format
