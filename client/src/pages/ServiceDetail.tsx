@@ -475,15 +475,13 @@ const ServiceDetail = () => {
               {/* Featured image with optimized loading */}
               {service.featuredImage && (
                 <div className="mt-8 mb-12 overflow-hidden rounded-xl shadow-lg">
-                  <OptimizedImage
+                  <img
                     src={service.featuredImage}
                     alt={`${service.title} - TSG Fulfillment Services`}
                     width={1200}
                     height={600}
                     className="w-full h-auto object-cover"
                     loading="eager"
-                    priority={true}
-                    sizes="(max-width: 768px) 100vw, 1200px"
                   />
                 </div>
               )}
