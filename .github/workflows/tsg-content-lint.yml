@@ -5,7 +5,7 @@ run-name: Content review by ${{ github.actor }} on ${{ github.ref_name }}
 on:
   push:
     branches:
-      - main
+      - Deployment
       - replit
       - 'feature/**'
     paths:
@@ -17,7 +17,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
-      - main
+      - Deployment
       - replit
     paths:
       - 'client/src/**/*.tsx'
