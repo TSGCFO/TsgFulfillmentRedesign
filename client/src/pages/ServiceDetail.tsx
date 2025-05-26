@@ -7,9 +7,7 @@ import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Breadcrumbs } from '@/components/ui/breadcrumb';
-import { OptimizedImage } from '@/components/ui/optimized-image';
-import LazySection from '@/components/ui/lazy-section';
+
 import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
@@ -445,14 +443,14 @@ const ServiceDetail = () => {
               </Link>
             </div>
             
-            {/* Breadcrumbs navigation */}
-            <Breadcrumbs 
-              className="mt-3"
-              items={[
-                { label: 'Services', href: '/#services' },
-                { label: service.title, href: `/services/${params?.slug}`, isCurrent: true }
-              ]}
-            />
+            {/* Simple breadcrumbs navigation */}
+            <nav className="mt-3 flex items-center space-x-1 text-sm">
+              <Link href="/" className="text-gray-500 hover:text-primary transition-colors">Home</Link>
+              <span className="text-gray-400">/</span>
+              <Link href="/#services" className="text-gray-500 hover:text-primary transition-colors">Services</Link>
+              <span className="text-gray-400">/</span>
+              <span className="font-medium text-gray-700">{service.title}</span>
+            </nav>
           </div>
         </div>
       </header>
@@ -501,7 +499,7 @@ const ServiceDetail = () => {
           </div>
         </section>
 
-        <LazySection className="py-16">
+        <section className="py-16">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <motion.div
@@ -516,9 +514,9 @@ const ServiceDetail = () => {
               </motion.div>
             </div>
           </div>
-        </LazySection>
+        </section>
 
-        <LazySection className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <motion.div
@@ -538,9 +536,9 @@ const ServiceDetail = () => {
               </motion.div>
             </div>
           </div>
-        </LazySection>
+        </section>
 
-        <LazySection className="py-16">
+        <section className="py-16">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto">
               <motion.div
@@ -564,9 +562,9 @@ const ServiceDetail = () => {
               </motion.div>
             </div>
           </div>
-        </LazySection>
+        </section>
 
-        <LazySection className="py-16 bg-primary/5" id="contact">
+        <section className="py-16 bg-primary/5" id="contact">
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <motion.div
@@ -588,9 +586,9 @@ const ServiceDetail = () => {
               </motion.div>
             </div>
           </div>
-        </LazySection>
+        </section>
 
-        <LazySection className="py-16">
+        <section className="py-16">
           <div className="container mx-auto px-6">
             <Separator className="mb-12" />
             <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -608,7 +606,7 @@ const ServiceDetail = () => {
               )}
             </div>
           </div>
-        </LazySection>
+        </section>
       </main>
 
       <Footer />
