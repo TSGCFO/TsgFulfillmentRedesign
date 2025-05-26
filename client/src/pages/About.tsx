@@ -41,7 +41,7 @@ const About: React.FC = () => {
   const values = [
     {
       title: "Excellence",
-      description: "We are committed to delivering excellence in every aspect of our operations, from logistics processes to customer service.",
+      description: "We are committed to delivering exceptional service in every aspect of our operations, from logistics processes to customer service.",
       icon: <Star className="h-10 w-10 text-primary mb-4" />
     },
     {
