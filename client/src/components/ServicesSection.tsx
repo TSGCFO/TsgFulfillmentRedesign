@@ -133,7 +133,7 @@ const ServicesSection: React.FC = () => {
       icon: <Package className="text-white w-12 h-12" />,
       title: "Fulfillment",
       description: "End-to-end order fulfillment services including receiving, storage, pick & pack, and shipping with real-time tracking and reporting.",
-      image: "https://images.unsplash.com/photo-1586528116493-ce31b741fdd4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
       slug: "fulfillment",
       backgroundColor: "bg-[#0C71C3]"
     },
