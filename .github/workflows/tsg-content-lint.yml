@@ -305,8 +305,7 @@ jobs:
             # Save full review for comment (truncate if too long for GitHub)
             if [ ${#REVIEW_CONTENT} -gt 65000 ]; then
               echo "📏 Review content too long (${#REVIEW_CONTENT} chars), truncating..."
-              REVIEW_CONTENT="${REVIEW_CONTENT:0:65000}
-**[Content truncated due to length - full review available in workflow logs]**"
+              REVIEW_CONTENT="${REVIEW_CONTENT:0:65000}"$'\n\n**[Content truncated due to length - full review available in workflow logs]**'
             fi
             
             # Set output using proper multiline format
