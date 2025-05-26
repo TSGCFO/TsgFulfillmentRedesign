@@ -249,72 +249,25 @@ jobs:
       - name: Parse Claude review results
         id: parse-results
         run: |
-          # Read the execution results
-          if [ -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
-            echo "📋 Analyzing Claude execution output..."
-
-            # Debug: Show file structure (first 10 lines)
-            echo "🔍 Execution file structure preview:"
-            head -10 "${{ steps.claude-review.outputs.execution_file }}" || echo "Could not preview file"
-
-            # Try to determine the JSON structure and extract content
-            # First, try to find assistant messages with content arrays
-            REVIEW_CONTENT=$(jq -r '[.[] | select(.type == "assistant" and .message.content)] | last | .message.content | map(select(.type == "text")) | map(.text) | join("\n")' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
-
-            # If that fails, try simpler assistant message extraction
-            if [ -z "$REVIEW_CONTENT" ] || [ "$REVIEW_CONTENT" = "null" ]; then
-              echo "⚠️ Complex format failed, trying simple assistant extraction..."
-              REVIEW_CONTENT=$(jq -r '[.[] | select(.type == "assistant")] | last | .message.content[0].text // .content // .message // empty' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
-            fi
-
-            # Final fallback: extract any text content found
-            if [ -z "$REVIEW_CONTENT" ] || [ "$REVIEW_CONTENT" = "null" ]; then
-              echo "⚠️ All structured parsing failed, attempting text extraction..."
-              REVIEW_CONTENT=$(jq -r '[.[] | select(.message.content)] | last | .message.content[] | select(.type == "text") | .text // empty' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
-            fi
-
-            # Validate we got some content
-            if [ -z "$REVIEW_CONTENT" ] || [ "$REVIEW_CONTENT" = "null" ] || [ "$REVIEW_CONTENT" = "empty" ]; then
-              echo "❌ Failed to extract review content from execution file"
-              echo "📄 Full file contents for debugging:"
-              cat "${{ steps.claude-review.outputs.execution_file }}"
-              exit 1
-            fi
-
-            echo "✅ Successfully extracted review content (${#REVIEW_CONTENT} characters)"
-
-            # Process the review content
-            CRITICAL_ISSUES=$(echo "$REVIEW_CONTENT" | sed -n '/🔴 Critical Issues/,/🟡 Recommendations/p' | grep -v '🟡 Recommendations' | head -20)
-            RECOMMENDATIONS=$(echo "$REVIEW_CONTENT" | sed -n '/🟡 Recommendations/,/🟢 Positive Observations/p' | grep -v '🟢 Positive Observations' | head -20)
-
-            echo "Critical Issues:"
-            echo "$CRITICAL_ISSUES"
-            echo "Recommendations:"
-            echo "$RECOMMENDATIONS"
-            
-            # Check if there are critical issues
-            if echo "$CRITICAL_ISSUES" | grep -q "[[:alnum:]]"; then
-              echo "🔴 Critical issues detected"
-              echo "has_critical_issues=true" >> $GITHUB_OUTPUT
-            else
-              echo "🟢 No critical issues found"
-              echo "has_critical_issues=false" >> $GITHUB_OUTPUT
-            fi
-            
-            # Save full review for comment (truncate if too long for GitHub)
-            if [ ${#REVIEW_CONTENT} -gt 65000 ]; then
-              echo "📏 Review content too long (${#REVIEW_CONTENT} chars), truncating..."
-              REVIEW_CONTENT="${REVIEW_CONTENT:0:65000}"$'\n\n**[Content truncated due to length - full review available in workflow logs]**'
-            fi
-            
-            # Set output using proper multiline format
-            echo "review_content<<EOF" >> $GITHUB_OUTPUT
-            echo "$REVIEW_CONTENT" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          else
-            echo "❌ Execution file not found: ${{ steps.claude-review.outputs.execution_file }}"
+          if [ ! -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
+            echo "❌ Execution file not found."
             exit 1
           fi
+
+          echo "📋 Parsing Claude execution output..."
+          REVIEW_CONTENT=$(jq -r '[.[] | select(.type == "assistant" and .message.content)] | last | .message.content | map(select(.type == "text")) | map(.text) | join("\n")' "${{ steps.claude-review.outputs.execution_file }}")
+
+          if [ -z "$REVIEW_CONTENT" ]; then
+            echo "⚠️ Parsing failed. Check the Claude execution file for issues."
+            echo "Content of execution file:"
+            cat "${{ steps.claude-review.outputs.execution_file }}"
+            exit 1
+          fi
+
+          echo "✅ Successfully parsed review content."
+          echo "review_content<<EOF" >> $GITHUB_OUTPUT
+          echo "$REVIEW_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Post review as PR comment
         if: github.event_name == 'pull_request'
