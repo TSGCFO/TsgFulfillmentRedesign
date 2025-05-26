@@ -259,7 +259,7 @@ jobs:
             
             # Try to determine the JSON structure and extract content
             # First, try the documented format (object with messages array)
-            REVIEW_CONTENT=$(jq -r '.messages[-1].content // empty' "${{ steps.claude-review.outputs.execution_file }}" 2>/dev/null)
+            REVIEW_CONTENT=$(jq -r 'map(select(.role == "assistant")) | last | .content' "${{ steps.claude-review.outputs.execution_file }}")
             
             # If that fails, try array format (root is array of messages)
             if [ -z "$REVIEW_CONTENT" ]; then
