@@ -11,7 +11,7 @@ on:
 
 env:
   NODE_VERSION: '18'
-  CLAUDE_MODEL: 'claude-3-7-sonnet-20250219'
+  CLAUDE_MODEL: claude-3-7-sonnet-20250219
 
 permissions:
   contents: read
@@ -30,9 +30,9 @@ jobs:
         id: changes
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- 'client/src/**/*.tsx' 'client/src/**/*.jsx' | head -10)
+            FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- client/src/ | grep -E '\\.(tsx|jsx)$' | head -10)
           else
-            FILES=$(git diff --name-only HEAD~1 HEAD -- 'client/src/**/*.tsx' 'client/src/**/*.jsx' | head -10)
+            FILES=$(git diff --name-only HEAD~1 HEAD -- client/src/ | grep -E '\\.(tsx|jsx)$' | head -10)
           fi
 
           if [ -z "$FILES" ]; then
@@ -48,14 +48,13 @@ jobs:
       - name: Run Claude review
         if: steps.changes.outputs.has_changes == 'true'
         id: review
-        uses: anthropics/claude-code-base-action@beta
+        uses: anthropics/claude-code-base-action@v0.0.4
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          anthropic_model: ${{ env.CLAUDE_MODEL }}
           prompt_file: .github/prompts/content-review.md
-          allowed_tools: View,GlobTool,GrepTool,Bash
-          timeout_minutes: 5
-          max_turns: 20
+          allowed_tools: Read,Glob,Grep,Bash
+          timeout_minutes: 45
+          max_turns: 90
 
       - name: Parse review results
         if: steps.changes.outputs.has_changes == 'true'
