@@ -9,6 +9,7 @@ on:
     branches: [Deployment, replit]
     paths: ['client/src/**/*.tsx', 'client/src/**/*.jsx']
 
+
 env:
   NODE_VERSION: '18'
   CLAUDE_MODEL: claude-3-7-sonnet-20250219
