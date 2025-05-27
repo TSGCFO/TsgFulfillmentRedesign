@@ -1,4 +1,0 @@
-﻿2025-05-26T15:08:20.9486347Z Evaluate and set job outputs
-2025-05-26T15:08:20.9499858Z Set output 'standards-content'
-2025-05-26T15:08:20.9503027Z Set output 'config-valid'
-2025-05-26T15:08:20.9505263Z Cleaning up orphan processes

@@ -1,0 +1,287 @@
+2025-05-26T22:06:20.9931249Z Current runner version: '2.324.0'
+2025-05-26T22:06:20.9959912Z ##[group]Operating System
+2025-05-26T22:06:20.9960828Z Ubuntu
+2025-05-26T22:06:20.9961305Z 24.04.2
+2025-05-26T22:06:20.9961783Z LTS
+2025-05-26T22:06:20.9962410Z ##[endgroup]
+2025-05-26T22:06:20.9962944Z ##[group]Runner Image
+2025-05-26T22:06:20.9963615Z Image: ubuntu-24.04
+2025-05-26T22:06:20.9964173Z Version: 20250511.1.0
+2025-05-26T22:06:20.9965198Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250511.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-05-26T22:06:20.9966655Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250511.1
+2025-05-26T22:06:20.9967554Z ##[endgroup]
+2025-05-26T22:06:20.9968058Z ##[group]Runner Image Provisioner
+2025-05-26T22:06:20.9968730Z 2.0.437.1
+2025-05-26T22:06:20.9969229Z ##[endgroup]
+2025-05-26T22:06:20.9970729Z ##[group]GITHUB_TOKEN Permissions
+2025-05-26T22:06:20.9972597Z Checks: write
+2025-05-26T22:06:20.9973152Z Contents: read
+2025-05-26T22:06:20.9973954Z Metadata: read
+2025-05-26T22:06:20.9974666Z PullRequests: write
+2025-05-26T22:06:20.9975229Z ##[endgroup]
+2025-05-26T22:06:20.9977266Z Secret source: Actions
+2025-05-26T22:06:20.9978077Z Prepare workflow directory
+2025-05-26T22:06:21.0435884Z Prepare all required actions
+2025-05-26T22:06:21.0473143Z Getting action download info
+2025-05-26T22:06:21.2930510Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-05-26T22:06:21.2931604Z Version: 4.2.2
+2025-05-26T22:06:21.2932512Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-05-26T22:06:21.2933569Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-05-26T22:06:21.2934202Z ##[endgroup]
+2025-05-26T22:06:21.3880709Z ##[group]Download immutable action package 'actions/setup-node@v4'
+2025-05-26T22:06:21.3881429Z Version: 4.4.0
+2025-05-26T22:06:21.3882068Z Digest: sha256:9427cefe82346e992fb5b949e3569b39d537ae41aa3086483b14eceebfc16bc1
+2025-05-26T22:06:21.3882942Z Source commit SHA: 49933ea5288caeca8642d1e84afbd3f7d6820020
+2025-05-26T22:06:21.3883570Z ##[endgroup]
+2025-05-26T22:06:21.4810222Z Download action repository 'anthropics/claude-code-base-action@beta' (SHA:f99496e33ac73692b674913c57e0a58e6dacc8b1)
+2025-05-26T22:06:22.0977681Z ##[group]Download immutable action package 'actions/github-script@v7'
+2025-05-26T22:06:22.0978567Z Version: 7.0.1
+2025-05-26T22:06:22.0979288Z Digest: sha256:bce02966afe3a75123f766b765abe432fac5464b74976015dc06b811ac9054c7
+2025-05-26T22:06:22.0980500Z Source commit SHA: 60a0d83039c74a4aee543508d2ffcb1c3799cdea
+2025-05-26T22:06:22.0981180Z ##[endgroup]
+2025-05-26T22:06:22.5283778Z Getting action download info
+2025-05-26T22:06:22.7072367Z Download action repository 'oven-sh/setup-bun@v2' (SHA:735343b667d3e6f658f44d0eca948eb6282f2b76)
+2025-05-26T22:06:23.4363643Z Complete job name: content-review
+2025-05-26T22:06:23.5151338Z ##[group]Run actions/checkout@v4
+2025-05-26T22:06:23.5151985Z with:
+2025-05-26T22:06:23.5152227Z   fetch-depth: 0
+2025-05-26T22:06:23.5152510Z   repository: TSGCFO/TsgFulfillmentRedesign
+2025-05-26T22:06:23.5153029Z   token: ***
+2025-05-26T22:06:23.5153277Z   ssh-strict: true
+2025-05-26T22:06:23.5153531Z   ssh-user: git
+2025-05-26T22:06:23.5153782Z   persist-credentials: true
+2025-05-26T22:06:23.5154047Z   clean: true
+2025-05-26T22:06:23.5154295Z   sparse-checkout-cone-mode: true
+2025-05-26T22:06:23.5154610Z   fetch-tags: false
+2025-05-26T22:06:23.5154852Z   show-progress: true
+2025-05-26T22:06:23.5155091Z   lfs: false
+2025-05-26T22:06:23.5155308Z   submodules: false
+2025-05-26T22:06:23.5155559Z   set-safe-directory: true
+2025-05-26T22:06:23.5156015Z env:
+2025-05-26T22:06:23.5156234Z   NODE_VERSION: 18
+2025-05-26T22:06:23.5156462Z   REVIEW_TIMEOUT: 30
+2025-05-26T22:06:23.5156719Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T22:06:23.5157024Z ##[endgroup]
+2025-05-26T22:06:23.7709437Z Syncing repository: TSGCFO/TsgFulfillmentRedesign
+2025-05-26T22:06:23.7711346Z ##[group]Getting Git version info
+2025-05-26T22:06:23.7711963Z Working directory is '/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign'
+2025-05-26T22:06:23.7713043Z [command]/usr/bin/git version
+2025-05-26T22:06:23.7812134Z git version 2.49.0
+2025-05-26T22:06:23.7842768Z ##[endgroup]
+2025-05-26T22:06:23.7858979Z Temporarily overriding HOME='/home/runner/work/_temp/c284cacf-be42-4c26-b823-bc7dae11b761' before making global git config changes
+2025-05-26T22:06:23.7860772Z Adding repository directory to the temporary git global config as a safe directory
+2025-05-26T22:06:23.7866182Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign
+2025-05-26T22:06:23.7907052Z Deleting the contents of '/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign'
+2025-05-26T22:06:23.7910928Z ##[group]Initializing the repository
+2025-05-26T22:06:23.7915616Z [command]/usr/bin/git init /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign
+2025-05-26T22:06:23.8013283Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-05-26T22:06:23.8014159Z hint: is subject to change. To configure the initial branch name to use in all
+2025-05-26T22:06:23.8014753Z hint: of your new repositories, which will suppress this warning, call:
+2025-05-26T22:06:23.8015456Z hint:
+2025-05-26T22:06:23.8015871Z hint: 	git config --global init.defaultBranch <name>
+2025-05-26T22:06:23.8016216Z hint:
+2025-05-26T22:06:23.8016573Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-05-26T22:06:23.8017124Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-05-26T22:06:23.8017528Z hint:
+2025-05-26T22:06:23.8017768Z hint: 	git branch -m <name>
+2025-05-26T22:06:23.8022275Z Initialized empty Git repository in /home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/.git/
+2025-05-26T22:06:23.8035454Z [command]/usr/bin/git remote add origin https://github.com/TSGCFO/TsgFulfillmentRedesign
+2025-05-26T22:06:23.8074879Z ##[endgroup]
+2025-05-26T22:06:23.8076009Z ##[group]Disabling automatic garbage collection
+2025-05-26T22:06:23.8080666Z [command]/usr/bin/git config --local gc.auto 0
+2025-05-26T22:06:23.8109332Z ##[endgroup]
+2025-05-26T22:06:23.8110249Z ##[group]Setting up auth
+2025-05-26T22:06:23.8116887Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-05-26T22:06:23.8148177Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-05-26T22:06:23.8511796Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-05-26T22:06:23.8543065Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-05-26T22:06:23.8771750Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-05-26T22:06:23.8815142Z ##[endgroup]
+2025-05-26T22:06:23.8815999Z ##[group]Fetching the repository
+2025-05-26T22:06:23.8829456Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +f0d4fce0c540568fb8b46ee6d406600d47254e04:refs/remotes/pull/16/merge
+2025-05-26T22:06:25.4871498Z From https://github.com/TSGCFO/TsgFulfillmentRedesign
+2025-05-26T22:06:25.4872446Z  * [new branch]      Deployment                               -> origin/Deployment
+2025-05-26T22:06:25.4873263Z  * [new branch]      codex                                    -> origin/codex
+2025-05-26T22:06:25.4878667Z  * [new branch]      d5tr9e-codex/extract-written-content-from-website-files -> origin/d5tr9e-codex/extract-written-content-from-website-files
+2025-05-26T22:06:25.4880446Z  * [new branch]      replit                                   -> origin/replit
+2025-05-26T22:06:25.4884290Z  * [new ref]         f0d4fce0c540568fb8b46ee6d406600d47254e04 -> pull/16/merge
+2025-05-26T22:06:25.4921422Z ##[endgroup]
+2025-05-26T22:06:25.4922142Z ##[group]Determining the checkout info
+2025-05-26T22:06:25.4923621Z ##[endgroup]
+2025-05-26T22:06:25.4930407Z [command]/usr/bin/git sparse-checkout disable
+2025-05-26T22:06:25.4974445Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-05-26T22:06:25.5000940Z ##[group]Checking out the ref
+2025-05-26T22:06:25.5005577Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/16/merge
+2025-05-26T22:06:25.6233218Z Note: switching to 'refs/remotes/pull/16/merge'.
+2025-05-26T22:06:25.6233662Z 
+2025-05-26T22:06:25.6234029Z You are in 'detached HEAD' state. You can look around, make experimental
+2025-05-26T22:06:25.6234764Z changes and commit them, and you can discard any commits you make in this
+2025-05-26T22:06:25.6235516Z state without impacting any branches by switching back to a branch.
+2025-05-26T22:06:25.6235939Z 
+2025-05-26T22:06:25.6236214Z If you want to create a new branch to retain commits you create, you may
+2025-05-26T22:06:25.6236937Z do so (now or later) by using -c with the switch command. Example:
+2025-05-26T22:06:25.6237355Z 
+2025-05-26T22:06:25.6237532Z   git switch -c <new-branch-name>
+2025-05-26T22:06:25.6237911Z 
+2025-05-26T22:06:25.6238111Z Or undo this operation with:
+2025-05-26T22:06:25.6238378Z 
+2025-05-26T22:06:25.6238532Z   git switch -
+2025-05-26T22:06:25.6238753Z 
+2025-05-26T22:06:25.6239112Z Turn off this advice by setting config variable advice.detachedHead to false
+2025-05-26T22:06:25.6240086Z 
+2025-05-26T22:06:25.6240745Z HEAD is now at f0d4fce Merge 9233ce37075a6f3ca22462818d142a9515dda0eb into afad931df04e6c03f4b70b9d0c5e0ca3ef1a1bf3
+2025-05-26T22:06:25.6256543Z ##[endgroup]
+2025-05-26T22:06:25.6297550Z [command]/usr/bin/git log -1 --format=%H
+2025-05-26T22:06:25.6320579Z f0d4fce0c540568fb8b46ee6d406600d47254e04
+2025-05-26T22:06:25.6546674Z ##[group]Run actions/setup-node@v4
+2025-05-26T22:06:25.6546971Z with:
+2025-05-26T22:06:25.6547154Z   node-version: 18
+2025-05-26T22:06:25.6547398Z   cache: npm
+2025-05-26T22:06:25.6547621Z   cache-dependency-path: package-lock.json
+2025-05-26T22:06:25.6547895Z   always-auth: false
+2025-05-26T22:06:25.6548099Z   check-latest: false
+2025-05-26T22:06:25.6548428Z   token: ***
+2025-05-26T22:06:25.6548612Z env:
+2025-05-26T22:06:25.6548787Z   NODE_VERSION: 18
+2025-05-26T22:06:25.6548981Z   REVIEW_TIMEOUT: 30
+2025-05-26T22:06:25.6549206Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T22:06:25.6549464Z ##[endgroup]
+2025-05-26T22:06:25.8239494Z Found in cache @ /opt/hostedtoolcache/node/18.20.8/x64
+2025-05-26T22:06:25.8245888Z ##[group]Environment details
+2025-05-26T22:06:26.2115874Z node: v18.20.8
+2025-05-26T22:06:26.2116223Z npm: 10.8.2
+2025-05-26T22:06:26.2116521Z yarn: 1.22.22
+2025-05-26T22:06:26.2117338Z ##[endgroup]
+2025-05-26T22:06:26.2139877Z [command]/opt/hostedtoolcache/node/18.20.8/x64/bin/npm config get cache
+2025-05-26T22:06:26.3755480Z /home/runner/.npm
+2025-05-26T22:06:26.6279960Z npm cache is not found
+2025-05-26T22:06:26.6436585Z ##[group]Run # Create a comprehensive prompt incorporating TSG standards
+2025-05-26T22:06:26.6437573Z [36;1m# Create a comprehensive prompt incorporating TSG standards[0m
+2025-05-26T22:06:26.6438117Z [36;1mcat << 'PROMPT_EOF' > review_prompt.txt[0m
+2025-05-26T22:06:26.6438785Z [36;1mYou are an expert content reviewer for TSG Fulfillment Services. Review the code changes in this pull request focusing on content within React/TypeScript components.[0m
+2025-05-26T22:06:26.6439399Z [36;1m[0m
+2025-05-26T22:06:26.6439769Z [36;1m## Company Standards from claude.md:[0m
+2025-05-26T22:06:26.6440067Z [36;1m# TSG Fulfillment Services Default Standards[0m
+2025-05-26T22:06:26.6440329Z [36;1m[0m
+2025-05-26T22:06:26.6440492Z [36;1m## Brand Voice[0m
+2025-05-26T22:06:26.6440728Z [36;1m- Professional yet approachable[0m
+2025-05-26T22:06:26.6441002Z [36;1m- Customer-centric language[0m
+2025-05-26T22:06:26.6441272Z [36;1m- Clear and concise communication[0m
+2025-05-26T22:06:26.6441776Z [36;1m[0m
+2025-05-26T22:06:26.6441956Z [36;1m## Content Guidelines[0m
+2025-05-26T22:06:26.6442207Z [36;1m- Avoid superlatives without data backing[0m
+2025-05-26T22:06:26.6442496Z [36;1m- Focus on value propositions[0m
+2025-05-26T22:06:26.6442747Z [36;1m- Use active voice[0m
+2025-05-26T22:06:26.6442986Z [36;1m- Maintain consistent terminology[0m
+2025-05-26T22:06:26.6443241Z [36;1m[0m
+2025-05-26T22:06:26.6443418Z [36;1m## SEO Requirements[0m
+2025-05-26T22:06:26.6443664Z [36;1m- Include relevant keywords naturally[0m
+2025-05-26T22:06:26.6443963Z [36;1m- Optimize meta descriptions (150-160 chars)[0m
+2025-05-26T22:06:26.6444255Z [36;1m- Use descriptive headings[0m
+2025-05-26T22:06:26.6444516Z [36;1m- Ensure mobile-friendly content[0m
+2025-05-26T22:06:26.6444755Z [36;1m[0m
+2025-05-26T22:06:26.6444928Z [36;1m## Your Review Tasks:[0m
+2025-05-26T22:06:26.6445136Z [36;1m[0m
+2025-05-26T22:06:26.6445331Z [36;1m### 1. Grammar and Spelling Review[0m
+2025-05-26T22:06:26.6445740Z [36;1m- Check all text content, comments, and string literals for grammar and spelling errors[0m
+2025-05-26T22:06:26.6446197Z [36;1m- Ensure proper punctuation and sentence structure[0m
+2025-05-26T22:06:26.6446550Z [36;1m- Verify consistency in capitalization and formatting[0m
+2025-05-26T22:06:26.6446956Z [36;1m- Pay special attention to customer-facing text in UI components[0m
+2025-05-26T22:06:26.6447328Z [36;1m[0m
+2025-05-26T22:06:26.6447541Z [36;1m### 2. Content Accuracy and Anti-Exaggeration[0m
+2025-05-26T22:06:26.6447960Z [36;1m- Flag any unsubstantiated claims or superlatives (e.g., "best", "fastest", "only")[0m
+2025-05-26T22:06:26.6448389Z [36;1m- Ensure technical specifications are accurate[0m
+2025-05-26T22:06:26.6448741Z [36;1m- Verify that features described actually exist in the code[0m
+2025-05-26T22:06:26.6449122Z [36;1m- Check for misleading or potentially false advertising[0m
+2025-05-26T22:06:26.6449408Z [36;1m[0m
+2025-05-26T22:06:26.6449750Z [36;1m### 3. SEO Optimization Analysis[0m
+2025-05-26T22:06:26.6450174Z [36;1m- Review meta tags, page titles, and descriptions in components[0m
+2025-05-26T22:06:26.6450537Z [36;1m- Check for proper heading hierarchy (H1-H6)[0m
+2025-05-26T22:06:26.6450828Z [36;1m- Analyze keyword usage and density[0m
+2025-05-26T22:06:26.6451117Z [36;1m- Suggest improvements for search visibility[0m
+2025-05-26T22:06:26.6451410Z [36;1m- Verify image alt texts and aria-labels[0m
+2025-05-26T22:06:26.6451719Z [36;1m- Check for SEO-friendly URL structures in routing[0m
+2025-05-26T22:06:26.6451991Z [36;1m[0m
+2025-05-26T22:06:26.6452160Z [36;1m### 4. Brand Consistency Check[0m
+2025-05-26T22:06:26.6452497Z [36;1m- Ensure content aligns with TSG Fulfillment Services brand voice[0m
+2025-05-26T22:06:26.6452866Z [36;1m- Verify consistent use of company terminology[0m
+2025-05-26T22:06:26.6453234Z [36;1m- Check that tone matches our professional yet approachable standard[0m
+2025-05-26T22:06:26.6453860Z [36;1m- Flag any content that doesn't align with our customer-centric approach[0m
+2025-05-26T22:06:26.6454213Z [36;1m[0m
+2025-05-26T22:06:26.6454392Z [36;1m### 5. Technical Content Review[0m
+2025-05-26T22:06:26.6454701Z [36;1m- Verify that component prop descriptions are accurate[0m
+2025-05-26T22:06:26.6455069Z [36;1m- Check that error messages are helpful and user-friendly[0m
+2025-05-26T22:06:26.6455427Z [36;1m- Ensure loading states have appropriate messaging[0m
+2025-05-26T22:06:26.6455794Z [36;1m- Review any hardcoded text that should be internationalized[0m
+2025-05-26T22:06:26.6456100Z [36;1m[0m
+2025-05-26T22:06:26.6456275Z [36;1m## Output Format:[0m
+2025-05-26T22:06:26.6456570Z [36;1mProvide your feedback in the following structured format:[0m
+2025-05-26T22:06:26.6456876Z [36;1m[0m
+2025-05-26T22:06:26.6457068Z [36;1m### 🔴 Critical Issues (Must Fix)[0m
+2025-05-26T22:06:26.6457409Z [36;1mList any critical issues that must be addressed before merging.[0m
+2025-05-26T22:06:26.6457755Z [36;1m[0m
+2025-05-26T22:06:26.6457998Z [36;1m### 🟡 Recommendations (Should Consider)[0m
+2025-05-26T22:06:26.6458472Z [36;1mList improvements that would enhance content quality.[0m
+2025-05-26T22:06:26.6458761Z [36;1m[0m
+2025-05-26T22:06:26.6458937Z [36;1m### 🟢 Positive Observations[0m
+2025-05-26T22:06:26.6459265Z [36;1mHighlight well-written content or good practices observed.[0m
+2025-05-26T22:06:26.6459692Z [36;1m[0m
+2025-05-26T22:06:26.6459865Z [36;1m### 📊 SEO Metrics[0m
+2025-05-26T22:06:26.6460090Z [36;1m- Keyword optimization score[0m
+2025-05-26T22:06:26.6460350Z [36;1m- Content readability assessment[0m
+2025-05-26T22:06:26.6460606Z [36;1m- Technical SEO compliance[0m
+2025-05-26T22:06:26.6460821Z [36;1m[0m
+2025-05-26T22:06:26.6460986Z [36;1m### 🎯 Action Items[0m
+2025-05-26T22:06:26.6461265Z [36;1mProvide a numbered list of specific actions to take.[0m
+2025-05-26T22:06:26.6461554Z [36;1m[0m
+2025-05-26T22:06:26.6461756Z [36;1mFocus on the following changed files:[0m
+2025-05-26T22:06:26.6461999Z [36;1m[0m
+2025-05-26T22:06:26.6462172Z [36;1m[0m
+2025-05-26T22:06:26.6462483Z [36;1mBe specific with line numbers and provide exact text corrections where applicable.[0m
+2025-05-26T22:06:26.6462876Z [36;1mPROMPT_EOF[0m
+2025-05-26T22:06:26.6657162Z shell: /usr/bin/bash -e {0}
+2025-05-26T22:06:26.6657423Z env:
+2025-05-26T22:06:26.6657595Z   NODE_VERSION: 18
+2025-05-26T22:06:26.6657787Z   REVIEW_TIMEOUT: 30
+2025-05-26T22:06:26.6658006Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T22:06:26.6658265Z ##[endgroup]
+2025-05-26T22:06:26.6880813Z ##[group]Run anthropics/claude-code-base-action@beta
+2025-05-26T22:06:26.6881147Z with:
+2025-05-26T22:06:26.6881762Z   anthropic_api_key: ***
+2025-05-26T22:06:26.6882015Z   anthropic_model: claude-3-7-sonnet-20250219
+2025-05-26T22:06:26.6882290Z   prompt_file: review_prompt.txt
+2025-05-26T22:06:26.6882997Z   allowed_tools: View,GlobTool,GrepTool,Bash(git diff --name-only origin/main...HEAD),
+Bash(git diff origin/main...HEAD -- $file),Bash(grep -n ""),
+Bash(find client/src -name "*.tsx" -o -name "*.jsx" | head -20)
+
+2025-05-26T22:06:26.6883709Z   timeout_minutes: 30
+2025-05-26T22:06:26.6883905Z   max_turns: 10
+2025-05-26T22:06:26.6884087Z   use_bedrock: false
+2025-05-26T22:06:26.6884280Z   use_vertex: false
+2025-05-26T22:06:26.6884466Z   use_node_cache: false
+2025-05-26T22:06:26.6884657Z env:
+2025-05-26T22:06:26.6884812Z   NODE_VERSION: 18
+2025-05-26T22:06:26.6884995Z   REVIEW_TIMEOUT: 30
+2025-05-26T22:06:26.6885208Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T22:06:26.6885488Z ##[endgroup]
+2025-05-26T22:06:26.6972595Z ##[group]Run actions/setup-node@v4
+2025-05-26T22:06:26.6972836Z with:
+2025-05-26T22:06:26.6973004Z   node-version: 18.x
+2025-05-26T22:06:26.6973206Z   always-auth: false
+2025-05-26T22:06:26.6973406Z   check-latest: false
+2025-05-26T22:06:26.6973714Z   token: ***
+2025-05-26T22:06:26.6973889Z env:
+2025-05-26T22:06:26.6974054Z   NODE_VERSION: 18
+2025-05-26T22:06:26.6974242Z   REVIEW_TIMEOUT: 30
+2025-05-26T22:06:26.6974460Z   CLAUDE_MODEL: claude-3-7-sonnet-20250219
+2025-05-26T22:06:26.6974716Z ##[endgroup]
+2025-05-26T22:06:26.8744685Z Found in cache @ /opt/hostedtoolcache/node/18.20.8/x64
+2025-05-26T22:06:26.8745479Z ##[group]Environment details
+2025-05-26T22:06:27.0511854Z node: v18.20.8
+2025-05-26T22:06:27.0512268Z npm: 10.8.2
+2025-05-26T22:06:27.0512602Z yarn: 1.22.22
+2025-05-26T22:06:27.0513348Z ##[endgroup]
+2025-05-26T22:06:27.0622046Z ##[group]Run oven-sh/setup-bun@v2
+2025-05-26T22:06:27.0622291Z with:
+2025-05-26T22:06:27.0622466Z   bun-version: 1.2.11
+2025-05-26T22
