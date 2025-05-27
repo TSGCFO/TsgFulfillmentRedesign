@@ -39,7 +39,7 @@ on:
 # Global environment variables
 env:
   NODE_VERSION: '18'
-  REVIEW_TIMEOUT: '300'
+  REVIEW_TIMEOUT: '600'
   CLAUDE_MODEL: 'claude-3-7-sonnet-20250219'
 
 # Repository permissions
@@ -243,12 +243,12 @@ jobs:
             View,GlobTool,GrepTool,Bash(git diff --name-only origin/main...HEAD),
             Bash(git diff origin/main...HEAD -- $file),Bash(grep -n ""),
             Bash(find client/src -name "*.tsx" -o -name "*.jsx" | head -20)
-          timeout_minutes: ${{ env.REVIEW_TIMEOUT }}
-          max_turns: 100
+          timeout_minutes: 10
+          max_turns: 50
 
       - name: Parse Claude review results
-          id: parse-results
-          run: |
+        id: parse-results
+        run: |
             if [ ! -f "${{ steps.claude-review.outputs.execution_file }}" ]; then
               echo "❌ Execution file not found."
               exit 1
