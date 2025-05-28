@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {

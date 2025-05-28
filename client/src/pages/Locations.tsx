@@ -5,7 +5,7 @@ import { MapPin, Building, Warehouse, Truck, Clock, Phone, Mail, ArrowRight, Che
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Seo from '@/components/SEO/Seo';
@@ -142,7 +142,7 @@ const Locations: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 pb-20 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <OptimizedImage 
+          <EnhancedImage 
             src="https://images.unsplash.com/photo-1609867053361-e5ebb5a2f129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
             alt="TSG Fulfillment Vaughan facility"
             width={1920}

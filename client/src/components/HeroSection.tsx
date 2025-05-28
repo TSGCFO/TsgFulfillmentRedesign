@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const fadeIn = {
@@ -53,7 +53,7 @@ const HeroSection: React.FC = () => {
       
       {/* Hero background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <OptimizedImage 
+        <EnhancedImage 
           src={heroImages[0]}
           alt="Modern logistics and fulfillment center" 
           className="w-full h-full object-cover" 

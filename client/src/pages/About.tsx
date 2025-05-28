@@ -5,7 +5,7 @@ import { ArrowRight, Award, Users, MapPin, Star, CheckCircle } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { Separator } from '@/components/ui/separator';
 import Seo from '@/components/SEO/Seo';
 
