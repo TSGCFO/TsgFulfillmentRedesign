@@ -66,7 +66,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
       >
         {/* Background image with overlay - visible on hover */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
-          <OptimizedImage
+          <EnhancedImage
             src={image}
             alt={title}
             width={600}

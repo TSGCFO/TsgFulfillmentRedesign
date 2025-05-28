@@ -55,7 +55,7 @@ const IndustryCard: React.FC<IndustryCardProps> = ({
       <meta itemProp="provider" content="TSG Fulfillment Services" />
 
       <div className="relative overflow-hidden rounded-lg shadow-md h-[280px]">
-        <OptimizedImage
+        <EnhancedImage
           src={image}
           alt={`${title} logistics and fulfillment services`}
           width={600}
