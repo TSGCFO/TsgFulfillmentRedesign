@@ -561,7 +561,7 @@ const IndustryDetail: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 md:pt-32 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <OptimizedImage 
+          <EnhancedImage 
             src={industry.headerImage}
             alt={`${industry.title} logistics and fulfillment services`}
             width={1920}

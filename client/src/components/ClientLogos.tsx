@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },

@@ -280,7 +280,7 @@ const Locations: React.FC = () => {
               {/* Facility Image */}
               <div className="lg:w-1/2">
                 <div className="relative h-full">
-                  <OptimizedImage 
+                  <EnhancedImage 
                     src={facility.image}
                     alt={`TSG Fulfillment ${facility.name} facility`}
                     width={800}

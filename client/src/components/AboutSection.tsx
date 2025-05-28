@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, Award, TrendingUp, Users } from 'lucide-react';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -143,7 +143,7 @@ const AboutSection: React.FC = () => {
               viewport={{ once: true, margin: "-100px" }}
               variants={fadeInLeft}
             >
-              <OptimizedImage 
+              <EnhancedImage 
                 src="https://images.unsplash.com/photo-1581972876890-4159567fd774?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" 
                 alt="Modern logistics warehouse with advanced technology and organized operations" 
                 width={1074}
@@ -294,7 +294,7 @@ const AboutSection: React.FC = () => {
               variants={fadeInRight}
             >
               <div className="relative">
-                <OptimizedImage 
+                <EnhancedImage 
                   src="https://images.unsplash.com/photo-1566232392379-afd9a0db2138?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
                   alt="TSG Fulfillment warehouse operations showing organized logistics processes" 
                   width={1170}

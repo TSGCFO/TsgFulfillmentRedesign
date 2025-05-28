@@ -60,7 +60,6 @@ const HeroSection: React.FC = () => {
           width={1920}
           height={1080}
           quality={90}
-          loading="eager"
           priority={true}
         />
         <div className="absolute inset-0 bg-primary/70"></div>
