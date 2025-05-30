@@ -1,0 +1,231 @@
+{
+  "timestamp": "2025-05-30T20:28:21.082Z",
+  "totalImages": 28,
+  "successful": 27,
+  "failed": 1,
+  "images": [
+    {
+      "originalUrl": "https://your-project.supabase.co/storage/v1/object/public/images/category/filename.jpg",
+      "category": "warehouse",
+      "filename": "warehouse-filename-2025.jpg",
+      "status": "failed",
+      "error": "getaddrinfo ENOTFOUND your-project.supabase.co"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/slider-04.jpg",
+      "category": "services",
+      "filename": "services-slider-04-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/002-services-slider-04-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-slider-04-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/slider-03.jpg",
+      "category": "services",
+      "filename": "services-slider-03-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/003-services-slider-03-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-slider-03-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/slider-02.jpg",
+      "category": "services",
+      "filename": "services-slider-02-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/004-services-slider-02-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-slider-02-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/slider-01.jpg",
+      "category": "services",
+      "filename": "services-slider-01-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/005-services-slider-01-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-slider-01-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/main-baner.jpg",
+      "category": "services",
+      "filename": "services-main-baner-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/006-services-main-baner-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-main-baner-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/banner-22.jpg",
+      "category": "hero",
+      "filename": "hero-banner-22-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/007-hero-banner-22-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-banner-22-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/hand-assembly.jpg",
+      "category": "services",
+      "filename": "services-hand-assembly-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/008-services-hand-assembly-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-hand-assembly-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/fullfi-banner.jpg",
+      "category": "hero",
+      "filename": "hero-fullfi-banner-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/009-hero-fullfi-banner-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-fullfi-banner-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/truck.jpg",
+      "category": "services",
+      "filename": "services-truck-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/010-services-truck-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-truck-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/inventory-banner.jpg",
+      "category": "hero",
+      "filename": "hero-inventory-banner-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/011-hero-inventory-banner-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-inventory-banner-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/Health-banner.jpg",
+      "category": "hero",
+      "filename": "hero-health-banner-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/012-hero-health-banner-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-health-banner-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/logistic.jpg",
+      "category": "services",
+      "filename": "services-logistic-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/013-services-logistic-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-logistic-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/logo.png",
+      "category": "services",
+      "filename": "services-logo-2025.png",
+      "rawPath": "/home/runner/workspace/downloaded-images/014-services-logo-2025.png",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-logo-2025.png",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+      "category": "logos",
+      "filename": "logos-amazon-logo-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/015-logos-amazon-logo-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-amazon-logo-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg",
+      "category": "logos",
+      "filename": "logos-walmart-logo-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/016-logos-walmart-logo-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-walmart-logo-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Target_logo.svg",
+      "category": "logos",
+      "filename": "logos-target-logo-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/017-logos-target-logo-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-target-logo-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg",
+      "category": "logos",
+      "filename": "logos-shopify-logo-2018-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/018-logos-shopify-logo-2018-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-shopify-logo-2018-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg",
+      "category": "logos",
+      "filename": "logos-logo-nike-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/019-logos-logo-nike-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-logo-nike-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg",
+      "category": "logos",
+      "filename": "logos-adidas-logo-2025.svg",
+      "rawPath": "/home/runner/workspace/downloaded-images/020-logos-adidas-logo-2025.svg",
+      "organizedPath": "/home/runner/workspace/organized-images/logos/logos-adidas-logo-2025.svg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/about-hero.jpg",
+      "category": "hero",
+      "filename": "hero-about-hero-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/021-hero-about-hero-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-about-hero-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/analytics-dashboard.jpg",
+      "category": "services",
+      "filename": "services-analytics-dashboard-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/022-services-analytics-dashboard-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-analytics-dashboard-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/contact-hero.jpg",
+      "category": "hero",
+      "filename": "hero-contact-hero-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/023-hero-contact-hero-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/hero/hero-contact-hero-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/warehouse.jpg",
+      "category": "services",
+      "filename": "services-warehouse-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/024-services-warehouse-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-warehouse-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/og-image.jpg",
+      "category": "services",
+      "filename": "services-og-image-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/025-services-og-image-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-og-image-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/warehouse-facility.jpg",
+      "category": "services",
+      "filename": "services-warehouse-facility-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/026-services-warehouse-facility-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-warehouse-facility-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/analytics-performance.jpg",
+      "category": "services",
+      "filename": "services-analytics-performance-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/027-services-analytics-performance-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-analytics-performance-2025.jpg",
+      "status": "success"
+    },
+    {
+      "originalUrl": "https://tsgfulfillment.com/images/report-generator.jpg",
+      "category": "services",
+      "filename": "services-report-generator-2025.jpg",
+      "rawPath": "/home/runner/workspace/downloaded-images/028-services-report-generator-2025.jpg",
+      "organizedPath": "/home/runner/workspace/organized-images/services/services-report-generator-2025.jpg",
+      "status": "success"
+    }
+  ]
+}
