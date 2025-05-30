@@ -81,13 +81,23 @@ export type ImageKey = keyof typeof IMAGE_REGISTRY;
  * Get the full URL for an image from Supabase storage
  */
 export const getImageUrl = (imageKey: ImageKey): string => {
+  if (!supabase) {
+    // Return fallback URLs when Supabase is not configured
+    return FALLBACK_IMAGES.default;
+  }
+  
   const imagePath = IMAGE_REGISTRY[imageKey];
   
-  const { data } = supabase.storage
-    .from(IMAGE_BUCKET)
-    .getPublicUrl(imagePath);
-  
-  return data.publicUrl;
+  try {
+    const { data } = supabase.storage
+      .from(IMAGE_BUCKET)
+      .getPublicUrl(imagePath);
+    
+    return data.publicUrl;
+  } catch (error) {
+    console.warn('Failed to get image URL from Supabase:', error);
+    return FALLBACK_IMAGES.default;
+  }
 };
 
 /**
