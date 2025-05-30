@@ -67,6 +67,7 @@ function Router() {
         <Route path="/analytics/reports" component={ReportGenerator} />
         <Route path="/analytics/comparison" component={PerformanceComparison} />
         <Route path="/analytics/dashboard" component={CustomDashboard} />
+        <Route path="/admin/images" component={ImageManagement} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
