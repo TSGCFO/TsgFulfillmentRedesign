@@ -17,15 +17,15 @@ const __dirname = path.dirname(__filename);
 
 // Supabase configuration
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
 const BUCKET_NAME = 'images';
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  console.error('Missing Supabase credentials. Please set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.');
+if (!SUPABASE_URL || !SUPABASE_KEY) {
+  console.error('Missing Supabase credentials. Please set SUPABASE_URL and either SUPABASE_SERVICE_KEY or SUPABASE_ANON_KEY environment variables.');
   process.exit(1);
 }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /**
  * Create bucket if it doesn't exist
@@ -36,7 +36,7 @@ async function ensureBucketExists() {
   const { data, error } = await supabase.storage.getBucket(BUCKET_NAME);
   
   if (error && error.message.includes('not found')) {
-    console.log(`Creating bucket: ${BUCKET_NAME}`);
+    console.log(`Bucket "${BUCKET_NAME}" not found. Attempting to create...`);
     
     const { data: createData, error: createError } = await supabase.storage.createBucket(BUCKET_NAME, {
       public: true,
@@ -46,12 +46,17 @@ async function ensureBucketExists() {
     
     if (createError) {
       console.error('Failed to create bucket:', createError.message);
+      console.log('\nOptions to fix this:');
+      console.log('1. Create the bucket manually in Supabase dashboard: Storage > Create bucket > "images"');
+      console.log('2. Use your service role key instead of anon key');
+      console.log('3. Ask your admin to create the bucket and grant upload permissions');
       return false;
     }
     
     console.log('Bucket created successfully');
   } else if (error) {
     console.error('Error checking bucket:', error.message);
+    console.log('This might be a permissions issue. Consider using the service role key.');
     return false;
   } else {
     console.log('Bucket already exists');
