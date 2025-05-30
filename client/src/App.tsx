@@ -19,6 +19,7 @@ const Analytics = lazy(() => import("@/pages/Analytics"));
 const ReportGenerator = lazy(() => import("@/pages/ReportGenerator"));
 const PerformanceComparison = lazy(() => import("@/pages/PerformanceComparison"));
 const CustomDashboard = lazy(() => import("@/pages/CustomDashboard"));
+const ImageManagement = lazy(() => import("@/pages/image-management"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component
