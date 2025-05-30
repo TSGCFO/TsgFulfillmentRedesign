@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const fadeIn = {
@@ -27,7 +27,7 @@ const staggerChildren = {
 const heroImages = [
   "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
   "https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1035&q=80",
-  "https://images.unsplash.com/photo-1586528116493-ce31b741fdd4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80"
+  "https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
 ];
 
 const HeroSection: React.FC = () => {
@@ -53,14 +53,13 @@ const HeroSection: React.FC = () => {
       
       {/* Hero background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <OptimizedImage 
+        <EnhancedImage 
           src={heroImages[0]}
           alt="Modern logistics and fulfillment center" 
           className="w-full h-full object-cover" 
           width={1920}
           height={1080}
           quality={90}
-          loading="eager"
           priority={true}
         />
         <div className="absolute inset-0 bg-primary/70"></div>

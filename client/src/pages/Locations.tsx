@@ -5,7 +5,7 @@ import { MapPin, Building, Warehouse, Truck, Clock, Phone, Mail, ArrowRight, Che
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Seo from '@/components/SEO/Seo';
@@ -58,7 +58,7 @@ const Locations: React.FC = () => {
       image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
       size: "150,000 sq ft",
       features: [
-        "Temperature-controlled environment",
+        "Modern warehousing environment",
         "High security with 24/7 monitoring",
         "Strategic location near Highway 407",
         "Modern loading docks",
@@ -142,9 +142,9 @@ const Locations: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 pb-20 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <OptimizedImage 
+          <EnhancedImage 
             src="https://images.unsplash.com/photo-1609867053361-e5ebb5a2f129?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-            alt="TSG Fulfillment network of warehouse locations"
+            alt="TSG Fulfillment Vaughan facility"
             width={1920}
             height={1080}
             className="w-full h-full object-cover"
@@ -167,12 +167,12 @@ const Locations: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              Our <span className="font-light">Facilities</span>
+              Our <span className="font-light">Facility</span>
             </h1>
             
             <p className="text-xl text-white/90 mb-8 max-w-3xl">
-              TSG Fulfillment operates strategically located facilities across the United States, 
-              providing comprehensive coverage to minimize shipping times and costs for businesses of all sizes.
+              TSG Fulfillment operates a state-of-the-art facility in Vaughan, Ontario,
+              providing comprehensive logistics services to minimize shipping times and costs for businesses of all sizes.
             </p>
           </motion.div>
         </div>
@@ -236,10 +236,10 @@ const Locations: React.FC = () => {
             <div className="h-full w-full flex items-center justify-center">
               <div className="text-center max-w-md px-4">
                 <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Nationwide Coverage</h3>
+                <h3 className="text-2xl font-bold mb-2">Canada-Wide Service</h3>
                 <p className="text-gray-600">
-                  This would be an interactive map showing all our facility locations 
-                  and coverage areas in a real implementation.
+                  This would be an interactive map showing our Vaughan facility 
+                  and service coverage area in a real implementation.
                 </p>
               </div>
             </div>
@@ -280,7 +280,7 @@ const Locations: React.FC = () => {
               {/* Facility Image */}
               <div className="lg:w-1/2">
                 <div className="relative h-full">
-                  <OptimizedImage 
+                  <EnhancedImage 
                     src={facility.image}
                     alt={`TSG Fulfillment ${facility.name} facility`}
                     width={800}
@@ -361,7 +361,7 @@ const Locations: React.FC = () => {
                     window.location.href = `mailto:${facility.email}`;
                   }}
                 >
-                  Contact This Location
+                  Contact Our Facility
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

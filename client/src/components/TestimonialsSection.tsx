@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -126,7 +126,7 @@ const TestimonialsSection: React.FC = () => {
                 
                 <div className="mt-8 flex items-center" itemProp="author" itemScope itemType="https://schema.org/Person">
                   <div className="flex-shrink-0">
-                    <OptimizedImage 
+                    <EnhancedImage 
                       src={currentTestimonial.image} 
                       alt={currentTestimonial.name} 
                       width={60}

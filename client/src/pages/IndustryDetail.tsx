@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
@@ -193,7 +193,7 @@ const industries: IndustryData[] = [
     title: "Health & Beauty",
     slug: "health-beauty",
     metaDescription: "Specialized fulfillment solutions for health, beauty, and personal care products with temperature control, batch tracking, and regulatory compliance.",
-    headerImage: "https://images.unsplash.com/photo-1614859638024-82f09fca5668?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+    headerImage: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     shortDescription: "Specialized handling, storage, and distribution services designed specifically for health, beauty, and personal care products.",
     longDescription: [
       "Health and beauty products require specialized handling, storage, and shipping processes to maintain product integrity and meet regulatory requirements. TSG Fulfillment offers tailored logistics solutions for the unique needs of this sensitive product category.",
@@ -370,8 +370,8 @@ const industries: IndustryData[] = [
     ],
     solutions: [
       {
-        title: "Temperature-Controlled Facilities",
-        description: "Specialized storage areas for ambient, refrigerated, and frozen products with continuous temperature monitoring and alerting systems."
+        title: "Specialized Storage Solutions",
+        description: "Optimized storage areas for various product types with advanced monitoring and alerting systems."
       },
       {
         title: "Regulatory Compliance Systems",
@@ -387,7 +387,7 @@ const industries: IndustryData[] = [
       }
     ],
     benefits: [
-      "Maintain product quality through appropriate temperature control",
+      "Maintain product quality with proper storage solutions",
       "Ensure regulatory compliance with proper documentation and processes",
       "Reduce product waste through effective expiration date management",
       "Manage recalls efficiently if they occur",
@@ -561,7 +561,7 @@ const IndustryDetail: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 md:pt-32 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <OptimizedImage 
+          <EnhancedImage 
             src={industry.headerImage}
             alt={`${industry.title} logistics and fulfillment services`}
             width={1920}
@@ -856,7 +856,7 @@ const IndustryDetail: React.FC = () => {
                 <Warehouse className="text-primary w-12 h-12 mb-4" />
                 <h3 className="text-xl font-bold mb-3">Warehousing</h3>
                 <p className="text-gray-600 mb-4">
-                  Strategic warehouse facilities optimized for {industry.title.toLowerCase()} products with security, 
+                  Our strategic warehouse facility optimized for {industry.title.toLowerCase()} products with security, 
                   environmental controls, and inventory management.
                 </p>
                 <Link href="/services/warehousing" className="text-primary font-medium flex items-center hover:underline">

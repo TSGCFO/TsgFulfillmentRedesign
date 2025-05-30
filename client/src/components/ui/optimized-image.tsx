@@ -41,24 +41,26 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   // Calculate image srcset for responsive images
   const generateSrcSet = () => {
-    // If it's an external URL that doesn't support srcset, don't create one
-    if (src.startsWith('http') && !src.includes('unsplash.com')) {
-      return undefined;
-    }
-
     // For Unsplash, we can generate a proper srcset
     if (src.includes('unsplash.com')) {
       const widths = [320, 640, 960, 1280, 1920, 2560];
       return widths
         .map(w => {
-          const imgSrc = src.includes('w=') 
-            ? src.replace(/w=\d+/, `w=${w}`)
-            : `${src}&w=${w}&q=${quality}`;
+          let imgSrc = src;
+          // If w= parameter exists, replace it
+          if (imgSrc.includes('w=')) {
+            imgSrc = imgSrc.replace(/w=\d+/, `w=${w}`);
+          } else {
+            // Add w= parameter
+            const separator = imgSrc.includes('?') ? '&' : '?';
+            imgSrc = `${imgSrc}${separator}w=${w}&q=${quality}`;
+          }
           return `${imgSrc} ${w}w`;
         })
         .join(', ');
     }
 
+    // For other external URLs, don't generate srcset to avoid errors
     return undefined;
   };
 
@@ -78,13 +80,17 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       height={height}
       className={className}
       loading={priority ? 'eager' : loading}
-      sizes={sizes}
+      sizes={srcset ? sizes : undefined}
       srcSet={srcset}
       style={imgStyle}
       itemProp={itemProp}
       {...props}
       // Add structured data attributes for better SEO
       data-testid="optimized-image"
+      onError={(e) => {
+        // Handle image loading errors gracefully
+        console.warn('Image failed to load:', src);
+      }}
     />
   );
 };

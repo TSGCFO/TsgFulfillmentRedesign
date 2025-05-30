@@ -5,7 +5,7 @@ import { ArrowRight, Award, Users, MapPin, Star, CheckCircle } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { OptimizedImage } from '@/components/ui/optimized-image';
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { Separator } from '@/components/ui/separator';
 import Seo from '@/components/SEO/Seo';
 
@@ -41,7 +41,7 @@ const About: React.FC = () => {
   const values = [
     {
       title: "Excellence",
-      description: "We are committed to delivering excellence in every aspect of our operations, from logistics processes to customer service.",
+      description: "We are committed to delivering exceptional service in every aspect of our operations, from logistics processes to customer service.",
       icon: <Star className="h-10 w-10 text-primary mb-4" />
     },
     {
@@ -185,7 +185,7 @@ const About: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 pb-20 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <OptimizedImage 
+          <EnhancedImage 
             src="https://images.unsplash.com/photo-1566232392379-afd9a0db2138?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
             alt="TSG Fulfillment warehouse operations"
             width={1920}
@@ -266,8 +266,8 @@ const About: React.FC = () => {
                   <div className="text-gray-600">Active Clients</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-3xl font-bold text-primary mb-2">3</div>
-                  <div className="text-gray-600">Strategic Locations</div>
+                  <div className="text-3xl font-bold text-primary mb-2">1</div>
+                  <div className="text-gray-600">State-of-the-Art Facility</div>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
                   <div className="text-3xl font-bold text-primary mb-2">750K+</div>
@@ -284,7 +284,7 @@ const About: React.FC = () => {
               variants={fadeInRight}
             >
               <div className="relative">
-                <OptimizedImage 
+                <EnhancedImage 
                   src="https://images.unsplash.com/photo-1581872388288-bf2d207a7fbc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80"
                   alt="TSG Fulfillment warehouse operations"
                   width={1025}
@@ -380,7 +380,7 @@ const About: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="h-64 overflow-hidden">
-                  <OptimizedImage 
+                  <EnhancedImage 
                     src={member.image}
                     alt={member.name}
                     width={400}
@@ -409,13 +409,13 @@ const About: React.FC = () => {
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeIn}
           >
-            <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Our Facilities</span>
+            <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Our Facility</span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">
-              Strategic <span className="text-primary">Locations</span>
+              Strategic <span className="text-primary">Location</span>
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              Our state-of-the-art fulfillment centers are strategically located across the United States, 
-              allowing us to provide efficient, cost-effective shipping to customers nationwide.
+              Our state-of-the-art fulfillment center is strategically located in Vaughan, Ontario, 
+              allowing us to provide efficient, cost-effective shipping to customers throughout Canada.
             </p>
           </motion.div>
           
