@@ -129,12 +129,8 @@ async function uploadAllImages() {
     return;
   }
   
-  // Ensure bucket exists
-  const bucketReady = await ensureBucketExists();
-  if (!bucketReady) {
-    console.error('Failed to prepare bucket. Exiting.');
-    return;
-  }
+  // Since bucket already exists, skip creation check
+  console.log('Assuming bucket "images" already exists...');
   
   console.log('Starting image upload process...');
   
