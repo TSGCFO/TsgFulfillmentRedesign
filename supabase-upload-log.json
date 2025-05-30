@@ -1,0 +1,309 @@
+{
+  "timestamp": "2025-05-30T20:53:33.624Z",
+  "summary": {
+    "totalFiles": 27,
+    "successful": 0,
+    "failed": 27,
+    "totalSize": 0,
+    "totalSizeFormatted": "0 Bytes"
+  },
+  "uploads": [
+    {
+      "category": "hero",
+      "filename": "hero-about-hero-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-about-hero-2025.jpg",
+      "remotePath": "hero/hero-about-hero-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:28.155Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-banner-22-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-banner-22-2025.jpg",
+      "remotePath": "hero/hero-banner-22-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:28.347Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-contact-hero-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-contact-hero-2025.jpg",
+      "remotePath": "hero/hero-contact-hero-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:28.572Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-fullfi-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-fullfi-banner-2025.jpg",
+      "remotePath": "hero/hero-fullfi-banner-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:28.775Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-health-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-health-banner-2025.jpg",
+      "remotePath": "hero/hero-health-banner-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:28.977Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-inventory-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-inventory-banner-2025.jpg",
+      "remotePath": "hero/hero-inventory-banner-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:29.194Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-adidas-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-adidas-logo-2025.svg",
+      "remotePath": "logos/logos-adidas-logo-2025.svg",
+      "size": 3608,
+      "sizeFormatted": "3.52 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:29.388Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-amazon-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-amazon-logo-2025.svg",
+      "remotePath": "logos/logos-amazon-logo-2025.svg",
+      "size": 5530,
+      "sizeFormatted": "5.4 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:29.601Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-logo-nike-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-logo-nike-2025.svg",
+      "remotePath": "logos/logos-logo-nike-2025.svg",
+      "size": 966,
+      "sizeFormatted": "966 Bytes",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:29.781Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-shopify-logo-2018-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-shopify-logo-2018-2025.svg",
+      "remotePath": "logos/logos-shopify-logo-2018-2025.svg",
+      "size": 2724,
+      "sizeFormatted": "2.66 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:29.964Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-target-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-target-logo-2025.svg",
+      "remotePath": "logos/logos-target-logo-2025.svg",
+      "size": 2828,
+      "sizeFormatted": "2.76 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:30.161Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-walmart-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-walmart-logo-2025.svg",
+      "remotePath": "logos/logos-walmart-logo-2025.svg",
+      "size": 7756,
+      "sizeFormatted": "7.57 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:30.369Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-analytics-dashboard-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-analytics-dashboard-2025.jpg",
+      "remotePath": "services/services-analytics-dashboard-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:30.585Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-analytics-performance-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-analytics-performance-2025.jpg",
+      "remotePath": "services/services-analytics-performance-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:30.794Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-hand-assembly-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-hand-assembly-2025.jpg",
+      "remotePath": "services/services-hand-assembly-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:30.970Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-logistic-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-logistic-2025.jpg",
+      "remotePath": "services/services-logistic-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:31.169Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-logo-2025.png",
+      "localPath": "/home/runner/workspace/organized-images/services/services-logo-2025.png",
+      "remotePath": "services/services-logo-2025.png",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:31.339Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-main-baner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-main-baner-2025.jpg",
+      "remotePath": "services/services-main-baner-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:31.540Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-og-image-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-og-image-2025.jpg",
+      "remotePath": "services/services-og-image-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:31.768Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-report-generator-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-report-generator-2025.jpg",
+      "remotePath": "services/services-report-generator-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:31.942Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-01-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-01-2025.jpg",
+      "remotePath": "services/services-slider-01-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:32.124Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-02-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-02-2025.jpg",
+      "remotePath": "services/services-slider-02-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:32.320Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-03-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-03-2025.jpg",
+      "remotePath": "services/services-slider-03-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:32.494Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-04-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-04-2025.jpg",
+      "remotePath": "services/services-slider-04-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:32.687Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-truck-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-truck-2025.jpg",
+      "remotePath": "services/services-truck-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:32.884Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-warehouse-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-warehouse-2025.jpg",
+      "remotePath": "services/services-warehouse-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:33.305Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-warehouse-facility-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-warehouse-facility-2025.jpg",
+      "remotePath": "services/services-warehouse-facility-2025.jpg",
+      "size": 4827,
+      "sizeFormatted": "4.71 KB",
+      "status": "failed",
+      "error": "new row violates row-level security policy",
+      "timestamp": "2025-05-30T20:53:33.524Z"
+    }
+  ]
+}
