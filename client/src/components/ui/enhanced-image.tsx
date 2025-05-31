@@ -95,11 +95,13 @@ export function OptimizedImage({
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+
   const handleImageLoad = () => {
     setIsLoading(false);
   };
 
   const handleImageError = () => {
+
     setImageError(true);
     setIsLoading(false);
   };
@@ -115,10 +117,12 @@ export function OptimizedImage({
       )}
       <img
         src={imageError ? fallbackUrl : src}
+
         alt={alt}
         width={width}
         height={height}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"
