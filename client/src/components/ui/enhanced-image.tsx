@@ -1,74 +1,132 @@
-import React, { useState } from 'react';
-import { getEnhancedImageSrc, EnhancedImageProps } from '@/lib/images';
+import { useState } from 'react';
+import { getImageUrl, getOptimizedImageUrl, generateAltText, type ImageKey } from '@/lib/images';
+
+interface EnhancedImageProps {
+  imageKey: ImageKey;
+  alt?: string;
+  width?: number;
+  height?: number;
+  quality?: number;
+  className?: string;
+  customContext?: string;
+  priority?: boolean;
+  fallbackUrl?: string;
+}
 
 /**
- * Enhanced Image Component with automatic fallback and error handling
+ * Enhanced Image Component with Supabase Storage Integration
  * 
  * Features:
- * - Automatic fallback to working images
- * - Responsive image loading
- * - Error handling with graceful degradation
- * - Optimized performance with lazy loading
+ * - Automatic SEO-friendly alt text generation
+ * - Optimized image loading with transforms
+ * - Fallback handling for failed loads
+ * - Centralized image management
  */
-export const EnhancedImage: React.FC<EnhancedImageProps> = ({
-  src,
+export function EnhancedImage({
+  imageKey,
   alt,
   width,
   height,
-  className = '',
-  fallbackCategory = 'default',
-  priority = false,
   quality = 80,
-  ...props
-}) => {
-  const [hasError, setHasError] = useState(false);
+  className = '',
+  customContext,
+  priority = false,
+  fallbackUrl = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'
+}: EnhancedImageProps) {
+  const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { src: optimizedSrc, fallbackSrc, srcSet } = getEnhancedImageSrc({
-    src,
-    alt,
-    width,
-    height,
-    fallbackCategory,
-    priority,
-    quality
-  });
+  // Generate the image URL
+  const imageUrl = width || height || quality !== 80 
+    ? getOptimizedImageUrl(imageKey, width, height, quality)
+    : getImageUrl(imageKey);
+
+  // Generate SEO-friendly alt text
+  const imageAlt = alt || generateAltText(imageKey, customContext);
 
   const handleImageLoad = () => {
     setIsLoading(false);
   };
 
   const handleImageError = () => {
-    setHasError(true);
+    setImageError(true);
     setIsLoading(false);
   };
 
-  // Use fallback image if there was an error
-  const finalSrc = hasError ? fallbackSrc : optimizedSrc;
-
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative overflow-hidden ${className}`}>
       {isLoading && (
-        <div 
-          className="absolute inset-0 bg-gray-200 animate-pulse rounded"
-          style={{ width, height }}
-        />
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="text-gray-400 text-sm">Loading...</div>
+        </div>
       )}
       <img
-        src={finalSrc}
+        src={imageError ? fallbackUrl : imageUrl}
+        alt={imageAlt}
+        width={width}
+        height={height}
+        className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        loading={priority ? 'eager' : 'lazy'}
+      />
+    </div>
+  );
+}
+
+/**
+ * Simple wrapper for backward compatibility
+ */
+export function OptimizedImage({
+  src,
+  alt,
+  width,
+  height,
+  className = '',
+  fallback
+}: {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  fallback?: string;
+}) {
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  const handleImageLoad = () => {
+    setIsLoading(false);
+  };
+
+  const handleImageError = () => {
+
+    setImageError(true);
+    setIsLoading(false);
+  };
+
+  const fallbackUrl = fallback || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      {isLoading && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="text-gray-400 text-sm">Loading...</div>
+        </div>
+      )}
+      <img
+        src={imageError ? fallbackUrl : src}
+
         alt={alt}
         width={width}
         height={height}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-        loading={priority ? 'eager' : 'lazy'}
-        srcSet={srcSet}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+
         onLoad={handleImageLoad}
         onError={handleImageError}
-        {...props}
+        loading="lazy"
       />
     </div>
   );
-};
-
-export default EnhancedImage;
+}
