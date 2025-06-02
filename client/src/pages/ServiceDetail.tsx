@@ -369,11 +369,15 @@ const ServiceDetail = () => {
     }
 
     const currentSlug = params.slug;
+    console.log("Looking for service with slug:", currentSlug);
+    console.log("Available service slugs:", serviceDetails.map(s => s.slug));
+    
     const currentServiceIndex = serviceDetails.findIndex(
       (s) => s.slug === currentSlug,
     );
 
     if (currentServiceIndex === -1) {
+      console.log("Service not found, redirecting to not-found");
       setLocation("/not-found");
       return;
     }
