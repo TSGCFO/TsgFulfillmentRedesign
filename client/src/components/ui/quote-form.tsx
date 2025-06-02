@@ -227,9 +227,10 @@ export function QuoteForm() {
         
         <Button 
           type="submit"
-          className="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary/90 transition duration-300 shadow-md"
+          disabled={isSubmitting}
+          className="w-full bg-primary text-white py-3 px-6 rounded-md font-medium hover:bg-primary/90 transition duration-300 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Submit Request
+          {isSubmitting ? 'Submitting...' : 'Submit Request'}
         </Button>
       </form>
     </Form>
