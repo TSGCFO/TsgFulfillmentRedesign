@@ -95,13 +95,11 @@ export function OptimizedImage({
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const handleImageLoad = () => {
     setIsLoading(false);
   };
 
   const handleImageError = () => {
-
     setImageError(true);
     setIsLoading(false);
   };
@@ -117,7 +115,6 @@ export function OptimizedImage({
       )}
       <img
         src={imageError ? fallbackUrl : src}
-
         alt={alt}
         width={width}
         height={height}

@@ -33,46 +33,37 @@ export type ImageCategory = typeof IMAGE_CATEGORIES[keyof typeof IMAGE_CATEGORIE
  */
 export const IMAGE_REGISTRY = {
   // Hero section images
-  'hero-fulfillment-warehouse': 'hero/tsg-fulfillment-warehouse-operations.jpg',
-  'hero-logistics-center': 'hero/modern-logistics-distribution-center.jpg',
+  'hero-about': 'hero/hero-about-hero-2025.jpg',
+  'hero-banner-22': 'hero/hero-banner-22-2025.jpg',
+  'hero-contact': 'hero/hero-contact-hero-2025.jpg',
+  'hero-fulfillment': 'hero/hero-fullfi-banner-2025.jpg',
+  'hero-health': 'hero/hero-health-banner-2025.jpg',
+  'hero-inventory': 'hero/hero-inventory-banner-2025.jpg',
   
   // Service images
-  'service-warehousing': 'services/professional-warehousing-storage-solutions.jpg',
-  'service-fulfillment': 'services/ecommerce-order-fulfillment-processing.jpg',
-  'service-shipping': 'services/fast-shipping-delivery-logistics.jpg',
-  'service-inventory': 'services/inventory-management-tracking-system.jpg',
-  'service-value-added': 'services/value-added-logistics-services.jpg',
-  'service-kitting': 'services/kitting-assembly-services.jpg',
-  'service-reverse-logistics': 'services/reverse-logistics-returns-processing.jpg',
-  'service-freight-forwarding': 'services/freight-forwarding-shipping.jpg',
-  'service-healthcare-marketing': 'services/healthcare-marketing-fulfillment.jpg',
-  
-  // Industry images
-  'industry-ecommerce': 'industries/ecommerce-retail-fulfillment-solutions.jpg',
-  'industry-manufacturing': 'industries/manufacturing-supply-chain-logistics.jpg',
-  'industry-healthcare': 'industries/healthcare-medical-device-distribution.jpg',
-  'industry-automotive': 'industries/automotive-parts-warehouse-distribution.jpg',
-  'industry-health-beauty': 'industries/health-beauty-product-fulfillment.jpg',
-  'industry-technology': 'industries/technology-electronics-distribution.jpg',
-  'industry-fashion': 'industries/fashion-apparel-warehouse-fulfillment.jpg',
-  'industry-food-beverage': 'industries/food-beverage-cold-chain-logistics.jpg',
-  
-  // Warehouse operations
-  'warehouse-interior': 'warehouse/modern-warehouse-interior-operations.jpg',
-  'warehouse-automation': 'warehouse/automated-warehouse-robotics-system.jpg',
-  'warehouse-picking': 'warehouse/order-picking-fulfillment-process.jpg',
-  
-  // Team and company
-  'team-leadership': 'team/tsg-fulfillment-leadership-team.jpg',
-  'team-warehouse-staff': 'team/warehouse-operations-team-working.jpg',
+  'service-analytics-dashboard': 'services/services-analytics-dashboard-2025.jpg',
+  'service-analytics-performance': 'services/services-analytics-performance-2025.jpg',
+  'service-hand-assembly': 'services/services-hand-assembly-2025.jpg',
+  'service-logistics': 'services/services-logistic-2025.jpg',
+  'service-logo': 'services/services-logo-2025.png',
+  'service-main-banner': 'services/services-main-baner-2025.jpg',
+  'service-og-image': 'services/services-og-image-2025.jpg',
+  'service-report-generator': 'services/services-report-generator-2025.jpg',
+  'service-slider-01': 'services/services-slider-01-2025.jpg',
+  'service-slider-02': 'services/services-slider-02-2025.jpg',
+  'service-slider-03': 'services/services-slider-03-2025.jpg',
+  'service-slider-04': 'services/services-slider-04-2025.jpg',
+  'service-truck': 'services/services-truck-2025.jpg',
+  'service-warehouse': 'services/services-warehouse-2025.jpg',
+  'service-warehouse-facility': 'services/services-warehouse-facility-2025.jpg',
   
   // Logos and branding
-  'logo-tsg-main': 'logos/tsg-fulfillment-company-logo.svg',
-  'logo-tsg-white': 'logos/tsg-fulfillment-logo-white.svg',
-  
-  // Client logos
-  'client-logo-1': 'logos/client-logistics-company-logo.png',
-  'client-logo-2': 'logos/client-ecommerce-brand-logo.png'
+  'logo-adidas': 'logos/logos-adidas-logo-2025.svg',
+  'logo-amazon': 'logos/logos-amazon-logo-2025.svg',
+  'logo-nike': 'logos/logos-logo-nike-2025.svg',
+  'logo-shopify': 'logos/logos-shopify-logo-2018-2025.svg',
+  'logo-target': 'logos/logos-target-logo-2025.svg',
+  'logo-walmart': 'logos/logos-walmart-logo-2025.svg'
 } as const;
 
 export type ImageKey = keyof typeof IMAGE_REGISTRY;
@@ -264,16 +255,18 @@ const FALLBACK_IMAGES = {
 // Service-specific image mapping
 export const getServiceImage = (serviceSlug: string): string => {
   const serviceMapping: Record<string, ImageKey> = {
-    'value-added-services': 'service-value-added',
-    'fulfillment': 'service-fulfillment',
-    'warehousing': 'service-warehousing',
-    'transportation': 'service-shipping',
-    'kitting-services': 'service-kitting',
-    'hand-assembly': 'service-kitting',
-    'reverse-logistics': 'service-reverse-logistics',
-    'inventory-management': 'service-inventory',
-    'freight-forwarding': 'service-freight-forwarding',
-    'healthcare-marketing-services': 'service-healthcare-marketing'
+
+    'fulfillment': 'service-main-banner',
+    'warehousing': 'service-warehouse',
+    'value-added-services': 'service-logistics',
+    'transportation': 'service-truck',
+    'kitting-services': 'service-hand-assembly',
+    'hand-assembly': 'service-hand-assembly',
+    'reverse-logistics': 'service-logistics',
+    'inventory-management': 'service-analytics-dashboard',
+    'freight-forwarding': 'service-truck',
+    'healthcare-marketing-services': 'service-logistics'
+
   };
   
   const imageKey = serviceMapping[serviceSlug];
@@ -289,15 +282,17 @@ export const getServiceImage = (serviceSlug: string): string => {
 
 // Industry-specific image mapping
 export const getIndustryImage = (industrySlug: string): string => {
+
+  // Since no industry images were uploaded, use service images as fallback
   const industryMapping: Record<string, ImageKey> = {
-    'e-commerce': 'industry-ecommerce',
-    'health-beauty': 'industry-health-beauty',
-    'technology': 'industry-technology',
-    'fashion-apparel': 'industry-fashion',
-    'automotive': 'industry-automotive',
-    'food-beverage': 'industry-food-beverage',
-    'manufacturing': 'industry-manufacturing',
-    'healthcare': 'industry-healthcare'
+    'e-commerce': 'service-analytics-dashboard',
+    'health-beauty': 'hero-health',
+    'technology': 'service-analytics-performance',
+    'fashion-apparel': 'service-logistics',
+    'automotive': 'service-truck',
+    'food-beverage': 'service-warehouse',
+    'manufacturing': 'service-warehouse-facility',
+    'healthcare': 'hero-health'
   };
   
   const imageKey = industryMapping[industrySlug];
@@ -313,7 +308,8 @@ export const getIndustryImage = (industrySlug: string): string => {
 
 // Hero images
 export const getRandomHeroImage = (): string => {
-  const heroImages: ImageKey[] = ['hero-fulfillment-warehouse', 'hero-logistics-center'];
+
+  const heroImages: ImageKey[] = ['hero-fulfillment', 'hero-banner-22'];
   const randomKey = heroImages[Math.floor(Math.random() * heroImages.length)];
   try {
     return getImageUrl(randomKey);

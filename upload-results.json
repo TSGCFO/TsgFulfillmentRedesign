@@ -1,0 +1,281 @@
+{
+  "timestamp": "2025-05-30T20:58:20.701Z",
+  "summary": {
+    "totalFiles": 27,
+    "successful": 27,
+    "failed": 0,
+    "totalSize": "121.85 KB"
+  },
+  "uploads": [
+    {
+      "category": "hero",
+      "filename": "hero-about-hero-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-about-hero-2025.jpg",
+      "remotePath": "hero/hero-about-hero-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:11.129Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-banner-22-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-banner-22-2025.jpg",
+      "remotePath": "hero/hero-banner-22-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:11.495Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-contact-hero-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-contact-hero-2025.jpg",
+      "remotePath": "hero/hero-contact-hero-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:11.847Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-fullfi-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-fullfi-banner-2025.jpg",
+      "remotePath": "hero/hero-fullfi-banner-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:12.192Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-health-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-health-banner-2025.jpg",
+      "remotePath": "hero/hero-health-banner-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:12.529Z"
+    },
+    {
+      "category": "hero",
+      "filename": "hero-inventory-banner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/hero/hero-inventory-banner-2025.jpg",
+      "remotePath": "hero/hero-inventory-banner-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:12.889Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-adidas-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-adidas-logo-2025.svg",
+      "remotePath": "logos/logos-adidas-logo-2025.svg",
+      "size": 3608,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:13.247Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-amazon-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-amazon-logo-2025.svg",
+      "remotePath": "logos/logos-amazon-logo-2025.svg",
+      "size": 5530,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:13.599Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-logo-nike-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-logo-nike-2025.svg",
+      "remotePath": "logos/logos-logo-nike-2025.svg",
+      "size": 966,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:13.965Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-shopify-logo-2018-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-shopify-logo-2018-2025.svg",
+      "remotePath": "logos/logos-shopify-logo-2018-2025.svg",
+      "size": 2724,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:14.319Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-target-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-target-logo-2025.svg",
+      "remotePath": "logos/logos-target-logo-2025.svg",
+      "size": 2828,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:14.665Z"
+    },
+    {
+      "category": "logos",
+      "filename": "logos-walmart-logo-2025.svg",
+      "localPath": "/home/runner/workspace/organized-images/logos/logos-walmart-logo-2025.svg",
+      "remotePath": "logos/logos-walmart-logo-2025.svg",
+      "size": 7756,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:15.008Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-analytics-dashboard-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-analytics-dashboard-2025.jpg",
+      "remotePath": "services/services-analytics-dashboard-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:15.364Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-analytics-performance-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-analytics-performance-2025.jpg",
+      "remotePath": "services/services-analytics-performance-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:15.724Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-hand-assembly-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-hand-assembly-2025.jpg",
+      "remotePath": "services/services-hand-assembly-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:16.067Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-logistic-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-logistic-2025.jpg",
+      "remotePath": "services/services-logistic-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:16.440Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-logo-2025.png",
+      "localPath": "/home/runner/workspace/organized-images/services/services-logo-2025.png",
+      "remotePath": "services/services-logo-2025.png",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:16.895Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-main-baner-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-main-baner-2025.jpg",
+      "remotePath": "services/services-main-baner-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:17.229Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-og-image-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-og-image-2025.jpg",
+      "remotePath": "services/services-og-image-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:17.596Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-report-generator-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-report-generator-2025.jpg",
+      "remotePath": "services/services-report-generator-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:17.959Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-01-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-01-2025.jpg",
+      "remotePath": "services/services-slider-01-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:18.339Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-02-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-02-2025.jpg",
+      "remotePath": "services/services-slider-02-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:18.704Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-03-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-03-2025.jpg",
+      "remotePath": "services/services-slider-03-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:19.073Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-slider-04-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-slider-04-2025.jpg",
+      "remotePath": "services/services-slider-04-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:19.442Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-truck-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-truck-2025.jpg",
+      "remotePath": "services/services-truck-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:19.816Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-warehouse-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-warehouse-2025.jpg",
+      "remotePath": "services/services-warehouse-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:20.167Z"
+    },
+    {
+      "category": "services",
+      "filename": "services-warehouse-facility-2025.jpg",
+      "localPath": "/home/runner/workspace/organized-images/services/services-warehouse-facility-2025.jpg",
+      "remotePath": "services/services-warehouse-facility-2025.jpg",
+      "size": 4827,
+      "status": "success",
+      "error": null,
+      "timestamp": "2025-05-30T20:58:20.501Z"
+    }
+  ]
+}

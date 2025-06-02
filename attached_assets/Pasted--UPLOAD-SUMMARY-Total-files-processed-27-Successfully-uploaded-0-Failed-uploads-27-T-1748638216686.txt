@@ -1,0 +1,42 @@
+
+=== UPLOAD SUMMARY ===
+Total files processed: 27
+Successfully uploaded: 0
+Failed uploads: 27
+Total size uploaded: 0 Bytes
+
+Detailed log saved to: /home/runner/workspace/supabase-upload-log.json
+Image URLs saved to: /home/runner/workspace/uploaded-image-urls.json
+
+Failed uploads:
+  - hero/hero-about-hero-2025.jpg: new row violates row-level security policy
+  - hero/hero-banner-22-2025.jpg: new row violates row-level security policy
+  - hero/hero-contact-hero-2025.jpg: new row violates row-level security policy
+  - hero/hero-fullfi-banner-2025.jpg: new row violates row-level security policy
+  - hero/hero-health-banner-2025.jpg: new row violates row-level security policy
+  - hero/hero-inventory-banner-2025.jpg: new row violates row-level security policy
+  - logos/logos-adidas-logo-2025.svg: new row violates row-level security policy
+  - logos/logos-amazon-logo-2025.svg: new row violates row-level security policy
+  - logos/logos-logo-nike-2025.svg: new row violates row-level security policy
+  - logos/logos-shopify-logo-2018-2025.svg: new row violates row-level security policy
+  - logos/logos-target-logo-2025.svg: new row violates row-level security policy
+  - logos/logos-walmart-logo-2025.svg: new row violates row-level security policy
+  - services/services-analytics-dashboard-2025.jpg: new row violates row-level security policy
+  - services/services-analytics-performance-2025.jpg: new row violates row-level security policy
+  - services/services-hand-assembly-2025.jpg: new row violates row-level security policy
+  - services/services-logistic-2025.jpg: new row violates row-level security policy
+  - services/services-logo-2025.png: new row violates row-level security policy
+  - services/services-main-baner-2025.jpg: new row violates row-level security policy
+  - services/services-og-image-2025.jpg: new row violates row-level security policy
+  - services/services-report-generator-2025.jpg: new row violates row-level security policy
+  - services/services-slider-01-2025.jpg: new row violates row-level security policy
+  - services/services-slider-02-2025.jpg: new row violates row-level security policy
+  - services/services-slider-03-2025.jpg: new row violates row-level security policy
+  - services/services-slider-04-2025.jpg: new row violates row-level security policy
+  - services/services-truck-2025.jpg: new row violates row-level security policy
+  - services/services-warehouse-2025.jpg: new row violates row-level security policy
+  - services/services-warehouse-facility-2025.jpg: new row violates row-level security policy
+
+Your images are now available via Supabase CDN at:
+https://ahnneaclpkspcdtoqzkp.supabase.co/storage/v1/object/public/images/category/filename
+~/workspace$ 
