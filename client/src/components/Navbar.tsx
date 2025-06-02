@@ -55,9 +55,9 @@ const Navbar: React.FC = () => {
   ];
 
   const serviceItems = [
-    { label: 'Warehousing', id: 'warehousing-services', isLink: true },
-    { label: 'Fulfillment', id: 'order-fulfillment', isLink: true },
-    { label: 'Transportation', id: 'freight-forwarding', isLink: true },
+    { label: 'Warehousing', id: 'warehousing', isLink: true },
+    { label: 'Fulfillment', id: 'fulfillment', isLink: true },
+    { label: 'Transportation', id: 'transportation', isLink: true },
     { label: 'Value Added Services', id: 'value-added-services', isLink: true },
   ];
 

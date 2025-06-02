@@ -369,15 +369,11 @@ const ServiceDetail = () => {
     }
 
     const currentSlug = params.slug;
-    console.log("Looking for service with slug:", currentSlug);
-    console.log("Available service slugs:", serviceDetails.map(s => s.slug));
-    
     const currentServiceIndex = serviceDetails.findIndex(
       (s) => s.slug === currentSlug,
     );
 
     if (currentServiceIndex === -1) {
-      console.log("Service not found, redirecting to not-found");
       setLocation("/not-found");
       return;
     }
@@ -523,12 +519,11 @@ const ServiceDetail = () => {
               {/* Featured image with optimized loading */}
               <div className="mt-8 mb-12 overflow-hidden rounded-xl shadow-lg">
                 <EnhancedImage
-                  src={getServiceImage(service.slug)}
+                  imageKey={`services/${service.slug}` as any}
                   alt={`${service.title} - TSG Fulfillment Services`}
                   width={1200}
                   height={600}
                   className="w-full h-auto object-cover"
-                  fallbackCategory="service"
                   priority={true}
                 />
               </div>
