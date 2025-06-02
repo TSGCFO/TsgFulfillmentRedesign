@@ -364,7 +364,7 @@ const ServiceDetail = () => {
 
   useEffect(() => {
     if (!params) {
-      setLocation("/services/order-fulfillment");
+      setLocation("/services/fulfillment");
       return;
     }
 
