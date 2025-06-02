@@ -30,12 +30,8 @@ const clientLogos = [
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg',
   },
   {
-    name: 'Nike',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-  },
-  {
-    name: 'Adidas',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg',
+    name: 'Costco',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5f/Costco_Wholesale_logo_2010-10-26.svg',
   }
 ];
 
@@ -50,7 +46,7 @@ const ClientLogos: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           variants={fadeIn}
         >
-          <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Trusted Partners</span>
+          <span className="inline-block text-primary font-semibold uppercase tracking-wider mb-3">Trusted Partners & Integrations</span>
           <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6">Powering Supply Chains for <span className="text-primary">Market Leaders</span></h2>
           <p className="text-gray-600 max-w-3xl mx-auto text-lg">
             Our enterprise-grade logistics solutions serve leading brands across various industries.
