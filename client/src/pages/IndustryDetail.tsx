@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { EnhancedImage } from '@/components/ui/enhanced-image';
+import { IndustryDetailSkeleton } from '@/components/ui/skeletons';
 import Seo from '@/components/SEO/Seo';
 
 const fadeIn = {
