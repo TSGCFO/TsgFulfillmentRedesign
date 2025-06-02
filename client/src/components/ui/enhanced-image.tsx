@@ -119,6 +119,7 @@ export function OptimizedImage({
         width={width}
         height={height}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"

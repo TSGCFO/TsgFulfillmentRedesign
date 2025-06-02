@@ -255,6 +255,7 @@ const FALLBACK_IMAGES = {
 // Service-specific image mapping
 export const getServiceImage = (serviceSlug: string): string => {
   const serviceMapping: Record<string, ImageKey> = {
+
     'fulfillment': 'service-main-banner',
     'warehousing': 'service-warehouse',
     'value-added-services': 'service-logistics',
@@ -265,6 +266,7 @@ export const getServiceImage = (serviceSlug: string): string => {
     'inventory-management': 'service-analytics-dashboard',
     'freight-forwarding': 'service-truck',
     'healthcare-marketing-services': 'service-logistics'
+
   };
   
   const imageKey = serviceMapping[serviceSlug];
@@ -280,6 +282,7 @@ export const getServiceImage = (serviceSlug: string): string => {
 
 // Industry-specific image mapping
 export const getIndustryImage = (industrySlug: string): string => {
+
   // Since no industry images were uploaded, use service images as fallback
   const industryMapping: Record<string, ImageKey> = {
     'e-commerce': 'service-analytics-dashboard',
@@ -305,6 +308,7 @@ export const getIndustryImage = (industrySlug: string): string => {
 
 // Hero images
 export const getRandomHeroImage = (): string => {
+
   const heroImages: ImageKey[] = ['hero-fulfillment', 'hero-banner-22'];
   const randomKey = heroImages[Math.floor(Math.random() * heroImages.length)];
   try {
