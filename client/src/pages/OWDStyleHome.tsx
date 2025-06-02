@@ -211,7 +211,18 @@ const OWDStyleHome: React.FC = () => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Get in touch with our team for a customized fulfillment solution that meets your business needs.
           </p>
-          <Button className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold">
+          <Button 
+            className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold"
+            onClick={() => {
+              const element = document.getElementById('contact');
+              if (element) {
+                window.scrollTo({
+                  top: element.offsetTop - 100,
+                  behavior: 'smooth',
+                });
+              }
+            }}
+          >
             Request a Quote
           </Button>
         </div>

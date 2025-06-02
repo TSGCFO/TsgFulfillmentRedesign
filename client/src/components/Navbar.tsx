@@ -18,10 +18,13 @@ const Navbar: React.FC = () => {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
 
   const handleGetQuote = () => {
-    toast({
-      title: "Request received",
-      description: "We'll get back to you with a quote soon.",
-    });
+    const element = document.getElementById('contact');
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 100,
+        behavior: 'smooth',
+      });
+    }
   };
 
   useEffect(() => {
