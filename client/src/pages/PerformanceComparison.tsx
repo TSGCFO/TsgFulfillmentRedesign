@@ -15,6 +15,7 @@ import {
 
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { AnalyticsDashboardSkeleton } from '@/components/ui/skeletons';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Select, SelectContent, SelectItem,
@@ -248,6 +249,27 @@ const PerformanceComparison: React.FC = () => {
       "audienceType": "Supply Chain and Logistics Managers"
     }
   };
+
+  if (isLoading) {
+    return (
+      <AnalyticsLayout title="Performance Comparison">
+        <Seo
+          title="Logistics Performance Comparison | TSG Fulfillment"
+          description="Compare logistics performance metrics across different time periods. Track improvements, identify trends, and optimize your supply chain operations with advanced analytics."
+          keywords="logistics comparison, fulfillment metrics, performance tracking, supply chain analytics, logistics benchmarking, shipping metrics, inventory comparison"
+          canonical="https://tsgfulfillment.com/analytics/performance-comparison"
+          ogType="website" 
+          ogUrl="https://tsgfulfillment.com/analytics/performance-comparison"
+          ogImage="https://tsgfulfillment.com/images/analytics-performance.jpg"
+          twitterCard="summary_large_image"
+          twitterTitle="Logistics Performance Comparison | TSG Fulfillment"
+          twitterDescription="Track your logistics performance improvements over time with our advanced comparison tools."
+          structuredData={performanceComparisonStructuredData}
+        />
+        <AnalyticsDashboardSkeleton />
+      </AnalyticsLayout>
+    );
+  }
 
   return (
     <AnalyticsLayout title="Performance Comparison">

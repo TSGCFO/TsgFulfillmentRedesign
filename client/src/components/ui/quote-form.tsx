@@ -24,6 +24,7 @@ import {
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
+import { QuoteFormSkeleton } from '@/components/ui/skeletons';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -41,6 +42,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export function QuoteForm() {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -56,6 +58,7 @@ export function QuoteForm() {
   });
 
   async function onSubmit(data: FormValues) {
+    setIsSubmitting(true);
     try {
       await apiRequest('POST', '/api/quote', data);
       toast({
@@ -69,6 +72,8 @@ export function QuoteForm() {
         description: 'Please try again later',
         variant: 'destructive',
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 

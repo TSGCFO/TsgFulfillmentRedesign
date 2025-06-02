@@ -477,6 +477,28 @@ const AnalyticsPage: React.FC = () => {
     }
   };
 
+  // Show loading skeleton while any critical data is loading
+  if (summaryLoading || shippingLoading || inventoryLoading) {
+    return (
+      <AnalyticsLayout title="Analytics Dashboard">
+        <Seo
+          title="Logistics Analytics Dashboard | TSG Fulfillment"
+          description="Comprehensive analytics and reporting platform for monitoring and optimizing your logistics and fulfillment operations with TSG Fulfillment."
+          keywords="logistics analytics, fulfillment reporting, shipment tracking, inventory management, supply chain metrics, performance dashboard"
+          canonical="https://tsgfulfillment.com/analytics"
+          ogType="website" 
+          ogUrl="https://tsgfulfillment.com/analytics"
+          ogImage="https://tsgfulfillment.com/images/analytics-dashboard.jpg"
+          twitterCard="summary_large_image"
+          twitterTitle="Logistics Analytics Dashboard | TSG Fulfillment"
+          twitterDescription="Monitor and optimize your logistics operations with our comprehensive analytics dashboard."
+          structuredData={analyticsStructuredData}
+        />
+        <AnalyticsDashboardSkeleton />
+      </AnalyticsLayout>
+    );
+  }
+
   return (
     <AnalyticsLayout title="Analytics Dashboard">
       <Seo
