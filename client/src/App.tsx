@@ -15,6 +15,7 @@ const IndustryDetail = lazy(() => import("@/pages/IndustryDetail"));
 const About = lazy(() => import("@/pages/About"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Locations = lazy(() => import("@/pages/Locations"));
+const analyticsEnabled = import.meta.env.VITE_ANALYTICS_ENABLED === 'true';
 const Analytics = lazy(() => import("@/pages/Analytics"));
 const ReportGenerator = lazy(() => import("@/pages/ReportGenerator"));
 const PerformanceComparison = lazy(() => import("@/pages/PerformanceComparison"));
@@ -66,10 +67,14 @@ function Router() {
         <Route path="/about" component={About} />
         <Route path="/contact" component={Contact} />
         <Route path="/locations" component={Locations} />
-        <Route path="/analytics" component={Analytics} />
-        <Route path="/analytics/reports" component={ReportGenerator} />
-        <Route path="/analytics/comparison" component={PerformanceComparison} />
-        <Route path="/analytics/dashboard" component={CustomDashboard} />
+        {analyticsEnabled && (
+          <>
+            <Route path="/analytics" component={Analytics} />
+            <Route path="/analytics/reports" component={ReportGenerator} />
+            <Route path="/analytics/comparison" component={PerformanceComparison} />
+            <Route path="/analytics/dashboard" component={CustomDashboard} />
+          </>
+        )}
         <Route path="/admin/images" component={ImageManagement} />
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
         <Route path="/quote" component={QuoteRequest} />

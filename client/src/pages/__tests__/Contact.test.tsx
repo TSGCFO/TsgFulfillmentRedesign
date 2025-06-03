@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import Contact from '../Contact';
 
 describe('Contact page', () => {
   it('submits the contact form', async () => {
     const user = userEvent.setup();
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
     render(<Contact />);
 
     await user.type(screen.getByLabelText(/your name/i), 'John Doe');

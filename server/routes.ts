@@ -13,13 +13,15 @@ import {
 // Error handler utility function
 const handleError = (res: Response, error: any, message: string = 'An error occurred') => {
   console.error(`Error: ${message}`, error);
-  res.status(400).json({ 
+  res.status(400).json({
     message,
     error: error instanceof Error ? error.message : 'Unknown error'
   });
 };
 
-export async function registerRoutes(app: Express): Promise<Server> {
+const analyticsEnabled = process.env.ANALYTICS_ENABLED === 'true';
+
+export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
   // QUOTE REQUEST ENDPOINTS
   // Create a quote request
   app.post('/api/quote-requests', async (req, res) => {
@@ -372,9 +374,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // ANALYTICS API ENDPOINTS
-  // Get client analytics summary
-  app.get('/api/analytics/client-summary/:clientId', async (req, res) => {
+  if (analytics) {
+    // ANALYTICS API ENDPOINTS
+    // Get client analytics summary
+    app.get('/api/analytics/client-summary/:clientId', async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
       const analyticsSummary = await storage.getClientAnalyticsSummary(clientId);
@@ -382,10 +385,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       handleError(res, error, 'Error retrieving client analytics summary');
     }
-  });
+    });
   
-  // Get shipping performance analytics
-  app.get('/api/analytics/shipping-performance', async (req, res) => {
+    // Get shipping performance analytics
+    app.get('/api/analytics/shipping-performance', async (req, res) => {
     try {
       const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
       const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
@@ -396,10 +399,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       handleError(res, error, 'Error retrieving shipping performance');
     }
-  });
+    });
   
-  // Get inventory report
-  app.get('/api/analytics/inventory-report', async (req, res) => {
+    // Get inventory report
+    app.get('/api/analytics/inventory-report', async (req, res) => {
     try {
       const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
       const inventoryReport = await storage.getInventoryReport(clientId);
@@ -407,11 +410,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       handleError(res, error, 'Error retrieving inventory report');
     }
-  });
+    });
   
-  // Advanced analytics endpoints
-  // Get report data for customized reports
-  app.get('/api/analytics/report-data', async (req, res) => {
+    // Advanced analytics endpoints
+    // Get report data for customized reports
+    app.get('/api/analytics/report-data', async (req, res) => {
     try {
       const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
       const reportType = req.query.reportType as string;
@@ -427,10 +430,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       handleError(res, error, 'Error retrieving report data');
     }
-  });
+    });
   
-  // Get comparison data for performance analytics
-  app.get('/api/analytics/comparison', async (req, res) => {
+    // Get comparison data for performance analytics
+    app.get('/api/analytics/comparison', async (req, res) => {
     try {
       const { clientId, periodAStart, periodAEnd, periodBStart, periodBEnd, metric } = req.query;
       
@@ -452,7 +455,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       handleError(res, error, 'Error retrieving comparison data');
     }
-  });
+    });
+  }
 
   const httpServer = createServer(app);
 
