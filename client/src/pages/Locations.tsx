@@ -57,7 +57,7 @@ const Locations: React.FC = () => {
       phone: "(289) 815-5869",
       email: "info@tsgfulfillment.com",
       image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      size: "150,000 sq ft",
+      size: "25,000 sq ft",
       features: [
         "Modern warehousing environment",
         "High security with 24/7 monitoring",
