@@ -95,12 +95,16 @@ export const getImageUrl = (imageKey: ImageKey): string => {
  * Get optimized image URL with transform parameters
  */
 export const getOptimizedImageUrl = (
-  imageKey: ImageKey, 
-  width?: number, 
+  imageKey: ImageKey,
+  width?: number,
   height?: number,
   quality?: number
 ): string => {
   const imagePath = IMAGE_REGISTRY[imageKey];
+
+  if (!supabase) {
+    return FALLBACK_IMAGES.default;
+  }
   
   const { data } = supabase.storage
     .from(IMAGE_BUCKET)

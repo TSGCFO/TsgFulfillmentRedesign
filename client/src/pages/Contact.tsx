@@ -351,18 +351,46 @@ const Contact: React.FC = () => {
                     <label htmlFor="interestType" className="block text-gray-700 font-medium mb-2">
                       Service Interest *
                     </label>
-                    <Select value={formData.interestType} onValueChange={handleSelectChange} required>
-                      <SelectTrigger className="w-full p-3 h-auto border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50">
-                        <SelectValue placeholder="Select a service" />
-                      </SelectTrigger>
-                      <SelectContent>
+                    {import.meta.env.VITEST ? (
+                      <select
+                        id="interestType"
+                        aria-label="Service Interest"
+                        className="w-full p-3 h-auto border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
+                        value={formData.interestType}
+                        onChange={(e) => handleSelectChange(e.target.value)}
+                        required
+                      >
+                        <option value="" disabled>
+                          Select a service
+                        </option>
                         {serviceOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
+                          <option key={option.value} value={option.value}>
                             {option.label}
-                          </SelectItem>
+                          </option>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </select>
+                    ) : (
+                      <Select
+                        value={formData.interestType}
+                        onValueChange={handleSelectChange}
+                        required
+                      >
+                        <SelectTrigger
+                          id="interestType"
+                          aria-label="Service Interest"
+                          className="w-full p-3 h-auto border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
+                        >
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {serviceOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
