@@ -3,6 +3,8 @@ import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import Logo from './Logo';
+
+const analyticsEnabled = import.meta.env.VITE_ANALYTICS_ENABLED === 'true';
 import {
   Sheet,
   SheetContent,
@@ -71,9 +73,9 @@ const Navbar: React.FC = () => {
     { label: 'Contact', id: 'contact-form', isLink: true }
   ];
   
-  const pageLinks = [
-    { label: 'Analytics', href: '/analytics' }
-  ];
+  const pageLinks = analyticsEnabled
+    ? [{ label: 'Analytics', href: '/analytics' }]
+    : [];
 
   return (
     <>

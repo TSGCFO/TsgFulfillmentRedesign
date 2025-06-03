@@ -3,6 +3,8 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedAnalyticsData } from "./seed-data";
 
+const analyticsEnabled = process.env.ANALYTICS_ENABLED === "true";
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  const server = await registerRoutes(app, analyticsEnabled);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -57,11 +59,12 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Seed analytics data for demo purposes
-  try {
-    await seedAnalyticsData();
-  } catch (error) {
-    log(`Error seeding analytics data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  if (analyticsEnabled) {
+    try {
+      await seedAnalyticsData();
+    } catch (error) {
+      log(`Error seeding analytics data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   // ALWAYS serve the app on port 5000
