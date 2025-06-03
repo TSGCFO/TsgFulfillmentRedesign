@@ -387,15 +387,28 @@ const Locations: React.FC = () => {
                   ))}
                 </div>
                 
-                <Button 
-                  className="bg-primary text-white hover:bg-primary/90 flex items-center"
-                  onClick={() => {
-                    window.location.href = `mailto:${facility.email}`;
-                  }}
-                >
-                  Contact Our Facility
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button 
+                    className="bg-primary text-white hover:bg-primary/90 flex items-center"
+                    onClick={() => {
+                      window.location.href = '/#contact';
+                    }}
+                  >
+                    Get a Quote
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  
+                  <Button 
+                    variant="outline"
+                    className="flex items-center"
+                    onClick={() => {
+                      window.location.href = `mailto:${facility.email}`;
+                    }}
+                  >
+                    Email Us
+                    <Mail className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </motion.div>
           ))}
