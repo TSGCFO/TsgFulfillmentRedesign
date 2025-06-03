@@ -21,8 +21,8 @@ process.env.VITE_SUPABASE_ANON_KEY = 'test';
 // Simplify Radix Select components during tests
 vi.mock('@/components/ui/select', () => {
   return {
-    Select: ({ children, ...props }: any) =>
-      React.createElement('select', props, children),
+    Select: ({ children, onValueChange, ...props }: any) =>
+      React.createElement('select', { onChange: onValueChange, ...props }, children),
     SelectTrigger: ({ children }: any) => React.createElement(React.Fragment, null, children),
     SelectContent: ({ children }: any) => React.createElement(React.Fragment, null, children),
     SelectItem: ({ value, children, ...props }: any) =>
