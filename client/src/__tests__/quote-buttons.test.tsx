@@ -1,7 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
+
+// Preserve original methods so they can be restored after tests
+const originalScrollTo = window.scrollTo;
+const originalGetElementById = document.getElementById;
 
 // Mock scrollTo function
 const mockScrollTo = vi.fn();
@@ -30,6 +34,11 @@ describe('Quote Button Functionality Tests', () => {
       if (id === 'contact') return mockContactElement;
       return null;
     });
+  });
+
+  afterAll(() => {
+    window.scrollTo = originalScrollTo;
+    document.getElementById = originalGetElementById;
   });
 
   describe('Quote Button Click Handlers', () => {
