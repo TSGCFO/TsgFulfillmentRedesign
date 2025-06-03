@@ -215,13 +215,7 @@ const NewHome: React.FC = () => {
           <Button 
             className="bg-white hover:bg-gray-100 text-[#0056B3] px-8 py-3 text-lg font-bold"
             onClick={() => {
-              const element = document.getElementById('contact');
-              if (element) {
-                window.scrollTo({
-                  top: element.offsetTop - 100,
-                  behavior: 'smooth',
-                });
-              }
+              window.location.href = '/quote';
             }}
           >
             Request a Quote
@@ -345,18 +339,12 @@ const NewHome: React.FC = () => {
               <Button 
                 className="bg-white hover:bg-gray-100 text-blue-800 font-bold px-8 py-3 text-lg"
                 onClick={() => {
-                  const element = document.getElementById('contact');
-                  if (element) {
-                    window.scrollTo({
-                      top: element.offsetTop - 100,
-                      behavior: 'smooth',
-                    });
-                  }
+                  window.location.href = '/quote';
                 }}
               >
                 Request a Quote
               </Button>
-              <Link href="/contact">
+              <Link href="/contact-form">
                 <Button className="bg-transparent hover:bg-blue-700 border-2 border-white font-bold px-8 py-3 text-lg">
                   Contact Us
                 </Button>

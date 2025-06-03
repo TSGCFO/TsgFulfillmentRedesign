@@ -214,13 +214,7 @@ const OWDStyleHome: React.FC = () => {
           <Button 
             className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold"
             onClick={() => {
-              const element = document.getElementById('contact');
-              if (element) {
-                window.scrollTo({
-                  top: element.offsetTop - 100,
-                  behavior: 'smooth',
-                });
-              }
+              window.location.href = '/quote';
             }}
           >
             Request a Quote
