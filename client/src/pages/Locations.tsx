@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { EnhancedImage } from '@/components/ui/enhanced-image';
+import { GoogleMapsDirections } from '@/components/ui/google-maps-directions';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Seo from '@/components/SEO/Seo';
@@ -53,7 +54,7 @@ const Locations: React.FC = () => {
         state: "Ontario",
         zip: "L4H 5K2"
       },
-      phone: "(905) 555-1234",
+      phone: "(289) 815-5869",
       email: "info@tsgfulfillment.com",
       image: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
       size: "150,000 sq ft",
@@ -174,6 +175,25 @@ const Locations: React.FC = () => {
               TSG Fulfillment operates a state-of-the-art facility in Vaughan, Ontario,
               providing comprehensive logistics services to minimize shipping times and costs for businesses of all sizes.
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                className="bg-white text-primary hover:bg-gray-100 font-semibold"
+                onClick={() => {
+                  document.getElementById('vaughan')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <Building className="h-4 w-4 mr-2" />
+                View Facility Details
+              </Button>
+              
+              <GoogleMapsDirections 
+                address={facilities[0].address}
+                coordinates={facilities[0].coordinates}
+                variant="outline"
+                className="[&>button]:bg-transparent [&>button]:border-white [&>button]:text-white [&>button]:hover:bg-white [&>button]:hover:text-primary"
+              />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -341,6 +361,18 @@ const Locations: React.FC = () => {
                       ))}
                     </ul>
                   </div>
+                </div>
+                
+                {/* Google Maps Directions */}
+                <div className="mb-8">
+                  <h4 className="font-semibold text-primary mb-4 flex items-center">
+                    <MapPin className="h-5 w-5 mr-2" /> Get Directions
+                  </h4>
+                  <GoogleMapsDirections 
+                    address={facility.address}
+                    coordinates={facility.coordinates}
+                    className="mb-4"
+                  />
                 </div>
                 
                 <h4 className="font-semibold text-primary mb-2 flex items-center">
