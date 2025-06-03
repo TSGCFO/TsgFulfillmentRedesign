@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
+import { scrollTo as scrollToHelper } from '@/lib/scroll';
 
 // Preserve original methods so they can be restored after tests
 const originalScrollTo = window.scrollTo;
@@ -43,17 +44,7 @@ describe('Quote Button Functionality Tests', () => {
 
   describe('Quote Button Click Handlers', () => {
     it('should create scroll function that targets contact section', () => {
-      const scrollToContact = () => {
-        const element = document.getElementById('contact');
-        if (element) {
-          window.scrollTo({
-            top: element.offsetTop - 100,
-            behavior: 'smooth',
-          });
-        }
-      };
-
-      scrollToContact();
+      scrollToHelper('contact');
 
       expect(mockGetElementById).toHaveBeenCalledWith('contact');
       expect(mockScrollTo).toHaveBeenCalledWith({
@@ -64,18 +55,8 @@ describe('Quote Button Functionality Tests', () => {
 
     it('should handle missing contact section gracefully', () => {
       mockGetElementById.mockReturnValue(null);
-      
-      const scrollToContact = () => {
-        const element = document.getElementById('contact');
-        if (element) {
-          window.scrollTo({
-            top: element.offsetTop - 100,
-            behavior: 'smooth',
-          });
-        }
-      };
 
-      scrollToContact();
+      scrollToHelper('contact');
 
       expect(mockGetElementById).toHaveBeenCalledWith('contact');
       expect(mockScrollTo).not.toHaveBeenCalled();
@@ -119,17 +100,7 @@ describe('Quote Button Functionality Tests', () => {
   describe('Button Integration Tests', () => {
     it('should test navbar quote button functionality', () => {
       // Simulate navbar quote button click
-      const handleGetQuote = () => {
-        const element = document.getElementById('contact');
-        if (element) {
-          window.scrollTo({
-            top: element.offsetTop - 100,
-            behavior: 'smooth',
-          });
-        }
-      };
-
-      handleGetQuote();
+      scrollToHelper('contact');
       expect(mockScrollTo).toHaveBeenCalledWith({
         top: 900,
         behavior: 'smooth',
@@ -138,17 +109,7 @@ describe('Quote Button Functionality Tests', () => {
 
     it('should test hero section quote button functionality', () => {
       // Simulate hero section quote button click
-      const scrollTo = (id: string) => {
-        const element = document.getElementById(id);
-        if (element) {
-          window.scrollTo({
-            top: element.offsetTop - 100,
-            behavior: 'smooth',
-          });
-        }
-      };
-
-      scrollTo('contact');
+      scrollToHelper('contact');
       expect(mockScrollTo).toHaveBeenCalledWith({
         top: 900,
         behavior: 'smooth',
@@ -157,17 +118,7 @@ describe('Quote Button Functionality Tests', () => {
 
     it('should test CTA section quote button functionality', () => {
       // Simulate CTA section quote button click
-      const scrollTo = (id: string) => {
-        const element = document.getElementById(id);
-        if (element) {
-          window.scrollTo({
-            top: element.offsetTop - 100,
-            behavior: 'smooth',
-          });
-        }
-      };
-
-      scrollTo('contact');
+      scrollToHelper('contact');
       expect(mockScrollTo).toHaveBeenCalledWith({
         top: 900,
         behavior: 'smooth',
@@ -188,17 +139,7 @@ describe('Quote Button Functionality Tests', () => {
 
     it('should use consistent scroll behavior across all pages', () => {
       pages.forEach(page => {
-        const scrollFunction = () => {
-          const element = document.getElementById('contact');
-          if (element) {
-            window.scrollTo({
-              top: element.offsetTop - 100,
-              behavior: 'smooth',
-            });
-          }
-        };
-
-        scrollFunction();
+        scrollToHelper('contact');
         expect(mockScrollTo).toHaveBeenLastCalledWith({
           top: 900,
           behavior: 'smooth',
