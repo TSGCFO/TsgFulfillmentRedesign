@@ -212,18 +212,18 @@ const AboutSection: React.FC = () => {
           ],
           "address": {
             "@type": "PostalAddress",
-            "streetAddress": "123 Logistics Way",
-            "addressLocality": "Houston",
-            "addressRegion": "TX",
-            "postalCode": "77001",
-            "addressCountry": "US"
+            "streetAddress": "6750 Langstaff Road",
+            "addressLocality": "Vaughan",
+            "addressRegion": "Ontario",
+            "postalCode": "L4H 5K2",
+            "addressCountry": "CA"
           },
           "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+1-832-321-3353",
+            "telephone": "+1-289-815-5869",
             "contactType": "customer service",
             "email": "info@tsgfulfillment.com",
-            "availableLanguage": ["English", "Spanish"]
+            "availableLanguage": ["English"]
           },
           "sameAs": [
             "https://www.facebook.com/tsgfulfillment",
