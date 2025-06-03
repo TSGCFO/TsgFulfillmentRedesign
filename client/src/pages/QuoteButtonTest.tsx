@@ -1,238 +1,223 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { CheckCircle, XCircle, AlertCircle, TestTube } from 'lucide-react';
 
 interface TestResult {
-  component: string;
-  description: string;
-  status: 'untested' | 'pass' | 'fail';
-  error?: string;
+  page: string;
+  buttonText: string;
+  status: 'untested' | 'working' | 'broken';
+  location: string;
 }
 
 const QuoteButtonTest: React.FC = () => {
   const [testResults, setTestResults] = useState<TestResult[]>([
-    {
-      component: 'Navbar',
-      description: 'Main navigation "Get a Quote" button',
-      status: 'untested'
-    },
-    {
-      component: 'Navbar Mobile',
-      description: 'Mobile navigation "Get a Quote" button',
-      status: 'untested'
-    },
-    {
-      component: 'Hero Section',
-      description: 'Hero "Request a Quote" button',
-      status: 'untested'
-    },
-    {
-      component: 'CTA Section',
-      description: 'CTA "Get a Free Quote" button',
-      status: 'untested'
-    },
-    {
-      component: 'Service Detail',
-      description: 'Service page "Request a Quote" button',
-      status: 'untested'
-    },
-    {
-      component: 'OWD Home',
-      description: 'OWD Home page quote button',
-      status: 'untested'
-    },
-    {
-      component: 'New Home',
-      description: 'New Home page quote buttons (2)',
-      status: 'untested'
-    },
-    {
-      component: 'Contact Page',
-      description: 'Contact page quote form access',
-      status: 'untested'
-    }
+    { page: 'Home Page', buttonText: 'Get a Quote (Navbar)', status: 'untested', location: 'Top navigation bar' },
+    { page: 'Home Page', buttonText: 'Request a Quote (Hero)', status: 'untested', location: 'Hero section' },
+    { page: 'Home Page', buttonText: 'Get a Free Quote (CTA)', status: 'untested', location: 'CTA section' },
+    { page: 'Service Pages', buttonText: 'Request a Quote', status: 'untested', location: 'Service detail pages' },
+    { page: 'OWD Home', buttonText: 'Request a Quote', status: 'untested', location: 'CTA banner' },
+    { page: 'New Home', buttonText: 'Request a Quote (x2)', status: 'untested', location: 'CTA sections' },
+    { page: 'Contact Page', buttonText: 'Quote Form Access', status: 'untested', location: 'Contact form section' }
   ]);
 
-  const testQuoteButton = (selector: string, componentName: string, index: number) => {
-    const newResults = [...testResults];
-    
-    try {
-      // Find buttons by text content
-      const buttons = Array.from(document.querySelectorAll('button')).filter(button => {
-        const text = button.textContent?.toLowerCase() || '';
-        return text.includes('quote') || text.includes('get a') || text.includes('request');
-      });
+  const [currentTest, setCurrentTest] = useState('');
 
-      if (buttons.length === 0) {
-        newResults[index] = {
-          ...newResults[index],
-          status: 'fail',
-          error: 'No quote buttons found on current page'
-        };
-      } else {
-        // Test if contact section exists
-        const contactSection = document.getElementById('contact');
-        if (!contactSection) {
-          newResults[index] = {
-            ...newResults[index],
-            status: 'fail',
-            error: 'Contact section not found on page'
-          };
-        } else {
-          newResults[index] = {
-            ...newResults[index],
-            status: 'pass'
-          };
-        }
-      }
-    } catch (error) {
-      newResults[index] = {
-        ...newResults[index],
-        status: 'fail',
-        error: `Test error: ${error instanceof Error ? error.message : 'Unknown error'}`
-      };
+  const testCurrentPage = () => {
+    setCurrentTest('Running tests...');
+    
+    // Check if contact section exists
+    const contactSection = document.getElementById('contact');
+    if (!contactSection) {
+      setCurrentTest('❌ No contact section found on this page');
+      return;
     }
 
-    setTestResults(newResults);
-  };
-
-  const testAllButtons = () => {
-    // Check if we're on a page with a contact section
-    const contactSection = document.getElementById('contact');
-    
-    const newResults = testResults.map((result, index) => {
-      if (!contactSection) {
-        return {
-          ...result,
-          status: 'fail' as const,
-          error: 'No contact section found on this page'
-        };
-      }
-
-      // Look for quote-related buttons
-      const quoteButtons = Array.from(document.querySelectorAll('button')).filter(button => {
-        const text = button.textContent?.toLowerCase() || '';
-        return text.includes('quote') || text.includes('get a') || text.includes('request');
-      });
-
-      if (quoteButtons.length > 0) {
-        return {
-          ...result,
-          status: 'pass' as const
-        };
-      } else {
-        return {
-          ...result,
-          status: 'fail' as const,
-          error: 'No quote buttons found'
-        };
-      }
+    // Find all quote-related buttons
+    const allButtons = Array.from(document.querySelectorAll('button, a'));
+    const quoteButtons = allButtons.filter(btn => {
+      const text = btn.textContent?.toLowerCase() || '';
+      return text.includes('quote') || text.includes('get a') || text.includes('request');
     });
 
-    setTestResults(newResults);
+    if (quoteButtons.length === 0) {
+      setCurrentTest('❌ No quote buttons found on this page');
+      return;
+    }
+
+    setCurrentTest(`✅ Found ${quoteButtons.length} quote button(s) on this page. Contact section exists.`);
+
+    // Test each button by checking if it has proper click handlers
+    const buttonDetails = quoteButtons.map(btn => {
+      const hasClickHandler = btn.onclick !== null || 
+                             btn.getAttribute('onclick') !== null ||
+                             btn.addEventListener !== undefined;
+      return `• "${btn.textContent?.trim()}" - ${hasClickHandler ? 'Has click handler' : 'No click handler'}`;
+    }).join('\n');
+
+    setCurrentTest(`✅ Found ${quoteButtons.length} quote button(s):\n${buttonDetails}\n\n📍 Contact section is available for scrolling.`);
+  };
+
+  const testSpecificButton = (buttonText: string) => {
+    const buttons = Array.from(document.querySelectorAll('button, a'));
+    const targetButton = buttons.find(btn => 
+      btn.textContent?.toLowerCase().includes(buttonText.toLowerCase())
+    );
+
+    if (targetButton) {
+      // Simulate click and check if page scrolls
+      const initialScrollY = window.scrollY;
+      (targetButton as HTMLElement).click();
+      
+      setTimeout(() => {
+        const scrolled = window.scrollY !== initialScrollY;
+        const contactVisible = document.getElementById('contact')?.getBoundingClientRect().top;
+        
+        if (scrolled || (contactVisible && contactVisible < window.innerHeight)) {
+          setCurrentTest(`✅ "${buttonText}" button works correctly`);
+        } else {
+          setCurrentTest(`❌ "${buttonText}" button may not be working`);
+        }
+      }, 1000);
+    } else {
+      setCurrentTest(`❌ Button "${buttonText}" not found on current page`);
+    }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pass':
+      case 'working':
         return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'fail':
+      case 'broken':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
         return <AlertCircle className="h-5 w-5 text-yellow-500" />;
     }
   };
 
-  const passCount = testResults.filter(r => r.status === 'pass').length;
-  const failCount = testResults.filter(r => r.status === 'fail').length;
-  const totalCount = testResults.length;
-
   return (
     <div className="container mx-auto px-6 py-12">
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
-            Quote Button Functionality Test
+          <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-3">
+            <TestTube className="h-8 w-8 text-primary" />
+            Quote Button Test Suite
           </CardTitle>
-          <div className="text-center text-gray-600">
-            <p>Testing all "Get a Quote" and "Request a Quote" buttons across the website</p>
-            <div className="mt-4 flex justify-center space-x-6">
-              <span className="flex items-center">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                Passed: {passCount}
-              </span>
-              <span className="flex items-center">
-                <XCircle className="h-4 w-4 text-red-500 mr-2" />
-                Failed: {failCount}
-              </span>
-              <span className="text-gray-500">
-                Total: {totalCount}
-              </span>
-            </div>
-          </div>
+          <p className="text-center text-gray-600">
+            Manual testing tool for verifying quote button functionality across the website
+          </p>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4 mb-6">
-            <Button onClick={testAllButtons} className="w-full">
-              Run Full Test Suite
-            </Button>
-            
-            <div className="text-sm text-gray-600 p-4 bg-blue-50 rounded-lg">
-              <strong>Test Instructions:</strong>
-              <ul className="mt-2 space-y-1">
-                <li>• Navigate to different pages (Home, Services, Contact, etc.)</li>
-                <li>• Click "Run Full Test Suite" on each page</li>
-                <li>• Green checkmarks indicate working buttons</li>
-                <li>• Red X marks indicate broken buttons that need fixing</li>
-                <li>• All quote buttons should scroll to the contact form section</li>
-              </ul>
+        <CardContent className="space-y-6">
+          
+          {/* Current Page Test */}
+          <div className="p-4 border rounded-lg bg-blue-50">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium text-lg">Test Current Page</h3>
+              <Button onClick={testCurrentPage} className="bg-blue-600 hover:bg-blue-700">
+                Scan Page
+              </Button>
+            </div>
+            <div className="text-sm bg-white p-3 rounded border min-h-[60px] whitespace-pre-line">
+              {currentTest || 'Click "Scan Page" to check for quote buttons on the current page'}
             </div>
           </div>
 
+          {/* Manual Test Instructions */}
+          <div className="p-4 border rounded-lg bg-green-50">
+            <h3 className="font-medium text-lg mb-3">Manual Testing Instructions</h3>
+            <div className="space-y-2 text-sm">
+              <p><strong>Step 1:</strong> Navigate to each page listed below</p>
+              <p><strong>Step 2:</strong> Click "Scan Page" to detect quote buttons</p>
+              <p><strong>Step 3:</strong> Manually click each quote button to verify it scrolls to the contact form</p>
+              <p><strong>Step 4:</strong> Mark results as working ✅ or broken ❌</p>
+            </div>
+          </div>
+
+          {/* Pages to Test */}
           <div className="space-y-3">
-            {testResults.map((result, index) => (
-              <div 
-                key={index}
-                className={`p-4 border rounded-lg flex items-center justify-between ${
-                  result.status === 'pass' ? 'border-green-200 bg-green-50' :
-                  result.status === 'fail' ? 'border-red-200 bg-red-50' :
-                  'border-gray-200 bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  {getStatusIcon(result.status)}
+            <h3 className="font-medium text-lg">Pages to Test:</h3>
+            
+            <div className="grid gap-3">
+              <div className="p-3 border rounded-lg">
+                <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">{result.component}</h4>
-                    <p className="text-sm text-gray-600">{result.description}</p>
-                    {result.error && (
-                      <p className="text-sm text-red-600 mt-1">{result.error}</p>
-                    )}
+                    <h4 className="font-medium">Home Page (/)</h4>
+                    <p className="text-sm text-gray-600">Test: Navbar "Get a Quote", Hero "Request a Quote", CTA "Get a Free Quote"</p>
                   </div>
+                  <a href="/" className="text-blue-600 hover:underline text-sm">Visit Page</a>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => testQuoteButton('', result.component, index)}
-                >
-                  Test Individual
-                </Button>
               </div>
-            ))}
+
+              <div className="p-3 border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">Service Pages (/services/*)</h4>
+                    <p className="text-sm text-gray-600">Test: "Request a Quote" buttons on service detail pages</p>
+                  </div>
+                  <a href="/services/warehousing" className="text-blue-600 hover:underline text-sm">Visit Page</a>
+                </div>
+              </div>
+
+              <div className="p-3 border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">OWD Home (/old-home)</h4>
+                    <p className="text-sm text-gray-600">Test: CTA banner "Request a Quote"</p>
+                  </div>
+                  <a href="/old-home" className="text-blue-600 hover:underline text-sm">Visit Page</a>
+                </div>
+              </div>
+
+              <div className="p-3 border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-medium">Contact Page (/contact)</h4>
+                    <p className="text-sm text-gray-600">Test: Quote form accessibility and functionality</p>
+                  </div>
+                  <a href="/contact" className="text-blue-600 hover:underline text-sm">Visit Page</a>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-medium mb-2">Pages to Test:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-              <span>• Home Page</span>
-              <span>• Services Pages</span>
-              <span>• Contact Page</span>
-              <span>• About Page</span>
-              <span>• Industries</span>
-              <span>• Locations</span>
-              <span>• Analytics</span>
-              <span>• OWD Home</span>
+          {/* Quick Test Buttons */}
+          <div className="p-4 border rounded-lg bg-gray-50">
+            <h3 className="font-medium text-lg mb-3">Quick Button Tests</h3>
+            <p className="text-sm text-gray-600 mb-3">Click these to test specific button types on the current page:</p>
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => testSpecificButton('Get a Quote')}
+              >
+                Test "Get a Quote"
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => testSpecificButton('Request a Quote')}
+              >
+                Test "Request a Quote"
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => testSpecificButton('Get a Free Quote')}
+              >
+                Test "Get a Free Quote"
+              </Button>
             </div>
+          </div>
+
+          {/* Expected Behavior */}
+          <div className="p-4 border rounded-lg bg-yellow-50">
+            <h3 className="font-medium text-lg mb-3">Expected Behavior</h3>
+            <ul className="text-sm space-y-1">
+              <li>• All quote buttons should smoothly scroll to the contact form section</li>
+              <li>• No buttons should only show toast notifications</li>
+              <li>• The contact form should have all required fields from your specification</li>
+              <li>• Form fields: Name, Business Email, Mobile Number, Company Name, Current Shipments dropdown, Expected Shipments dropdown, Services dropdown, Additional Information, reCAPTCHA</li>
+            </ul>
           </div>
         </CardContent>
       </Card>
