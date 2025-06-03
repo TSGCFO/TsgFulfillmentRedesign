@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
 import { scrollTo as scrollToHelper } from '@/lib/scroll';
 
 // Preserve original methods so they can be restored after tests
