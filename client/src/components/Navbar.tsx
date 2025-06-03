@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
   const topbarLinks = [
     { icon: <Phone className="h-4 w-4 mr-2" />, label: '(289) 815-5869', href: 'tel:2898155869' },
     { icon: <Mail className="h-4 w-4 mr-2" />, label: 'info@tsgfulfillment.com', href: 'mailto:info@tsgfulfillment.com' },
-    { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '#locations' },
+    { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '/locations' },
   ];
 
   const serviceItems = [
@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
     },
     { label: 'Industries', id: 'industries' },
     { label: 'About Us', id: 'about' },
-    { label: 'Locations', id: 'locations' },
+    { label: 'Locations', id: 'locations', isLink: true },
     { label: 'Contact', id: 'contact' }
   ];
   
