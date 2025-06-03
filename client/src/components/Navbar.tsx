@@ -18,13 +18,7 @@ const Navbar: React.FC = () => {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
 
   const handleGetQuote = () => {
-    const element = document.getElementById('contact');
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 100,
-        behavior: 'smooth',
-      });
-    }
+    window.location.href = '/quote';
   };
 
   useEffect(() => {
@@ -74,7 +68,7 @@ const Navbar: React.FC = () => {
     { label: 'Industries', id: 'industries' },
     { label: 'About Us', id: 'about' },
     { label: 'Locations', id: 'locations', isLink: true },
-    { label: 'Contact', id: 'contact' }
+    { label: 'Contact', id: 'contact-form', isLink: true }
   ];
   
   const pageLinks = [

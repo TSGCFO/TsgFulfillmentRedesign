@@ -22,6 +22,34 @@ const handleError = (res: Response, error: any, message: string = 'An error occu
 export async function registerRoutes(app: Express): Promise<Server> {
   // QUOTE REQUEST ENDPOINTS
   // Create a quote request
+  app.post('/api/quote-requests', async (req, res) => {
+    try {
+      const validatedData = insertQuoteRequestSchema.parse(req.body);
+      const quoteRequest = await storage.createQuoteRequest(validatedData);
+      res.status(200).json({ 
+        message: 'Quote request received successfully',
+        data: quoteRequest
+      });
+    } catch (error) {
+      handleError(res, error, 'Invalid quote request data');
+    }
+  });
+
+  // Contact form endpoint
+  app.post('/api/contact', async (req, res) => {
+    try {
+      // For now, we'll just log the contact form data
+      // In a real application, you'd want to save this to a database or send an email
+      console.log('Contact form submission:', req.body);
+      
+      res.status(200).json({ 
+        message: 'Contact form submitted successfully'
+      });
+    } catch (error) {
+      handleError(res, error, 'Error processing contact form');
+    }
+  });
+
   app.post('/api/quote', async (req, res) => {
     try {
       const validatedData = insertQuoteRequestSchema.parse(req.body);
