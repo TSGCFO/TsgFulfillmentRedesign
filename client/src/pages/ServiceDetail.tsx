@@ -528,10 +528,7 @@ const ServiceDetail = () => {
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
                 onClick={() => {
-                  const element = document.getElementById("contact");
-                  if (element) {
-                    element.scrollIntoView({ behavior: "smooth" });
-                  }
+                  setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
                 }}
               >
                 Request a Quote
@@ -617,10 +614,10 @@ const ServiceDetail = () => {
                   size="lg"
                   className="bg-primary hover:bg-primary/90"
                   onClick={() => {
-                    setLocation("/#contact");
+                    setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
                   }}
                 >
-                  Contact Us Now
+                  Get Your Quote
                 </Button>
               </motion.div>
             </div>
