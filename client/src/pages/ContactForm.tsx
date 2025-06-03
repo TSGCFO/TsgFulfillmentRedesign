@@ -106,25 +106,25 @@ const ContactForm = () => {
     {
       icon: <Phone className="h-5 w-5" />,
       title: "Phone",
-      content: "(555) 123-4567",
-      href: "tel:+15551234567"
+      content: "(289) 815-5869",
+      href: "tel:2898155869"
     },
     {
       icon: <Mail className="h-5 w-5" />,
       title: "Email",
-      content: "contact@tsgfulfillment.com",
-      href: "mailto:contact@tsgfulfillment.com"
+      content: "info@tsgfulfillment.com",
+      href: "mailto:info@tsgfulfillment.com"
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       title: "Address",
-      content: "123 Logistics Way, Industrial Park, CA 90210",
-      href: "#"
+      content: "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2",
+      href: "https://maps.google.com"
     },
     {
       icon: <Clock className="h-5 w-5" />,
       title: "Business Hours",
-      content: "Mon-Fri: 8:00 AM - 6:00 PM PST",
+      content: "Mon-Fri: 8:00 AM - 6:00 PM EST",
       href: "#"
     }
   ];
