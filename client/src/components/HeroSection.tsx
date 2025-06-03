@@ -35,7 +35,7 @@ const HeroSection: React.FC = () => {
     const element = document.getElementById(id);
     if (element) {
       window.scrollTo({
-        top: element.offsetTop - 100,
+        top: element.offsetTop - 80,
         behavior: 'smooth',
       });
     }
