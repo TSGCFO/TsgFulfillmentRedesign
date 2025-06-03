@@ -212,7 +212,12 @@ const NewHome: React.FC = () => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Get in touch with our team for a customized fulfillment solution that meets your business needs.
           </p>
-          <Button className="bg-white hover:bg-gray-100 text-[#0056B3] px-8 py-3 text-lg font-bold">
+          <Button 
+            className="bg-white hover:bg-gray-100 text-[#0056B3] px-8 py-3 text-lg font-bold"
+            onClick={() => {
+              window.location.href = '/quote';
+            }}
+          >
             Request a Quote
           </Button>
         </div>
@@ -331,10 +336,15 @@ const NewHome: React.FC = () => {
               Partner with TSG Fulfillment and experience the difference that efficient, technology-driven logistics can make for your business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-white hover:bg-gray-100 text-blue-800 font-bold px-8 py-3 text-lg">
+              <Button 
+                className="bg-white hover:bg-gray-100 text-blue-800 font-bold px-8 py-3 text-lg"
+                onClick={() => {
+                  window.location.href = '/quote';
+                }}
+              >
                 Request a Quote
               </Button>
-              <Link href="/contact">
+              <Link href="/contact-form">
                 <Button className="bg-transparent hover:bg-blue-700 border-2 border-white font-bold px-8 py-3 text-lg">
                   Contact Us
                 </Button>

@@ -211,7 +211,12 @@ const OWDStyleHome: React.FC = () => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Get in touch with our team for a customized fulfillment solution that meets your business needs.
           </p>
-          <Button className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold">
+          <Button 
+            className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold"
+            onClick={() => {
+              window.location.href = '/quote';
+            }}
+          >
             Request a Quote
           </Button>
         </div>
@@ -313,15 +318,15 @@ const OWDStyleHome: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <span className="text-gray-400">
-                    123 Logistics Way<br />
-                    Warehouse District, CA 90210
+                    6750 Langstaff Road<br />
+                    Vaughan, Ontario, L4H 5K2
                   </span>
                 </li>
                 <li className="flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <span className="text-gray-400">(800) 555-1234</span>
+                  <span className="text-gray-400">(289) 815-5869</span>
                 </li>
                 <li className="flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">

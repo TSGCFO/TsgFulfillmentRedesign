@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
     { name: "About Us", href: "/#about" },
     { name: "Industries", href: "/#industries" },
     { name: "Services", href: "/#services" },
-    { name: "Locations", href: "/#locations" },
+    { name: "Locations", href: "/locations" },
     { name: "Contact Us", href: "/#contact" }
   ];
 
@@ -70,13 +70,7 @@ const Footer: React.FC = () => {
             </div>
             <Button 
               onClick={() => {
-                const element = document.getElementById('contact');
-                if (element) {
-                  window.scrollTo({
-                    top: element.offsetTop - 100,
-                    behavior: 'smooth',
-                  });
-                }
+                window.location.href = '/contact-form';
               }}
               className="bg-white text-primary hover:bg-white/90 px-8 py-6 flex items-center"
             >

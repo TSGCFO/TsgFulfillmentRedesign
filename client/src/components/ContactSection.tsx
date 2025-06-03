@@ -38,12 +38,12 @@ const ContactSection: React.FC = () => {
     {
       icon: <MapPin size={18} />,
       title: "Our Location",
-      details: "13329, Lyons Avenue, Suite 18, Plano, TX, 75074"
+      details: "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2"
     },
     {
       icon: <Phone size={18} />,
       title: "Phone Number",
-      details: "(800) 480-2176"
+      details: "(289) 815-5869"
     },
     {
       icon: <Mail size={18} />,
@@ -53,7 +53,7 @@ const ContactSection: React.FC = () => {
     {
       icon: <Clock size={18} />,
       title: "Business Hours",
-      details: "Monday - Friday: 9:00 AM - 5:00 PM CT"
+      details: "Monday - Friday: 9:00 AM - 5:00 PM ET"
     }
   ];
 

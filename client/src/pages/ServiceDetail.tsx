@@ -19,6 +19,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { EnhancedImage } from "@/components/ui/enhanced-image";
 import { getServiceImage } from "@/lib/images";
+import { ServiceDetailSkeleton } from "@/components/ui/skeletons";
 
 import Seo from "@/components/SEO/Seo";
 
@@ -409,11 +410,7 @@ const ServiceDetail = () => {
   }, [params, setLocation]);
 
   if (!service) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+    return <ServiceDetailSkeleton />;
   }
 
   // Create structured data for this service
@@ -533,10 +530,7 @@ const ServiceDetail = () => {
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
                 onClick={() => {
-                  const element = document.getElementById("contact");
-                  if (element) {
-                    element.scrollIntoView({ behavior: "smooth" });
-                  }
+                  setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
                 }}
               >
                 Request a Quote
@@ -622,10 +616,10 @@ const ServiceDetail = () => {
                   size="lg"
                   className="bg-primary hover:bg-primary/90"
                   onClick={() => {
-                    setLocation("/#contact");
+                    setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
                   }}
                 >
-                  Contact Us Now
+                  Get Your Quote
                 </Button>
               </motion.div>
             </div>
