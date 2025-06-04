@@ -84,7 +84,7 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__database__*
+          allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__database__*,mcp__web-search__*,mcp__github_file_ops__*
           mcp_config: |
             {
               "mcpServers": {
@@ -115,6 +115,7 @@ jobs:
 ### 1. Tool Allowlisting
 
 MCP tools must be explicitly allowed in the `allowed_tools` parameter:
+
 - `mcp__server-name__tool-name` - for specific tools
 - `mcp__server-name__*` - for all tools from a server
 
@@ -127,6 +128,7 @@ MCP tools must be explicitly allowed in the `allowed_tools` parameter:
 ### 3. Available MCP Servers
 
 Popular MCP servers you can add:
+
 - `@modelcontextprotocol/server-sequential-thinking` - Enhanced reasoning
 - `@modelcontextprotocol/server-filesystem` - Advanced file operations  
 - `@modelcontextprotocol/server-postgres` - Database operations
@@ -136,7 +138,7 @@ Popular MCP servers you can add:
 
 After implementing the configuration, test with these commands:
 
-```
+```txt
 @claude /mcp
 @claude What MCP tools do you have access to?
 @claude Use sequential thinking to analyze our project structure
@@ -152,16 +154,16 @@ After implementing the configuration, test with these commands:
 
 ## Troubleshooting
 
-### Common Issues:
+### Common Issues
 
 1. **Tool Not Allowed**: Add the MCP tool to `allowed_tools`
 2. **Server Failed to Start**: Check the server configuration and dependencies
 3. **Permission Denied**: Ensure proper GitHub Action permissions
 4. **Environment Variables**: Use GitHub Secrets for sensitive data
 
-### Debug Commands:
+### Debug Commands
 
-```
+```txt
 @claude /mcp status
 @claude What MCP servers are running?
 @claude Test the sequential thinking capability
