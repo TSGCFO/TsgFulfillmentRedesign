@@ -26,3 +26,22 @@
 - Loading states: Informative messages, estimated wait times
 - Form labels: Clear, accessible, include helper text
 - Success messages: Positive reinforcement, next steps
+
+## MCP (Model Context Protocol) Configuration
+
+This project supports Claude Code as an MCP server for enhanced development capabilities.
+
+### Quick Commands
+- `claude mcp serve` - Start Claude Code as MCP server
+- `./scripts/start-mcp-server.sh` - Start with project-specific configuration
+- `./scripts/start-mcp-server.sh production` - Start in read-only mode
+
+### Documentation
+- [MCP Server Guide](./MCP_SERVER_GUIDE.md) - Comprehensive setup and configuration
+- [Quick Start Guide](./MCP_QUICK_START.md) - 5-minute setup
+- [Integration Examples](./MCP_INTEGRATION_EXAMPLES.md) - Practical usage examples
+
+### Security Notes
+- MCP server runs with appropriate access controls
+- Production mode uses read-only access by default
+- Sensitive directories are restricted (.env, node_modules, .git)
