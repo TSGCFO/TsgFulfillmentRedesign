@@ -25,6 +25,18 @@ npx vitest run --coverage
 
 The global report should show at least **98%** coverage for lines, branches, functions and statements.
 
+## End-to-End Tests
+
+End-to-end tests live in the `e2e` directory and are powered by [Playwright](https://playwright.dev/).
+
+Run them with:
+
+```bash
+npm run e2e
+```
+
+This uses the configuration defined in `playwright.config.ts`.
+
 ## Interpreting Results
 
 - When all tests pass, the command exits with code `0` and displays success messages for each suite.
