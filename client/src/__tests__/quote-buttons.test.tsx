@@ -136,7 +136,7 @@ describe('Quote Button Functionality Tests', () => {
     ];
 
     it('should use consistent scroll behavior across all pages', () => {
-      pages.forEach(page => {
+      pages.forEach(() => {
         scrollToHelper('contact');
         expect(mockScrollTo).toHaveBeenLastCalledWith({
           top: 900,
@@ -147,11 +147,13 @@ describe('Quote Button Functionality Tests', () => {
 
     it('should target the same contact section ID across all pages', () => {
       const targetId = 'contact';
-      
+
       pages.forEach(() => {
         document.getElementById(targetId);
-        expect(mockGetElementById).toHaveBeenCalledWith('contact');
       });
+
+      expect(mockGetElementById).toHaveBeenCalledTimes(pages.length);
+      expect(mockGetElementById).toHaveBeenLastCalledWith('contact');
     });
   });
 });
