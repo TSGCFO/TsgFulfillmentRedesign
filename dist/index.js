@@ -656,7 +656,8 @@ var handleError = (res, error, message = "An error occurred") => {
     error: error instanceof Error ? error.message : "Unknown error"
   });
 };
-async function registerRoutes(app2) {
+var analyticsEnabled = process.env.ANALYTICS_ENABLED === "true";
+async function registerRoutes(app2, analytics) {
   app2.post("/api/quote-requests", async (req, res) => {
     try {
       const validatedData = insertQuoteRequestSchema.parse(req.body);
@@ -935,70 +936,72 @@ async function registerRoutes(app2) {
       handleError(res, error, "Error updating dashboard setting");
     }
   });
-  app2.get("/api/analytics/client-summary/:clientId", async (req, res) => {
-    try {
-      const clientId = parseInt(req.params.clientId);
-      const analyticsSummary = await storage.getClientAnalyticsSummary(clientId);
-      res.status(200).json({ data: analyticsSummary });
-    } catch (error) {
-      handleError(res, error, "Error retrieving client analytics summary");
-    }
-  });
-  app2.get("/api/analytics/shipping-performance", async (req, res) => {
-    try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
-      const startDate = req.query.startDate ? new Date(req.query.startDate) : void 0;
-      const endDate = req.query.endDate ? new Date(req.query.endDate) : void 0;
-      const shippingPerformance = await storage.getShippingPerformance(clientId, startDate, endDate);
-      res.status(200).json({ data: shippingPerformance });
-    } catch (error) {
-      handleError(res, error, "Error retrieving shipping performance");
-    }
-  });
-  app2.get("/api/analytics/inventory-report", async (req, res) => {
-    try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
-      const inventoryReport = await storage.getInventoryReport(clientId);
-      res.status(200).json({ data: inventoryReport });
-    } catch (error) {
-      handleError(res, error, "Error retrieving inventory report");
-    }
-  });
-  app2.get("/api/analytics/report-data", async (req, res) => {
-    try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
-      const reportType = req.query.reportType;
-      const startDate = req.query.startDate ? new Date(req.query.startDate) : void 0;
-      const endDate = req.query.endDate ? new Date(req.query.endDate) : void 0;
-      if (!clientId || !reportType || !startDate || !endDate) {
-        return res.status(400).json({ error: "Missing required parameters" });
+  if (analytics) {
+    app2.get("/api/analytics/client-summary/:clientId", async (req, res) => {
+      try {
+        const clientId = parseInt(req.params.clientId);
+        const analyticsSummary = await storage.getClientAnalyticsSummary(clientId);
+        res.status(200).json({ data: analyticsSummary });
+      } catch (error) {
+        handleError(res, error, "Error retrieving client analytics summary");
       }
-      const reportData = await storage.getReportData(clientId, reportType, startDate, endDate);
-      res.status(200).json({ data: reportData });
-    } catch (error) {
-      handleError(res, error, "Error retrieving report data");
-    }
-  });
-  app2.get("/api/analytics/comparison", async (req, res) => {
-    try {
-      const { clientId, periodAStart, periodAEnd, periodBStart, periodBEnd, metric } = req.query;
-      if (!clientId || !periodAStart || !periodAEnd || !periodBStart || !periodBEnd || !metric) {
-        return res.status(400).json({ error: "Missing required parameters" });
+    });
+    app2.get("/api/analytics/shipping-performance", async (req, res) => {
+      try {
+        const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
+        const startDate = req.query.startDate ? new Date(req.query.startDate) : void 0;
+        const endDate = req.query.endDate ? new Date(req.query.endDate) : void 0;
+        const shippingPerformance = await storage.getShippingPerformance(clientId, startDate, endDate);
+        res.status(200).json({ data: shippingPerformance });
+      } catch (error) {
+        handleError(res, error, "Error retrieving shipping performance");
       }
-      const clientIdNum = parseInt(clientId);
-      const comparisonData = await storage.getComparisonData(
-        clientIdNum,
-        new Date(periodAStart),
-        new Date(periodAEnd),
-        new Date(periodBStart),
-        new Date(periodBEnd),
-        metric
-      );
-      res.status(200).json({ data: comparisonData });
-    } catch (error) {
-      handleError(res, error, "Error retrieving comparison data");
-    }
-  });
+    });
+    app2.get("/api/analytics/inventory-report", async (req, res) => {
+      try {
+        const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
+        const inventoryReport = await storage.getInventoryReport(clientId);
+        res.status(200).json({ data: inventoryReport });
+      } catch (error) {
+        handleError(res, error, "Error retrieving inventory report");
+      }
+    });
+    app2.get("/api/analytics/report-data", async (req, res) => {
+      try {
+        const clientId = req.query.clientId ? parseInt(req.query.clientId) : void 0;
+        const reportType = req.query.reportType;
+        const startDate = req.query.startDate ? new Date(req.query.startDate) : void 0;
+        const endDate = req.query.endDate ? new Date(req.query.endDate) : void 0;
+        if (!clientId || !reportType || !startDate || !endDate) {
+          return res.status(400).json({ error: "Missing required parameters" });
+        }
+        const reportData = await storage.getReportData(clientId, reportType, startDate, endDate);
+        res.status(200).json({ data: reportData });
+      } catch (error) {
+        handleError(res, error, "Error retrieving report data");
+      }
+    });
+    app2.get("/api/analytics/comparison", async (req, res) => {
+      try {
+        const { clientId, periodAStart, periodAEnd, periodBStart, periodBEnd, metric } = req.query;
+        if (!clientId || !periodAStart || !periodAEnd || !periodBStart || !periodBEnd || !metric) {
+          return res.status(400).json({ error: "Missing required parameters" });
+        }
+        const clientIdNum = parseInt(clientId);
+        const comparisonData = await storage.getComparisonData(
+          clientIdNum,
+          new Date(periodAStart),
+          new Date(periodAEnd),
+          new Date(periodBStart),
+          new Date(periodBEnd),
+          metric
+        );
+        res.status(200).json({ data: comparisonData });
+      } catch (error) {
+        handleError(res, error, "Error retrieving comparison data");
+      }
+    });
+  }
   const httpServer = createServer(app2);
   return httpServer;
 }
@@ -1384,6 +1387,7 @@ async function seedAnalyticsData() {
 }
 
 // server/index.ts
+var analyticsEnabled2 = process.env.ANALYTICS_ENABLED === "true";
 var app = express2();
 app.use(express2.json());
 app.use(express2.urlencoded({ extended: false }));
@@ -1412,7 +1416,7 @@ app.use((req, res, next) => {
   next();
 });
 (async () => {
-  const server = await registerRoutes(app);
+  const server = await registerRoutes(app, analyticsEnabled2);
   app.use((err, _req, res, _next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -1424,10 +1428,12 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  try {
-    await seedAnalyticsData();
-  } catch (error) {
-    log(`Error seeding analytics data: ${error instanceof Error ? error.message : "Unknown error"}`);
+  if (analyticsEnabled2) {
+    try {
+      await seedAnalyticsData();
+    } catch (error) {
+      log(`Error seeding analytics data: ${error instanceof Error ? error.message : "Unknown error"}`);
+    }
   }
   const port = 5e3;
   server.listen({

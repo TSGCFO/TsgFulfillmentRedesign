@@ -1,0 +1,51 @@
+name: Claude Code with Basic MCP
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code with Basic MCP
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__sequential-thinking__*,mcp__filesystem__*
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+                },
+                "filesystem": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                  "env": {
+                    "ALLOWED_DIRECTORIES": "/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/client,/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/server,/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/shared,/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign/docs"
+                  }
+                }
+              }
+            }
