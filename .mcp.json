@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "claude-code-server": {
+      "command": "claude",
+      "args": ["mcp", "serve"],
+      "env": {
+        "PROJECT_NAME": "TSG Fulfillment",
+        "NODE_ENV": "development"
+      }
+    },
+    "tsg-fulfillment-readonly": {
+      "command": "claude",
+      "args": ["mcp", "serve", "--read-only"],
+      "env": {
+        "PROJECT_NAME": "TSG Fulfillment",
+        "NODE_ENV": "production",
+        "RESTRICTED_ACCESS": "true"
+      }
+    }
+  }
+}
