@@ -84,4 +84,54 @@ describe('API routes', () => {
     const getData = await getRes.json();
     expect(getData.data.id).toBe(id);
   });
+
+  it('handles shipments', async () => {
+    const body = { clientId: 1, carrier: 'UPS', trackingNumber: '1Z', cost: 10, destination: 'NY' };
+    const res = await fetch(`http://localhost:${port}/api/shipments`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const created = await res.json();
+    const id = created.data.id;
+    const get = await fetch(`http://localhost:${port}/api/shipments/${id}`);
+    expect(get.status).toBe(200);
+  });
+
+  it('handles order statistics and client KPIs', async () => {
+    const stat = { clientId: 1, date: '2024-01-01', ordersReceived: 1 };
+    const oRes = await fetch(`http://localhost:${port}/api/order-statistics`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(stat)
+    });
+    expect(oRes.status).toBe(200);
+    const kpi = { clientId: 1, month: '2024-01-01', shippingAccuracy: 1 };
+    const kRes = await fetch(`http://localhost:${port}/api/client-kpis`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(kpi)
+    });
+    expect(kRes.status).toBe(200);
+  });
+
+  it('handles dashboard settings', async () => {
+    const data = { userId: 1, widgetId: 'w', position: 1, config: {} };
+    const res = await fetch(`http://localhost:${port}/api/dashboard-settings`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const { data: created } = await res.json();
+    const get = await fetch(`http://localhost:${port}/api/dashboard-settings/1`);
+    const out = await get.json();
+    expect(out.data.length).toBeGreaterThan(0);
+  });
+
+  it('serves analytics when enabled', async () => {
+    const app = express();
+    app.use(express.json());
+    const srv = await registerRoutes(app, true);
+    let p: number = 0;
+    await new Promise<void>(r => srv.listen(0, () => { p = (srv.address() as AddressInfo).port; r(); }));
+    const res = await fetch(`http://localhost:${p}/api/analytics/inventory-report`);
+    expect(res.status).toBe(200);
+    await new Promise<void>(r => srv.close(() => r()));
+  });
 });
