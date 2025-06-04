@@ -8,6 +8,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./client/src/__tests__/setup.ts'],
+    coverage: {
+      reporter: ['text', 'html'],
+      lines: 98,
+      functions: 98,
+      branches: 98,
+      statements: 98,
+    },
   },
   resolve: {
     alias: {
