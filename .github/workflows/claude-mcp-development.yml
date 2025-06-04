@@ -68,7 +68,6 @@ jobs:
                 "web-search": {
                   "command": "npx",
                   "args": ["-y", "@modelcontextprotocol/server-web-search"],
-                  "env": {
                     "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
                     "MAX_RESULTS": "10",
                     "SEARCH_TIMEOUT": "15000"
