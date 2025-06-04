@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { Phone, Mail, MapPin, ArrowRight, Menu, X, ChevronDown } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowRight, Menu, X, ChevronDown } from '@/lib/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,

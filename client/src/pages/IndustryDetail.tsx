@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRoute, Link } from 'wouter';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle, ArrowRight, Warehouse, Package, Truck } from 'lucide-react';
+import { ArrowLeft, CheckCircle, ArrowRight, Package, Truck, Warehouse } from '@/lib/icons';
 import { Button } from '@/components/ui/button';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';

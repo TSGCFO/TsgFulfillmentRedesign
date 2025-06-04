@@ -1,18 +1,17 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'wouter';
 import { 
-  BarChart2, 
+  BarChart3 as BarChart2, 
   Package, 
   Truck, 
   Clock, 
   Settings, 
   Home,
-  LogOut,
   HelpCircle,
   Bell,
   User,
   Search
-} from 'lucide-react';
+} from '@/lib/icons';
 import Logo from '../Logo';
 import { Button } from '@/components/ui/button';
 import { 

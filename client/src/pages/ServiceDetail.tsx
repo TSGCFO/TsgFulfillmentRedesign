@@ -4,14 +4,14 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
-  Box,
-  Warehouse,
   Truck,
   Package,
+  CheckCircle,
+  Box,
+  Warehouse,
   RotateCcw,
   Stethoscope,
-  CheckCircle,
-} from "lucide-react";
+} from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 import Logo from "@/components/Logo";

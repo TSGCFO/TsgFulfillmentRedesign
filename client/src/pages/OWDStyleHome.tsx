@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'wouter';
-import { ArrowRight, Box, BarChart2, Truck, Package, RefreshCw, Shield, Award, ShoppingCart } from 'lucide-react';
+import { ArrowRight, BarChart3 as BarChart2, Truck, Package, RefreshCw, Shield, Award, Box, ShoppingCart } from '@/lib/icons';
 import { Button } from '@/components/ui/button';
 import logoOnTransparent from '@assets/Original on Transparent.png';
 import warehouseImage from '@assets/Original.png';
