@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
 describe.each([
-  { flag: 'true', shouldShowLink: true },
-  { flag: 'false', shouldShowLink: false },
-])('Navbar when VITE_ANALYTICS_ENABLED=%s', ({ flag, shouldShowLink }) => {
+  ['true', true],
+  ['false', false],
+])('Navbar when VITE_ANALYTICS_ENABLED=%s', (flag, shouldShowLink) => {
   beforeAll(() => {
     process.env.VITE_ANALYTICS_ENABLED = flag;
     (import.meta as any).env = {
