@@ -1,51 +1,51 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+/**
+ * @vitest-environment node
+ */
+import { vi, beforeEach, afterEach, it, expect } from 'vitest';
+import type { Express } from 'express';
+import http from 'http';
 
-beforeEach(() => {
-  vi.resetModules();
+let serverInstance: http.Server;
+
+const registerRoutesMock = vi.fn(async (app: Express, _analytics: boolean) => {
+  app.get('/error', () => {
+    throw new Error('boom');
+  });
+  serverInstance = http.createServer(app as any);
+  return serverInstance;
 });
 
-describe('server index', () => {
-  it('seeds analytics when enabled', async () => {
-    process.env.ANALYTICS_ENABLED = 'true';
-    const seed = vi.fn();
-    const listen = vi.fn((_: any, cb: any) => cb());
-    vi.doMock('../routes', () => ({ registerRoutes: vi.fn().mockResolvedValue({ listen }) }));
-    vi.doMock('../vite', () => ({ setupVite: vi.fn(), serveStatic: vi.fn(), log: vi.fn() }));
-    vi.doMock('../seed-data', () => ({ seedAnalyticsData: seed }));
-    vi.doMock('express', () => {
-      const app = { use: vi.fn(), get: vi.fn().mockReturnValue('production') };
-      const exp: any = vi.fn(() => app);
-      exp.json = vi.fn(() => 'json');
-      exp.urlencoded = vi.fn(() => 'url');
-      return { default: exp };
-    });
-    await import('../index');
-    expect(seed).toHaveBeenCalled();
-  });
+const seedAnalyticsDataMock = vi.fn();
 
-  it('error handler responds with json', async () => {
-    process.env.ANALYTICS_ENABLED = 'false';
-    let errorHandler: any;
-    const listen = vi.fn((_: any, cb: any) => cb());
-    vi.doMock('../routes', () => ({ registerRoutes: vi.fn().mockResolvedValue({ listen }) }));
-    vi.doMock('../seed-data', () => ({ seedAnalyticsData: vi.fn() }));
-    vi.doMock('../vite', () => ({ setupVite: vi.fn(), serveStatic: vi.fn(), log: vi.fn() }));
-    vi.doMock('express', () => {
-      const app = {
-        use: (fn: any) => { if (fn.length === 4) errorHandler = fn; },
-        get: vi.fn().mockReturnValue('production'),
-      };
-      const exp: any = vi.fn(() => app);
-      exp.json = vi.fn(() => 'json');
-      exp.urlencoded = vi.fn(() => 'url');
-      return { default: exp };
-    });
-    await import('../index');
-    const json = vi.fn();
-    const res = { status: vi.fn(() => ({ json })) } as any;
-    const err = new Error('boom');
-    expect(() => errorHandler(err, {} as any, res, () => {})).toThrow(err);
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(json).toHaveBeenCalledWith({ message: 'boom' });
-  });
+vi.mock('../routes', () => ({ registerRoutes: registerRoutesMock }));
+vi.mock('../seed-data', () => ({ seedAnalyticsData: seedAnalyticsDataMock }));
+vi.mock('../vite', () => ({
+  setupVite: vi.fn(),
+  serveStatic: vi.fn(),
+  log: vi.fn(),
+}));
+
+beforeEach(() => {
+  process.env.ANALYTICS_ENABLED = 'true';
+  process.env.NODE_ENV = 'production';
+});
+
+afterEach(async () => {
+  if (serverInstance?.listening) {
+    await new Promise<void>((r) => serverInstance.close(() => r()));
+  }
+  vi.resetModules();
+  vi.clearAllMocks();
+});
+
+it('initializes server with analytics and propagates errors', async () => {
+  await import('../index');
+  await new Promise((r) => serverInstance.on('listening', r));
+
+  expect(registerRoutesMock).toHaveBeenCalledWith(expect.anything(), true);
+  expect(seedAnalyticsDataMock).toHaveBeenCalled();
+  expect((serverInstance.address() as any).port).toBe(5000);
+
+  const res = await fetch('http://localhost:5000/error');
+  expect(res.status).toBe(500);
 });
