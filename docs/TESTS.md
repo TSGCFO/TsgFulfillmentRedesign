@@ -25,6 +25,7 @@ npx vitest run --coverage
 
 The global report should show at least **98%** coverage for lines, branches, functions and statements.
 
+
 ## Test Suites
 
 ### Server Tests
@@ -43,6 +44,46 @@ The global report should show at least **98%** coverage for lines, branches, fun
 - **`client/src/components/__tests__/`** - UI component tests
 - **`client/src/hooks/__tests__/`** - Custom hook tests
 - **`client/src/lib/__tests__/`** - Library utility tests
+=======
+## End-to-End Tests
+
+End-to-end tests live in the `e2e` directory and are powered by [Playwright](https://playwright.dev/).
+
+### Prerequisites for E2E Tests
+
+Before running e2e tests, you need to install the browser executables:
+
+```bash
+npx playwright install
+```
+
+**Note:** The first time you run e2e tests, you may encounter an error about missing browser executables. Run the install command above to resolve this.
+
+### Running E2E Tests
+
+Run them with:
+
+```bash
+npm run e2e
+```
+
+This uses the configuration defined in `playwright.config.ts`.
+
+### E2E Test Configuration
+
+The Playwright configuration (`playwright.config.ts`) includes:
+- Test directory: `e2e/`
+- Test file pattern: `**/*.e2e.ts`
+- Base URL: `http://localhost:5000`
+- Reporters: list and HTML (HTML report saved but not auto-opened)
+
+### E2E Test Development
+
+E2E tests should:
+- Use the `.e2e.ts` file extension
+- Be placed in the `e2e/` directory
+- Target the local development server at `http://localhost:5000`
+- Follow Playwright testing patterns and best practices
 
 ## Interpreting Results
 
