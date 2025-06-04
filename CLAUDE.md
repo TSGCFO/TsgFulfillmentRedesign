@@ -27,6 +27,7 @@
 - Form labels: Clear, accessible, include helper text
 - Success messages: Positive reinforcement, next steps
 
+
 ## MCP (Model Context Protocol) Configuration
 
 This project supports Claude Code as an MCP server for enhanced development capabilities.
@@ -45,3 +46,23 @@ This project supports Claude Code as an MCP server for enhanced development capa
 - MCP server runs with appropriate access controls
 - Production mode uses read-only access by default
 - Sensitive directories are restricted (.env, node_modules, .git)
+=======
+## MCP Configuration
+
+This project supports enhanced Claude Code capabilities via MCP (Model Context Protocol) servers:
+
+### Available MCP Servers:
+- **Sequential Thinking**: Enhanced reasoning for complex architectural decisions
+- **Filesystem**: Secure file operations with directory restrictions
+- **GitHub**: Advanced GitHub API operations
+
+### Quick Commands:
+- `@claude /mcp` - Check MCP status
+- `@claude What MCP tools do you have access to?` - List available tools
+- `@claude Use sequential thinking to analyze...` - Enhanced reasoning
+- `@claude Use filesystem tools to explore...` - Advanced file ops
+
+### Configuration Files:
+- `CLAUDE_CODE_MCP_WORKFLOW_GUIDE.md` - Complete setup guide
+- `MCP_TESTING_GUIDE.md` - Testing and troubleshooting
+- `.github/workflows/claude-mcp-example.yml` - Example workflow
