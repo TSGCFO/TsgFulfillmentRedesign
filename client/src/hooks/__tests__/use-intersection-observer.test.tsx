@@ -24,5 +24,6 @@ describe('useIntersectionObserver', () => {
     expect(result.current[1]).toBe(true);
 
     unmount();
+    expect(MockObserver.prototype.disconnect).toHaveBeenCalled();
   });
 });
