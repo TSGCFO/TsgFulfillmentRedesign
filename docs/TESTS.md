@@ -25,6 +25,25 @@ npx vitest run --coverage
 
 The global report should show at least **98%** coverage for lines, branches, functions and statements.
 
+## Test Suites
+
+### Server Tests
+
+- **`server/__tests__/index.test.ts`** - Integration tests for the main server entry point, verifying:
+  - Analytics initialization and setup
+  - Server listening on port 5000
+  - Error propagation through Express middleware
+- **`server/__tests__/routes.test.ts`** - API route functionality tests
+- **`server/__tests__/storage.test.ts`** - Storage layer tests
+- **`server/__tests__/integration.test.tsx`** - Full integration tests with React components
+
+### Client Tests
+
+- **`client/src/__tests__/`** - Component and utility tests
+- **`client/src/components/__tests__/`** - UI component tests
+- **`client/src/hooks/__tests__/`** - Custom hook tests
+- **`client/src/lib/__tests__/`** - Library utility tests
+
 ## Interpreting Results
 
 - When all tests pass, the command exits with code `0` and displays success messages for each suite.
