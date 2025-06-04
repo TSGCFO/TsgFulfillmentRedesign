@@ -134,4 +134,50 @@ describe('API routes', () => {
     expect(res.status).toBe(200);
     await new Promise<void>(r => srv.close(() => r()));
   });
+
+  it('retrieves and updates resources', async () => {
+    // list quotes
+    const quotesRes = await fetch(`http://localhost:${port}/api/quote`);
+    expect(quotesRes.status).toBe(200);
+    const { data: quotes } = await quotesRes.json();
+    const quoteId = quotes[0].id;
+    const upd = await fetch(`http://localhost:${port}/api/quote/${quoteId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ service: 'updated' }) });
+    expect(upd.status).toBe(200);
+
+    const notFound = await fetch(`http://localhost:${port}/api/quote/9999`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    expect(notFound.status).toBe(404);
+
+    const invRes = await fetch(`http://localhost:${port}/api/inventory?clientId=1`);
+    expect(invRes.status).toBe(200);
+    const list = await invRes.json();
+    const invId = list.data[0].id;
+    const invPatch = await fetch(`http://localhost:${port}/api/inventory/${invId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ quantity: 99 }) });
+    expect(invPatch.status).toBe(200);
+    const missingInv = await fetch(`http://localhost:${port}/api/inventory/999`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    expect(missingInv.status).toBe(404);
+
+    const shipList = await fetch(`http://localhost:${port}/api/shipments`);
+    expect(shipList.status).toBe(200);
+    const { data: ships } = await shipList.json();
+    const shipId = ships[0].id;
+    const shipPatch = await fetch(`http://localhost:${port}/api/shipments/${shipId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'delivered' }) });
+    expect(shipPatch.status).toBe(200);
+
+    const statsList = await fetch(`http://localhost:${port}/api/order-statistics`);
+    expect(statsList.status).toBe(200);
+    const statId = (await statsList.json()).data[0].id;
+    const statPatch = await fetch(`http://localhost:${port}/api/order-statistics/${statId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ordersFulfilled: 2 }) });
+    expect(statPatch.status).toBe(200);
+
+    const kpiList = await fetch(`http://localhost:${port}/api/client-kpis`);
+    expect(kpiList.status).toBe(200);
+    const kpiId = (await kpiList.json()).data[0].id;
+    const kpiPatch = await fetch(`http://localhost:${port}/api/client-kpis/${kpiId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ returnRate: 1 }) });
+    expect(kpiPatch.status).toBe(200);
+
+    const dashPatch = await fetch(`http://localhost:${port}/api/dashboard-settings/1/w`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ position: 2 }) });
+    expect(dashPatch.status).toBe(200);
+    const dashMissing = await fetch(`http://localhost:${port}/api/dashboard-settings/1/missing`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    expect(dashMissing.status).toBe(404);
+  });
 });
