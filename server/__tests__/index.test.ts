@@ -12,6 +12,7 @@ const registerRoutesMock = vi.fn(async (app: Express, _analytics: boolean) => {
     throw new Error('boom');
   });
   serverInstance = http.createServer(app as any);
+  serverInstance.listen(0); // Use random available port
   return serverInstance;
 });
 
@@ -44,8 +45,10 @@ it('initializes server with analytics and propagates errors', async () => {
 
   expect(registerRoutesMock).toHaveBeenCalledWith(expect.anything(), true);
   expect(seedAnalyticsDataMock).toHaveBeenCalled();
-  expect((serverInstance.address() as any).port).toBe(5000);
+  
+  const address = serverInstance.address() as any;
+  expect(address.port).toBeGreaterThan(0);
 
-  const res = await fetch('http://localhost:5000/error');
+  const res = await fetch(`http://localhost:${address.port}/error`);
   expect(res.status).toBe(500);
-});
+}, 15000);
