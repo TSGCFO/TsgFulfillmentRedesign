@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'wouter';
-import { Mail, Phone, MapPin, FileText, ArrowRight, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useToast } from '@/hooks/use-toast';
+import { UnifiedContactForm } from '@/components/UnifiedContactForm';
 import Seo from '@/components/SEO/Seo';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -34,56 +25,6 @@ interface ContactInfo {
 }
 
 const Contact: React.FC = () => {
-  const { toast } = useToast();
-  
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    subject: '',
-    message: '',
-    interestType: ''
-  });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-  
-  const handleSelectChange = (value: string) => {
-    setFormData(prevState => ({
-      ...prevState,
-      interestType: value
-    }));
-  };
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Here you would normally send the data to your server
-    console.log('Form submitted:', formData);
-    
-    // Show success message
-    toast({
-      title: "Message Sent",
-      description: "Thank you for contacting us. We'll get back to you shortly.",
-    });
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      subject: '',
-      message: '',
-      interestType: ''
-    });
-  };
   
   // Contact information
   const contactInfo: ContactInfo[] = [
@@ -121,6 +62,13 @@ const Contact: React.FC = () => {
     { value: "value-added", label: "Value Added Services" },
     { value: "multiple", label: "Multiple Services" },
     { value: "other", label: "Other" }
+  ];
+
+  const subjects = [
+    "General Inquiry",
+    "Request a Quote",
+    "Partnership Opportunity",
+    "Other"
   ];
 
   // Define structured data for the Contact page
@@ -290,150 +238,13 @@ const Contact: React.FC = () => {
               viewport={{ once: true, margin: "-100px" }}
               variants={fadeIn}
             >
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                      Your Name *
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      placeholder="John Smith"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-                      Email Address *
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="john@example.com"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-gray-700 font-medium mb-2">
-                      Phone Number
-                    </label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      placeholder="(123) 456-7890"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="company" className="block text-gray-700 font-medium mb-2">
-                      Company Name
-                    </label>
-                    <Input
-                      id="company"
-                      name="company"
-                      placeholder="Your Company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="interestType" className="block text-gray-700 font-medium mb-2">
-                      Service Interest *
-                    </label>
-                    {import.meta.env.VITEST ? (
-                      <select
-                        id="interestType"
-                        aria-label="Service Interest"
-                        className="w-full p-3 h-auto border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                        value={formData.interestType}
-                        onChange={(e) => handleSelectChange(e.target.value)}
-                        required
-                      >
-                        <option value="" disabled>
-                          Select a service
-                        </option>
-                        {serviceOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    ) : (
-                      <Select
-                        value={formData.interestType}
-                        onValueChange={handleSelectChange}
-                        required
-                      >
-                        <SelectTrigger
-                          id="interestType"
-                          aria-label="Service Interest"
-                          className="w-full p-3 h-auto border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                        >
-                          <SelectValue placeholder="Select a service" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {serviceOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="subject" className="block text-gray-700 font-medium mb-2">
-                      Subject *
-                    </label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      placeholder="e.g., Request for Quote"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="mb-6">
-                  <label htmlFor="message" className="block text-gray-700 font-medium mb-2">
-                    Your Message *
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    placeholder="Please tell us about your logistics needs and any specific requirements..."
-                    rows={6}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary/50"
-                    required
-                  />
-                </div>
-                
-                <div className="text-center">
-                  <Button
-                    type="submit"
-                    className="bg-primary text-white hover:bg-primary/90 py-6 px-10 rounded-md font-semibold flex items-center justify-center mx-auto"
-                  >
-                    Send Message
-                    <Send className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </form>
+              <UnifiedContactForm
+                endpoint="/api/contact"
+                includeService
+                includeSubject
+                serviceOptions={serviceOptions.map(o => o.label)}
+                subjectOptions={subjects}
+              />
             </motion.div>
           </div>
         </div>
