@@ -104,7 +104,7 @@ const HeroSection: React.FC = () => {
           >
             <Button 
               className="bg-white text-primary hover:bg-white/90 font-semibold text-base px-8 py-6 transition-all"
-              onClick={() => window.location.href = '/quote'}
+              onClick={() => navigate('/quote')}
               aria-label="Request a quote for our services"
             >
               <span className="text-primary">Request a Quote</span>
