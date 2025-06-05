@@ -5,58 +5,71 @@
 After implementing MCP configuration in your workflow, use these commands to test the functionality:
 
 ### 1. Check MCP Status
-```
+
+```txt
 @claude /mcp
 ```
+
 Shows all available MCP servers and their status.
 
 ### 2. List Available Tools
+
 ```
 @claude What MCP tools do you have access to?
 ```
+
 Gets a complete list of MCP tools and capabilities.
 
 ### 3. Test Sequential Thinking
+
 ```
 @claude Use sequential thinking to analyze our TSG Fulfillment project architecture
 ```
+
 Tests the enhanced reasoning capabilities.
 
 ### 4. Test Filesystem Operations
+
 ```
 @claude Use the filesystem server to explore our client directory structure
 ```
+
 Tests advanced file operations with security restrictions.
 
 ### 5. Complex Analysis
+
 ```
 @claude Think deeply about how to improve our React component architecture, then use the filesystem tools to implement the changes
 ```
+
 Combines multiple MCP capabilities for complex tasks.
 
 ## Expected Behavior
 
-### With MCP Configuration:
+### With MCP Configuration
+
 - ✅ Enhanced reasoning capabilities via sequential thinking
 - ✅ Advanced file operations with directory restrictions
 - ✅ More sophisticated code analysis
 - ✅ Better architectural recommendations
 
-### Without MCP Configuration:
+### Without MCP Configuration
+
 - ⚠️ Basic Claude Code functionality only
 - ⚠️ Standard file operations
 - ⚠️ No enhanced reasoning tools
 
 ## Troubleshooting
 
-### If MCP tools aren't working:
+### If MCP tools aren't working
 
 1. **Check allowed_tools**: Ensure MCP tools are listed in `allowed_tools`
 2. **Verify mcp_config**: Check JSON syntax in `mcp_config`
 3. **Review permissions**: Ensure workflow has required permissions
 4. **Check server installation**: NPX should install MCP servers automatically
 
-### Debug Commands:
+### Debug Commands
+
 ```
 @claude /mcp status
 @claude Show me the current MCP configuration
