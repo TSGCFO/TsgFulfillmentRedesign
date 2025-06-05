@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
 
   const handleGetQuote = () => {
-    window.location.href = '/contact-form';
+    window.location.href = '/quote';
   };
 
   useEffect(() => {

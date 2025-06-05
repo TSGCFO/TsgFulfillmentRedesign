@@ -40,7 +40,7 @@ const CTASection: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Button 
-              onClick={() => scrollTo('contact')}
+              onClick={() => window.location.href = '/quote'}
               className="btn-primary bg-white text-primary hover:bg-gray-100 px-8 py-7 font-medium text-base"
             >
               <span className="text-primary">Get a Free Quote</span>

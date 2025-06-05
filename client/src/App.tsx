@@ -22,6 +22,7 @@ const CustomDashboard = lazy(() => import("@/pages/CustomDashboard"));
 const ImageManagement = lazy(() => import("@/pages/image-management"));
 const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
+const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component
@@ -75,6 +76,7 @@ function Router() {
         <Route path="/admin/images" component={ImageManagement} />
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
         <Route path="/contact-form" component={ContactForm} />
+        <Route path="/quote" component={QuoteRequest} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
