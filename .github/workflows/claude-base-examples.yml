@@ -1,0 +1,298 @@
+name: Claude Code Base - Usage Examples
+
+on:
+  workflow_dispatch:
+    inputs:
+      example_type:
+        description: 'Example to run'
+        type: choice
+        options:
+          - 'simple-analysis'
+          - 'code-review'
+          - 'feature-implementation'
+          - 'security-audit'
+          - 'documentation-update'
+          - 'bug-investigation'
+        required: true
+
+jobs:
+  # Example 1: Simple Analysis with Minimal MCP
+  simple-analysis:
+    if: github.event.inputs.example_type == 'simple-analysis'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Simple Code Analysis
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: "Analyze the client/src directory structure and provide insights about the React application architecture. Focus on component organization and best practices."
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "10"
+          allowed_tools: "View,GlobTool,GrepTool"
+          # No MCP servers - fastest execution
+          
+  # Example 2: Code Review with GitHub Integration
+  code-review:
+    if: github.event.inputs.example_type == 'code-review'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Comprehensive Code Review
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Perform a comprehensive code review of recent changes. Check for:
+            1. Code quality and best practices
+            2. Security vulnerabilities
+            3. Performance issues
+            4. TypeScript/React patterns
+            5. Test coverage gaps
+            
+            Create a detailed review report with specific recommendations.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "20"
+          allowed_tools: "Bash(git diff),Bash(git log),View,GlobTool,GrepTool,mcp__github__*"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 60000
+                }
+              }
+            }
+
+  # Example 3: Feature Implementation with Full MCP
+  feature-implementation:
+    if: github.event.inputs.example_type == 'feature-implementation'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Implement New Feature
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Implement a new feature: Add a "Quick Quote" button component that appears on service pages.
+            
+            Requirements:
+            1. Create a reusable QuickQuoteButton component
+            2. Add it to the ServicesSection component
+            3. Style it consistent with existing TSG brand
+            4. Include hover effects and animations
+            5. Make it responsive for mobile
+            6. Add TypeScript types
+            7. Write unit tests for the component
+            8. Update documentation
+            
+            Follow TSG brand guidelines and existing code patterns.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "30"
+          allowed_tools: "Bash(*),View,GlobTool,GrepTool,BatchTool,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__web-search__*"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 90000,
+                  "env": {"THINKING_DEPTH": "advanced"}
+                },
+                "filesystem": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                  "timeout": 60000,
+                  "env": {
+                    "ALLOWED_DIRECTORIES": "${{ github.workspace }}",
+                    "ENABLE_WRITE": "true"
+                  }
+                },
+                "web-search": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-web-search"],
+                  "timeout": 45000,
+                  "env": {
+                    "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
+                    "MAX_RESULTS": "20"
+                  }
+                }
+              }
+            }
+          claude_env: |
+            NODE_ENV: development
+            COMPONENT_LIBRARY: tailwindcss
+            TESTING_FRAMEWORK: vitest
+
+  # Example 4: Security Audit with Memory
+  security-audit:
+    if: github.event.inputs.example_type == 'security-audit'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Security Audit
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Perform a comprehensive security audit of the TSG Fulfillment application:
+            
+            1. Scan for common security vulnerabilities (XSS, CSRF, etc.)
+            2. Review authentication and authorization patterns
+            3. Check for sensitive data exposure
+            4. Analyze API endpoints for security issues
+            5. Review dependency vulnerabilities
+            6. Check environment variable usage
+            7. Validate input sanitization
+            8. Review CORS configuration
+            
+            Store findings in memory and generate a detailed security report.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "25"
+          allowed_tools: "Bash(npm audit),View,GlobTool,GrepTool,mcp__sequential-thinking__*,mcp__memory__*"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 90000
+                },
+                "memory": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-memory"],
+                  "timeout": 60000,
+                  "env": {
+                    "MEMORY_BANK_SIZE": "200",
+                    "PERSISTENCE": "session"
+                  }
+                }
+              }
+            }
+
+  # Example 5: Documentation Update with Web Search
+  documentation-update:
+    if: github.event.inputs.example_type == 'documentation-update'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Documentation
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Update the project documentation to reflect current best practices:
+            
+            1. Review and update README.md
+            2. Update API documentation
+            3. Check for outdated dependencies in docs
+            4. Research latest React/TypeScript best practices
+            5. Update code examples and snippets
+            6. Ensure TSG brand compliance in all documentation
+            7. Add missing JSDoc comments to key components
+            
+            Use web search to find the latest best practices and standards.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "20"
+          allowed_tools: "View,GlobTool,GrepTool,BatchTool,mcp__web-search__*,mcp__filesystem__*"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "web-search": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-web-search"],
+                  "timeout": 60000,
+                  "env": {
+                    "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
+                    "MAX_RESULTS": "30",
+                    "SEARCH_TIMEOUT": "45000"
+                  }
+                },
+                "filesystem": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                  "timeout": 45000,
+                  "env": {
+                    "ALLOWED_DIRECTORIES": "${{ github.workspace }}",
+                    "ENABLE_WRITE": "true"
+                  }
+                }
+              }
+            }
+
+  # Example 6: Bug Investigation with Database
+  bug-investigation:
+    if: github.event.inputs.example_type == 'bug-investigation'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50  # Get more history for investigation
+      - name: Investigate Bug
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Investigate potential bugs in the quote form functionality:
+            
+            1. Analyze recent changes to quote-related components
+            2. Check for form validation issues
+            3. Review error handling patterns
+            4. Look for race conditions or async issues
+            5. Check database queries for inefficiencies
+            6. Analyze user flow for edge cases
+            7. Review logs and error patterns
+            8. Create reproduction steps if issues found
+            
+            Use sequential thinking to systematically work through the investigation.
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "25"
+          allowed_tools: "Bash(git log),Bash(git blame),View,GlobTool,GrepTool,mcp__sequential-thinking__*,mcp__database__*"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 120000,
+                  "env": {
+                    "THINKING_DEPTH": "deep",
+                    "MAX_ITERATIONS": "30"
+                  }
+                },
+                "database": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-postgres"],
+                  "timeout": 60000,
+                  "env": {
+                    "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+                    "READ_ONLY": "true",
+                    "QUERY_TIMEOUT": "30000"
+                  }
+                }
+              }
+            }
+          claude_env: |
+            NODE_ENV: development
+            DEBUG: true
+            LOG_LEVEL: debug
