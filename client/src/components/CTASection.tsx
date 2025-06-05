@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { useLocation } from 'wouter';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -12,6 +13,8 @@ const fadeIn = {
 };
 
 const CTASection: React.FC = () => {
+  const [, setLocation] = useLocation();
+
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -40,7 +43,7 @@ const CTASection: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Button 
-              onClick={() => scrollTo('contact')}
+              onClick={() => setLocation('/quote')}
               className="btn-primary bg-white text-primary hover:bg-gray-100 px-8 py-7 font-medium text-base"
             >
               <span className="text-primary">Get a Free Quote</span>

@@ -19,7 +19,6 @@ export const redirectMap: Record<string, string> = {
   '/about': '/about-us',
   '/contact.php': '/contact-form',
   '/contact': '/contact-form',
-  '/quote': '/contact-form',
   '/fulfillment.php': '/services/order-fulfillment',
   '/services.php': '/services',
   '/testimonials.php': '/testimonials',
