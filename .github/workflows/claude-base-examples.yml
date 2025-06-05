@@ -1,0 +1,437 @@
+name: Claude Code Base - Usage Examples
+
+# This workflow demonstrates various usage patterns for the custom claude-code-base-action
+# These are example jobs that can be triggered independently
+
+on:
+  workflow_dispatch:
+    inputs:
+      example_type:
+        description: 'Example to run'
+        required: true
+        type: choice
+        options:
+          - 'simple-analysis'
+          - 'code-review-pr'
+          - 'feature-implementation'
+          - 'security-audit'
+          - 'documentation-update'
+          - 'bug-investigation'
+
+env:
+  CLAUDE_MODEL: "claude-3-7-sonnet-20250219"
+
+jobs:
+  # Example 1: Simple Code Analysis
+  simple-analysis:
+    if: github.event.inputs.example_type == 'simple-analysis'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Simple Claude Analysis
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Analyze this TypeScript/React codebase and provide:
+            1. Overview of architecture and structure
+            2. Code quality assessment
+            3. Top 3 improvement recommendations
+            4. Technology stack summary
+            
+            Focus on the client/src directory.
+          
+          allowed_tools: "View,GlobTool,GrepTool"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "10"
+
+  # Example 2: PR Code Review with Context
+  code-review-pr:
+    if: github.event.inputs.example_type == 'code-review-pr'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup prompt file
+        run: |
+          mkdir -p /tmp/prompts
+          cat << 'EOF' > /tmp/prompts/code-review.txt
+          You are conducting a thorough code review. Analyze the recent changes and provide:
+          
+          ## Review Scope
+          1. **Code Quality**: Architecture, patterns, maintainability
+          2. **Security**: Potential vulnerabilities or security issues
+          3. **Performance**: Optimization opportunities
+          4. **Testing**: Test coverage and quality
+          5. **Documentation**: Code comments and documentation
+          
+          ## TSG Standards
+          - Use professional, customer-centric language
+          - Follow brand terminology: "fulfillment center", "team member", "client"
+          - Ensure SEO optimization for web content
+          - Maintain accessibility standards
+          
+          ## Output Format
+          ### 🔴 Critical Issues
+          [List any critical issues requiring immediate attention]
+          
+          ### 🟡 Recommendations
+          [List improvements and suggestions]
+          
+          ### 🟢 Positive Observations
+          [Highlight good practices]
+          
+          ### 📊 Summary
+          - Files reviewed: [count]
+          - Critical issues: [count]
+          - Recommendations: [count]
+          
+          Please analyze all changed files and provide specific feedback with line numbers.
+          EOF
+      
+      - name: Run Code Review
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt_file: "/tmp/prompts/code-review.txt"
+          allowed_tools: "Bash(git diff HEAD~5),Bash(git log --oneline -5),View,GlobTool,GrepTool,mcp__github__*"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          max_turns: "8"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 120000
+                }
+              }
+            }
+
+  # Example 3: Feature Implementation with Full Access
+  feature-implementation:
+    if: github.event.inputs.example_type == 'feature-implementation'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Implement Feature
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Implement a new "Quick Quote" button component for the TSG website that:
+            
+            1. **Design Requirements:**
+               - Prominent, attention-grabbing button
+               - Consistent with existing design system
+               - Mobile-responsive design
+               - Accessibility compliant (WCAG 2.1)
+            
+            2. **Functionality:**
+               - Opens quote request modal/form
+               - Tracks user interaction for analytics
+               - Includes loading state during submission
+               - Shows success/error feedback
+            
+            3. **Implementation:**
+               - Use existing component patterns
+               - Follow TypeScript best practices
+               - Add comprehensive prop types
+               - Include unit tests
+               - Update Storybook if available
+            
+            4. **Integration:**
+               - Add to HomePage hero section
+               - Include in ServicesSection
+               - Ensure proper event tracking
+            
+            5. **TSG Brand Compliance:**
+               - Use customer-centric language
+               - Follow SEO best practices
+               - Include proper meta tags and descriptions
+               - Use approved terminology
+            
+            Please implement this feature following all existing patterns and standards.
+          
+          allowed_tools: "Bash(*),View,GlobTool,GrepTool,BatchTool,mcp__github_file_ops__*"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "30"
+          claude_env: |
+            TSG_BRAND_MODE: enabled
+            FEATURE_IMPLEMENTATION: true
+            TESTING_REQUIRED: true
+            NODE_ENV: development
+
+  # Example 4: Security Audit with Web Search
+  security-audit:
+    if: github.event.inputs.example_type == 'security-audit'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Security Audit
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          system_prompt: |
+            You are a security expert conducting a comprehensive security audit.
+            Focus on identifying vulnerabilities, security misconfigurations, and compliance issues.
+            Reference latest security standards and CVE databases when needed.
+          
+          prompt: |
+            Conduct a thorough security audit of this application:
+            
+            ## Audit Areas:
+            1. **Authentication & Authorization**
+               - Login mechanisms and session management
+               - Access controls and permission systems
+               - JWT/token handling
+            
+            2. **Data Protection**
+               - Sensitive data encryption
+               - Database security
+               - PII handling compliance
+            
+            3. **Input Validation**
+               - XSS protection
+               - SQL injection prevention
+               - CSRF protection
+               - File upload security
+            
+            4. **Infrastructure Security**
+               - Environment configuration
+               - API security
+               - Third-party integrations
+            
+            5. **Dependency Security**
+               - Package vulnerabilities
+               - Supply chain security
+               - Outdated dependencies
+            
+            ## Output Format:
+            ### 🚨 Critical Vulnerabilities
+            [Immediate security risks requiring urgent attention]
+            
+            ### ⚠️ Security Concerns
+            [Important issues to address soon]
+            
+            ### 💡 Security Recommendations
+            [Best practices and improvements]
+            
+            ### ✅ Security Strengths
+            [Well-implemented security measures]
+            
+            Use web search to verify current security best practices and CVE information.
+          
+          allowed_tools: "View,GlobTool,GrepTool,mcp__web-search__*,mcp__sequential-thinking__*"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "25"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "web-search": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-web-search"],
+                  "env": {
+                    "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
+                    "MAX_RESULTS": "15",
+                    "SEARCH_TIMEOUT": "30000"
+                  },
+                  "timeout": 60000
+                },
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 180000
+                }
+              }
+            }
+
+  # Example 5: Documentation Update with Memory
+  documentation-update:
+    if: github.event.inputs.example_type == 'documentation-update'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Update Documentation
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          append_system_prompt: |
+            You are a technical writer specializing in developer documentation.
+            Create clear, comprehensive documentation following TSG brand standards.
+            Use customer-centric language and ensure SEO optimization.
+          
+          prompt: |
+            Update and improve the project documentation:
+            
+            ## Documentation Tasks:
+            1. **README.md Enhancement**
+               - Clear project overview and value proposition
+               - Updated installation and setup instructions
+               - Usage examples and common workflows
+               - Troubleshooting section
+            
+            2. **API Documentation**
+               - Document all API endpoints
+               - Include request/response examples
+               - Add authentication details
+               - Error handling documentation
+            
+            3. **Component Documentation**
+               - Document React components
+               - Include props and usage examples
+               - Add accessibility notes
+               - Performance considerations
+            
+            4. **Development Guide**
+               - Setup instructions for new developers
+               - Code standards and conventions
+               - Testing guidelines
+               - Deployment processes
+            
+            ## TSG Standards:
+            - Professional, customer-centric tone
+            - Use approved terminology
+            - Include SEO optimization
+            - Ensure accessibility compliance
+            - Add relevant examples and use cases
+            
+            Use memory to track documentation patterns and maintain consistency.
+          
+          allowed_tools: "View,GlobTool,GrepTool,BatchTool,mcp__memory__*,mcp__github_file_ops__*"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: "20"
+          mcp_config: |
+            {
+              "mcpServers": {
+                "memory": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-memory"],
+                  "env": {
+                    "MEMORY_BANK_SIZE": "500",
+                    "PERSISTENCE": "session"
+                  },
+                  "timeout": 30000
+                }
+              }
+            }
+
+  # Example 6: Bug Investigation and Fix
+  bug-investigation:
+    if: github.event.inputs.example_type == 'bug-investigation'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js for testing
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Bug Investigation
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt: |
+            Investigate and fix reported bugs in the application:
+            
+            ## Investigation Process:
+            1. **Reproduce the Issue**
+               - Identify steps to reproduce
+               - Analyze error logs and stack traces
+               - Determine scope and impact
+            
+            2. **Root Cause Analysis**
+               - Examine relevant code sections
+               - Check recent changes that might have introduced the bug
+               - Identify underlying cause
+            
+            3. **Solution Development**
+               - Design minimal, targeted fix
+               - Consider edge cases and side effects
+               - Implement fix with proper error handling
+            
+            4. **Testing and Validation**
+               - Write/update tests to cover the bug
+               - Run existing test suite
+               - Validate fix resolves issue
+            
+            ## Common Bug Areas to Check:
+            - Form validation and submission
+            - API integration and error handling
+            - Component state management
+            - Responsive design issues
+            - Performance bottlenecks
+            - Accessibility problems
+            
+            ## Output Format:
+            ### 🐛 Issue Analysis
+            **Root Cause**: [Description of underlying problem]
+            **Impact**: [Scope and severity assessment]
+            **Affected Components**: [List of impacted files/components]
+            
+            ### 🔧 Solution Implementation
+            **Approach**: [Strategy description]
+            **Changes Made**: [Specific code modifications]
+            **Testing**: [How fix was validated]
+            
+            ### 📋 Prevention
+            **Monitoring**: [What to watch for]
+            **Improvements**: [Process or code improvements to prevent recurrence]
+            
+            Use sequential thinking for complex debugging scenarios.
+          
+          allowed_tools: "Bash(*),View,GlobTool,GrepTool,BatchTool,mcp__sequential-thinking__*,mcp__github_file_ops__*"
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          max_turns: "12"
+          timeout_minutes: "35"
+          claude_env: |
+            DEBUG_MODE: true
+            TESTING_ENABLED: true
+            BUG_INVESTIGATION: true
+            DETAILED_LOGGING: true
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "env": {
+                    "MAX_DEPTH": "15",
+                    "ENABLE_REFLECTION": "true"
+                  },
+                  "timeout": 240000
+                }
+              }
+            }

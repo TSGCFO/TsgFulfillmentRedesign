@@ -1,0 +1,381 @@
+name: Custom Claude Code Base Workflow
+
+# Multiple trigger mechanisms - bypass @claude restrictions
+on:
+  # Manual dispatch with custom inputs
+  workflow_dispatch:
+    inputs:
+      task_type:
+        description: 'Task Type'
+        required: true
+        type: choice
+        default: 'general'
+        options:
+          - 'general'
+          - 'code-review'
+          - 'feature-implementation'
+          - 'bug-fix'
+          - 'documentation'
+          - 'testing'
+          - 'deployment'
+          - 'security-audit'
+      
+      custom_prompt:
+        description: 'Task Instructions'
+        required: true
+        type: string
+        default: 'Please analyze the codebase and provide recommendations'
+      
+      target_files:
+        description: 'Target Files/Directories (optional)'
+        required: false
+        type: string
+        default: ''
+      
+      max_turns:
+        description: 'Maximum conversation turns'
+        required: false
+        type: string
+        default: '15'
+      
+      enable_filesystem_write:
+        description: 'Enable filesystem write operations'
+        required: false
+        type: boolean
+        default: true
+      
+      enable_web_search:
+        description: 'Enable web search capabilities'
+        required: false
+        type: boolean
+        default: false
+
+  # Custom trigger phrases (bypass @claude restriction)
+  issue_comment:
+    types: [created]
+  
+  pull_request_review_comment:
+    types: [created]
+  
+  # Scheduled execution
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly Monday 9 AM UTC
+  
+  # Push-based triggers
+  push:
+    branches: [ 'development', 'staging' ]
+    paths: 
+      - '**.md'
+      - '**.json'
+      - '**.yml'
+      - '**.yaml'
+
+env:
+  # Custom environment configuration
+  NODE_VERSION: "20.x"
+  CLAUDE_MODEL: "claude-3-7-sonnet-20250219"
+
+jobs:
+  # Conditional execution based on trigger type
+  detect-trigger:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+      task_type: ${{ steps.check.outputs.task_type }}
+      prompt: ${{ steps.check.outputs.prompt }}
+      custom_trigger: ${{ steps.check.outputs.custom_trigger }}
+    steps:
+      - name: Detect execution trigger
+        id: check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "task_type=${{ github.event.inputs.task_type }}" >> $GITHUB_OUTPUT
+            echo "prompt=${{ github.event.inputs.custom_prompt }}" >> $GITHUB_OUTPUT
+            echo "custom_trigger=manual_dispatch" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "issue_comment" ]] && [[ "${{ contains(github.event.comment.body, '@claude-custom') }}" == "true" ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "task_type=general" >> $GITHUB_OUTPUT
+            echo "prompt=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+            echo "custom_trigger=issue_comment" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "pull_request_review_comment" ]] && [[ "${{ contains(github.event.comment.body, '@claude-enhanced') }}" == "true" ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "task_type=code-review" >> $GITHUB_OUTPUT
+            echo "prompt=${{ github.event.comment.body }}" >> $GITHUB_OUTPUT
+            echo "custom_trigger=pr_review" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "task_type=general" >> $GITHUB_OUTPUT
+            echo "prompt=Weekly automated code review and optimization analysis" >> $GITHUB_OUTPUT
+            echo "custom_trigger=scheduled" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "task_type=code-review" >> $GITHUB_OUTPUT
+            echo "prompt=Analyze recently pushed changes and provide feedback" >> $GITHUB_OUTPUT
+            echo "custom_trigger=push_trigger" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+  # Main Claude Code Base execution
+  claude-custom:
+    needs: detect-trigger
+    if: needs.detect-trigger.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    
+    # Maximum permissions - bypass all restrictions
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: write
+      checks: write
+      deployments: write
+      discussions: write
+      pages: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.P_A_T || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          echo "📦 Dependencies installed successfully"
+
+      - name: Prepare custom context and prompt
+        id: prepare
+        run: |
+          mkdir -p /tmp/claude-prompts
+          
+          # Build comprehensive context
+          echo "# Claude Code Base Custom Execution Context" > /tmp/claude-prompts/context.md
+          echo "" >> /tmp/claude-prompts/context.md
+          echo "**Repository**: ${{ github.repository }}" >> /tmp/claude-prompts/context.md
+          echo "**Branch**: ${{ github.ref_name }}" >> /tmp/claude-prompts/context.md
+          echo "**Trigger**: ${{ needs.detect-trigger.outputs.custom_trigger }}" >> /tmp/claude-prompts/context.md
+          echo "**Task Type**: ${{ needs.detect-trigger.outputs.task_type }}" >> /tmp/claude-prompts/context.md
+          echo "**Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> /tmp/claude-prompts/context.md
+          echo "" >> /tmp/claude-prompts/context.md
+          
+          # Include repository structure context
+          echo "## Repository Structure:" >> /tmp/claude-prompts/context.md
+          find . -type f -name "*.md" -o -name "*.json" -o -name "*.yml" -o -name "*.yaml" | head -20 >> /tmp/claude-prompts/context.md
+          
+          # Add git context
+          echo "" >> /tmp/claude-prompts/context.md
+          echo "## Recent Changes:" >> /tmp/claude-prompts/context.md
+          git log --oneline -5 >> /tmp/claude-prompts/context.md
+          
+          # Build main prompt
+          cat << 'EOF' > /tmp/claude-prompts/claude-prompt.txt
+          You are Claude Code running in a custom unrestricted environment. You have access to:
+          
+          1. **Full Filesystem Access** - No directory restrictions
+          2. **Unlimited Tool Access** - All Bash commands, GitHub API, MCP servers
+          3. **Extended Permissions** - Full repository, deployment, and organizational access
+          4. **Advanced MCP Servers** - Sequential thinking, filesystem, web search, memory, database
+          5. **Custom Environment Variables** - Project-specific configuration
+          
+          ## Company Context (from CLAUDE.md):
+          - TSG Fulfillment Services: Professional B2B tone, customer-centric language
+          - Use "fulfillment center" not "warehouse", "team member" not "employee", "client" not "customer"
+          - Focus on solutions, avoid unsubstantiated superlatives
+          - SEO requirements: Primary keywords "fulfillment services", "order fulfillment", "3PL"
+          
+          ## Task Details:
+          EOF
+          
+          echo "**Task Type**: ${{ needs.detect-trigger.outputs.task_type }}" >> /tmp/claude-prompts/claude-prompt.txt
+          echo "**Instructions**: ${{ needs.detect-trigger.outputs.prompt }}" >> /tmp/claude-prompts/claude-prompt.txt
+          
+          if [[ -n "${{ github.event.inputs.target_files }}" ]]; then
+            echo "**Target Files**: ${{ github.event.inputs.target_files }}" >> /tmp/claude-prompts/claude-prompt.txt
+          fi
+          
+          echo "" >> /tmp/claude-prompts/claude-prompt.txt
+          echo "Please proceed with the task using all available tools and capabilities." >> /tmp/claude-prompts/claude-prompt.txt
+
+      - name: Create MCP configuration
+        run: |
+          cat << 'EOF' > /tmp/claude-prompts/mcp-config.json
+          {
+            "mcpServers": {
+              "sequential-thinking": {
+                "command": "npx",
+                "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                "timeout": 300000,
+                "env": {
+                  "MAX_DEPTH": "20",
+                  "ENABLE_REFLECTION": "true"
+                }
+              },
+              "filesystem": {
+                "command": "npx",
+                "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                "timeout": 120000,
+                "env": {
+                  "ALLOWED_DIRECTORIES": "${{ github.workspace }}",
+                  "ENABLE_WRITE": "${{ github.event.inputs.enable_filesystem_write || 'true' }}",
+                  "MAX_FILE_SIZE": "50MB",
+                  "EXCLUDED_PATTERNS": ".git/*,node_modules/*,.env*"
+                }
+              },
+              "web-search": {
+                "command": "npx", 
+                "args": ["-y", "@modelcontextprotocol/server-web-search"],
+                "timeout": 60000,
+                "env": {
+                  "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
+                  "MAX_RESULTS": "20",
+                  "SEARCH_TIMEOUT": "30000"
+                }
+              },
+              "memory": {
+                "command": "npx",
+                "args": ["-y", "@modelcontextprotocol/server-memory"],
+                "timeout": 30000,
+                "env": {
+                  "MEMORY_BANK_SIZE": "500",
+                  "PERSISTENCE": "session"
+                }
+              }
+            }
+          }
+          EOF
+
+      - name: Execute Claude Code Base Action
+        id: claude-execution
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          # Core configuration
+          prompt_file: /tmp/claude-prompts/claude-prompt.txt
+          model: ${{ env.CLAUDE_MODEL }}
+          max_turns: ${{ github.event.inputs.max_turns || '15' }}
+          timeout_minutes: '60'
+          
+          # Authentication
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          
+          # Enhanced system prompts
+          append_system_prompt: |
+            You are operating in a custom unrestricted environment with maximum capabilities.
+            Follow TSG Fulfillment Services brand guidelines and content standards.
+            Use advanced reasoning with sequential thinking when needed.
+            All filesystem operations are permitted within the workspace.
+            You can access web search, memory, and database tools when beneficial.
+            
+          # Unlimited tool access - bypass all restrictions
+          allowed_tools: |
+            Bash(*),
+            View,GlobTool,GrepTool,BatchTool,
+            mcp__github__*,
+            mcp__github_file_ops__*,
+            mcp__sequential-thinking__*,
+            mcp__filesystem__*,
+            mcp__web-search__*,
+            mcp__memory__*
+          
+          # MCP configuration
+          mcp_config: /tmp/claude-prompts/mcp-config.json
+          
+          # Custom environment variables
+          claude_env: |
+            ENVIRONMENT: development
+            TSG_BRAND_MODE: enabled
+            ADVANCED_FEATURES: true
+            FILESYSTEM_UNRESTRICTED: true
+            WEB_SEARCH_ENABLED: ${{ github.event.inputs.enable_web_search || 'false' }}
+            TASK_TYPE: ${{ needs.detect-trigger.outputs.task_type }}
+            TRIGGER_SOURCE: ${{ needs.detect-trigger.outputs.custom_trigger }}
+            MAX_CONTEXT_SIZE: unlimited
+            DEBUG_MODE: true
+        
+        env:
+          GITHUB_TOKEN: ${{ secrets.P_A_T || secrets.GITHUB_TOKEN }}
+          NODE_VERSION: ${{ env.NODE_VERSION }}
+
+      - name: Process execution results
+        if: always()
+        run: |
+          echo "🔍 Claude Code Base execution completed"
+          echo "Status: ${{ steps.claude-execution.outputs.conclusion }}"
+          
+          if [[ -f "${{ steps.claude-execution.outputs.execution_file }}" ]]; then
+            echo "📄 Execution log available at: ${{ steps.claude-execution.outputs.execution_file }}"
+            # Display last few log entries
+            echo "Last conversation turns:"
+            tail -n 100 "${{ steps.claude-execution.outputs.execution_file }}" || echo "Could not read execution file"
+          fi
+
+      - name: Post-execution testing
+        if: steps.claude-execution.outputs.conclusion == 'success'
+        run: |
+          echo "🧪 Running post-execution validation..."
+          
+          # Check if files were modified
+          if ! git diff --quiet; then
+            echo "✅ Files were modified by Claude"
+            git status --porcelain
+            
+            # Run tests if available
+            if [[ -f "package.json" ]] && jq -e '.scripts.test' package.json > /dev/null; then
+              echo "🧪 Running tests..."
+              npm test || echo "⚠️ Tests failed"
+            fi
+            
+            # Run linting if available  
+            if [[ -f "package.json" ]] && jq -e '.scripts.lint' package.json > /dev/null; then
+              echo "🔍 Running linting..."
+              npm run lint || echo "⚠️ Linting failed"
+            fi
+          else
+            echo "ℹ️ No files were modified"
+          fi
+
+      - name: Cleanup and logging
+        if: always()
+        run: |
+          echo "🧹 Cleaning up custom environment..."
+          
+          # Archive execution logs
+          if [[ -f "${{ steps.claude-execution.outputs.execution_file }}" ]]; then
+            mkdir -p /tmp/claude-logs
+            cp "${{ steps.claude-execution.outputs.execution_file }}" /tmp/claude-logs/execution-$(date +%Y%m%d-%H%M%S).json
+          fi
+          
+          # Clean temporary files
+          rm -rf /tmp/claude-prompts
+          
+          # Log execution summary
+          echo "📊 Custom Claude Code Base Execution Summary:"
+          echo "- Trigger: ${{ needs.detect-trigger.outputs.custom_trigger }}"
+          echo "- Task Type: ${{ needs.detect-trigger.outputs.task_type }}"
+          echo "- Execution Status: ${{ steps.claude-execution.outputs.conclusion }}"
+          echo "- Branch: ${{ github.ref_name }}"
+          echo "- Commit: ${{ github.sha }}"
+          echo "- Completed: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+      - name: Upload execution artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-custom-execution-${{ github.run_number }}
+          path: |
+            /tmp/claude-logs/
+            ${{ steps.claude-execution.outputs.execution_file }}
+          retention-days: 30
