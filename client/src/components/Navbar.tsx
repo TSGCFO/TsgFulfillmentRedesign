@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import Logo from './Logo';
@@ -18,10 +18,10 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { toast } = useToast();
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
 
   const handleGetQuote = () => {
-    const [, navigate] = useLocation();
-    navigate('/quote');
+    setLocation('/quote');
   };
 
   useEffect(() => {

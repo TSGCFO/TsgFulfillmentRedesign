@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { ArrowRight, ChevronDown } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -31,6 +32,8 @@ const heroImages = [
 ];
 
 const HeroSection: React.FC = () => {
+  const [, setLocation] = useLocation();
+
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -104,7 +107,7 @@ const HeroSection: React.FC = () => {
           >
             <Button 
               className="bg-white text-primary hover:bg-white/90 font-semibold text-base px-8 py-6 transition-all"
-              onClick={() => navigate('/quote')}
+              onClick={() => setLocation('/quote')}
               aria-label="Request a quote for our services"
             >
               <span className="text-primary">Request a Quote</span>
