@@ -1,0 +1,401 @@
+name: Custom Claude Code Base Workflow
+
+on:
+  # Manual dispatch with full customization
+  workflow_dispatch:
+    inputs:
+      task_type:
+        description: 'Type of task to perform'
+        type: choice
+        options:
+          - 'code-review'
+          - 'feature-implementation'
+          - 'bug-fix'
+          - 'documentation'
+          - 'security-audit'
+          - 'performance-optimization'
+          - 'testing'
+          - 'custom'
+        default: 'custom'
+      prompt:
+        description: 'Task instructions for Claude'
+        required: true
+        type: string
+      timeout_minutes:
+        description: 'Execution timeout (1-60 minutes)'
+        required: false
+        default: '30'
+        type: string
+      use_advanced_mcp:
+        description: 'Enable all MCP servers (slower but more capable)'
+        required: false
+        default: true
+        type: boolean
+      branch:
+        description: 'Target branch (defaults to current)'
+        required: false
+        type: string
+      environment:
+        description: 'Environment configuration'
+        type: choice
+        options:
+          - 'development'
+          - 'staging'
+          - 'production'
+        default: 'development'
+
+  # Custom trigger phrases (bypass @claude restriction)
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+  # Scheduled execution
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly Monday 9 AM UTC
+
+  # Push-based triggers for specific branches
+  push:
+    branches:
+      - development
+      - staging
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - '.github/workflows/**'
+
+jobs:
+  # Filter job for comment triggers
+  filter-triggers:
+    if: github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment'
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.result }}
+      custom_prompt: ${{ steps.extract.outputs.prompt }}
+    steps:
+      - name: Check for custom trigger phrases
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.comment?.body || context.payload.review?.body || '';
+            const customTriggers = ['@claude-custom', '@claude-enhanced', '@claude-base'];
+            return customTriggers.some(trigger => body.includes(trigger));
+
+      - name: Extract custom prompt
+        id: extract
+        if: steps.check.outputs.result == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.comment?.body || context.payload.review?.body || '';
+            const triggers = ['@claude-custom', '@claude-enhanced', '@claude-base'];
+            let prompt = '';
+            for (const trigger of triggers) {
+              if (body.includes(trigger)) {
+                prompt = body.replace(trigger, '').trim();
+                break;
+              }
+            }
+            core.setOutput('prompt', prompt || 'Please analyze and improve the current code.');
+
+  # Main execution job
+  claude-code-base:
+    needs: [filter-triggers]
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'schedule' ||
+      github.event_name == 'push' ||
+      needs.filter-triggers.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    
+    # Maximum permissions for unrestricted access
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      actions: write
+      checks: write
+      deployments: write
+      discussions: write
+      pages: write
+      repository-projects: write
+      security-events: write
+      statuses: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.P_A_T || secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js for MCP servers
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Prepare execution context
+        id: context
+        run: |
+          # Determine execution parameters
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TASK_TYPE=${{ github.event.inputs.task_type }}" >> $GITHUB_ENV
+            echo "TIMEOUT=${{ github.event.inputs.timeout_minutes }}" >> $GITHUB_ENV
+            echo "USE_ADVANCED_MCP=${{ github.event.inputs.use_advanced_mcp }}" >> $GITHUB_ENV
+            echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+            echo "CUSTOM_PROMPT<<EOF" >> $GITHUB_ENV
+            echo "${{ github.event.inputs.prompt }}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "TASK_TYPE=maintenance" >> $GITHUB_ENV
+            echo "TIMEOUT=45" >> $GITHUB_ENV
+            echo "USE_ADVANCED_MCP=true" >> $GITHUB_ENV
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "CUSTOM_PROMPT=Perform scheduled maintenance: check for security updates, optimize performance, and review recent changes." >> $GITHUB_ENV
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "TASK_TYPE=code-review" >> $GITHUB_ENV
+            echo "TIMEOUT=20" >> $GITHUB_ENV
+            echo "USE_ADVANCED_MCP=false" >> $GITHUB_ENV
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "CUSTOM_PROMPT=Review the recent push to ${{ github.ref_name }}. Focus on code quality, security, and performance." >> $GITHUB_ENV
+          else
+            echo "TASK_TYPE=custom" >> $GITHUB_ENV
+            echo "TIMEOUT=30" >> $GITHUB_ENV
+            echo "USE_ADVANCED_MCP=true" >> $GITHUB_ENV
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "CUSTOM_PROMPT<<EOF" >> $GITHUB_ENV
+            echo "${{ needs.filter-triggers.outputs.custom_prompt }}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          fi
+
+      - name: Create custom prompt file
+        run: |
+          mkdir -p /tmp/claude-prompts
+          
+          cat << 'EOF' > /tmp/claude-prompts/claude-prompt.txt
+          # TSG Fulfillment Services - Custom Claude Code Base Execution
+          
+          ## Execution Context
+          - Repository: ${{ github.repository }}
+          - Branch: ${{ github.ref_name }}
+          - Task Type: ${TASK_TYPE}
+          - Environment: ${ENVIRONMENT}
+          - Triggered by: ${{ github.actor }}
+          - Event: ${{ github.event_name }}
+          
+          ## TSG Brand Guidelines (from CLAUDE.md)
+          - Professional yet approachable tone
+          - Customer-centric language focusing on solutions
+          - Use "fulfillment center" not "warehouse"
+          - Use "team member" not "employee"  
+          - Use "client" not "customer" for B2B
+          
+          ## Primary Task
+          ${CUSTOM_PROMPT}
+          
+          ## Instructions
+          1. Follow TSG content standards and brand voice
+          2. Ensure security best practices
+          3. Maintain code quality and performance
+          4. Update tests and documentation as needed
+          5. Provide clear commit messages and progress updates
+          
+          ## Available Tools
+          You have access to all tools including:
+          - Unrestricted Bash commands for development operations
+          - Full GitHub API access for issues, PRs, and repository management
+          - Advanced MCP servers for enhanced reasoning and web search
+          - Filesystem operations with full workspace access
+          - Memory and database operations for complex tasks
+          
+          EOF
+
+      - name: Execute Claude Code Base Action
+        id: claude
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          prompt_file: '/tmp/claude-prompts/claude-prompt.txt'
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          timeout_minutes: ${{ env.TIMEOUT }}
+          model: 'claude-3-7-sonnet-20250219'
+          
+          # Unrestricted tool access
+          allowed_tools: |
+            Bash(*),
+            View,GlobTool,GrepTool,BatchTool,
+            mcp__github__*,
+            mcp__github_file_ops__*,
+            mcp__sequential-thinking__*,
+            mcp__filesystem__*,
+            mcp__web-search__*,
+            mcp__memory__*,
+            mcp__database__*
+            
+          # Advanced MCP configuration
+          mcp_config: |
+            {
+              "mcpServers": {
+                "sequential-thinking": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                  "timeout": 120000,
+                  "env": {
+                    "THINKING_DEPTH": "advanced",
+                    "MAX_ITERATIONS": "50"
+                  }
+                },
+                "filesystem": {
+                  "command": "npx", 
+                  "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                  "timeout": 60000,
+                  "env": {
+                    "ALLOWED_DIRECTORIES": "${{ github.workspace }}",
+                    "ENABLE_WRITE": "true",
+                    "MAX_FILE_SIZE": "100MB",
+                    "RECURSIVE_OPERATIONS": "true"
+                  }
+                },
+                "web-search": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-web-search"],
+                  "timeout": 45000,
+                  "env": {
+                    "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
+                    "MAX_RESULTS": "50",
+                    "SEARCH_TIMEOUT": "30000"
+                  }
+                },
+                "memory": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-memory"],
+                  "timeout": 30000,
+                  "env": {
+                    "MEMORY_BANK_SIZE": "500",
+                    "PERSISTENCE": "session",
+                    "CONTEXT_WINDOW": "large"
+                  }
+                },
+                "database": {
+                  "command": "npx",
+                  "args": ["-y", "@modelcontextprotocol/server-postgres"],
+                  "timeout": 45000,
+                  "env": {
+                    "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+                    "POOL_SIZE": "10",
+                    "QUERY_TIMEOUT": "30000",
+                    "READ_ONLY": "${{ env.ENVIRONMENT == 'production' && 'true' || 'false' }}"
+                  }
+                }
+              }
+            }
+            
+          # Custom environment variables for TSG
+          claude_env: |
+            NODE_ENV: ${{ env.ENVIRONMENT }}
+            TSG_ENVIRONMENT: ${{ env.ENVIRONMENT }}
+            GITHUB_ACTOR: ${{ github.actor }}
+            GITHUB_EVENT: ${{ github.event_name }}
+            TASK_TYPE: ${{ env.TASK_TYPE }}
+            REPOSITORY_NAME: ${{ github.repository }}
+            BRANCH_NAME: ${{ github.ref_name }}
+            WORKSPACE_PATH: ${{ github.workspace }}
+            API_BASE_URL: ${{ env.ENVIRONMENT == 'production' && 'https://api.tsgfulfillment.com' || 'https://api-dev.tsgfulfillment.com' }}
+            DEBUG: ${{ env.ENVIRONMENT != 'production' && 'true' || 'false' }}
+            LOG_LEVEL: ${{ env.ENVIRONMENT == 'production' && 'info' || 'debug' }}
+
+      # Post-execution validation
+      - name: Run validation checks
+        if: success() && env.TASK_TYPE != 'documentation'
+        run: |
+          echo "🔍 Running post-execution validation..."
+          
+          # Check for code changes
+          if git diff --quiet HEAD~1; then
+            echo "ℹ️ No code changes detected"
+          else
+            echo "📝 Code changes detected, running validation..."
+            
+            # Install and run linting
+            if npm run lint > /dev/null 2>&1; then
+              echo "✅ Linting passed"
+            else
+              echo "⚠️ Linting issues found, but continuing..."
+            fi
+            
+            # Run tests if available
+            if npm test > /dev/null 2>&1; then
+              echo "✅ Tests passed"
+            else
+              echo "⚠️ Test issues found, but continuing..."
+            fi
+            
+            # Check build if available
+            if npm run build > /dev/null 2>&1; then
+              echo "✅ Build successful"
+            else
+              echo "⚠️ Build issues found, but continuing..."
+            fi
+          fi
+
+      # Security and cleanup
+      - name: Security cleanup
+        if: always()
+        run: |
+          echo "🧹 Performing security cleanup..."
+          
+          # Remove any temporary MCP files
+          find /tmp -name "*mcp*" -type f -delete 2>/dev/null || true
+          find $HOME -name ".mcp*" -type f -delete 2>/dev/null || true
+          
+          # Clean up Claude prompt files
+          rm -rf /tmp/claude-prompts 2>/dev/null || true
+          
+          # Log execution summary
+          echo "📊 Execution Summary:"
+          echo "- Task: ${{ env.TASK_TYPE }}"
+          echo "- Environment: ${{ env.ENVIRONMENT }}"
+          echo "- Duration: ${SECONDS}s"
+          echo "- Status: ${{ steps.claude.outputs.conclusion }}"
+          echo "- Branch: ${{ github.ref_name }}"
+          echo "- Commit: ${{ github.sha }}"
+
+      # Optional: Create issue comment with results
+      - name: Update issue/PR with results
+        if: github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const conclusion = '${{ steps.claude.outputs.conclusion }}';
+            const taskType = '${{ env.TASK_TYPE }}';
+            const duration = process.env.SECONDS || 'unknown';
+            
+            const comment = `## Custom Claude Code Base Execution Complete 🤖
+            
+            **Task Type:** ${taskType}
+            **Status:** ${conclusion === 'success' ? '✅ Success' : '❌ Failed'}
+            **Duration:** ${duration}s
+            **Environment:** ${{ env.ENVIRONMENT }}
+            
+            ${conclusion === 'success' ? 
+              'The task has been completed successfully. Changes may have been made to the codebase.' : 
+              'The task encountered issues. Please check the execution logs for details.'}
+            
+            _Generated by Custom Claude Code Base Workflow_`;
+            
+            if (context.payload.issue) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
