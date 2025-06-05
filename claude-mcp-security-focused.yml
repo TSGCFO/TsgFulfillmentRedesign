@@ -18,9 +18,17 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
-      issues: write
+      contents: write          # Full repository access
+      pull-requests: write     # Create/modify PRs
+      issues: write           # Create/modify issues  
+      actions: write          # Workflow management
+      checks: write           # Status checks
+      deployments: write      # Deployments
+      discussions: write      # Discussions
+      pages: write            # GitHub Pages
+      repository-projects: write # Projects
+      security-events: write  # Security alerts
+      statuses: write         # Commit statuses
       id-token: write
     steps:
       - name: Checkout repository

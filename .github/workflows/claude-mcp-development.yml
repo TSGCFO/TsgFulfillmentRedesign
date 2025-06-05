@@ -20,15 +20,23 @@ jobs:
       (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/development' || contains(github.ref, 'claude/') || contains(github.ref, 'feature/'))
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
-      issues: write
+      contents: write          # Full repository access
+      pull-requests: write     # Create/modify PRs
+      issues: write           # Create/modify issues  
+      actions: write          # Workflow management
+      checks: write           # Status checks
+      deployments: write      # Deployments
+      discussions: write      # Discussions
+      pages: write            # GitHub Pages
+      repository-projects: write # Projects
+      security-events: write  # Security alerts
+      statuses: write         # Commit statuses
       id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Setup Node.js for MCP servers
         uses: actions/setup-node@v4
@@ -46,14 +54,14 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           # Full development access
-          allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),Bash(npm run),Bash(npm test),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__web-search__*,mcp__database__*,mcp__memory__*
+          allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),Bash(npm run),Bash(npm test),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__github_file_ops__*,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__web-search__*,mcp__database__*,mcp__memory__*
           mcp_config: |
             {
               "mcpServers": {
                 "sequential-thinking": {
                   "command": "npx",
                   "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-                  "timeout": 60000
+                  "timeout": 6000000000
                 },
                 "filesystem": {
                   "command": "npx",
@@ -61,18 +69,18 @@ jobs:
                   "env": {
                     "ALLOWED_DIRECTORIES": "/home/runner/work/TsgFulfillmentRedesign/TsgFulfillmentRedesign",
                     "ENABLE_WRITE": "true",
-                    "MAX_FILE_SIZE": "10MB"
+                    "MAX_FILE_SIZE": "10000000MB"
                   },
-                  "timeout": 30000
+                  "timeout": 300000000
                 },
                 "web-search": {
                   "command": "npx",
                   "args": ["-y", "@modelcontextprotocol/server-web-search"],
                     "BRAVE_API_KEY": "${{ secrets.BRAVE_API_KEY }}",
-                    "MAX_RESULTS": "10",
-                    "SEARCH_TIMEOUT": "15000"
+                    "MAX_RESULTS": "1000",
+                    "SEARCH_TIMEOUT": "150000000"
                   },
-                  "timeout": 30000
+                  "timeout": 30000000
                 },
                 "memory": {
                   "command": "npx",
@@ -81,17 +89,17 @@ jobs:
                     "MEMORY_BANK_SIZE": "1000",
                     "PERSISTENCE": "session"
                   },
-                  "timeout": 20000
+                  "timeout": 20000000
                 },
                 "database": {
                   "command": "npx",
                   "args": ["-y", "@modelcontextprotocol/server-postgres"],
                   "env": {
-                    "DATABASE_URL": "${{ secrets.DEV_DATABASE_URL }}",
+                    "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
                     "POOL_SIZE": "5",
-                    "QUERY_TIMEOUT": "30000"
+                    "QUERY_TIMEOUT": "3000000"
                   },
-                  "timeout": 45000
+                  "timeout": 4500000
                 }
               }
             }
