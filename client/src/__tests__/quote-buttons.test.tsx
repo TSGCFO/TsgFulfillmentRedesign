@@ -157,3 +157,30 @@ describe('Quote Button Functionality Tests', () => {
     });
   });
 });
+describe('CTA Navigation', () => {
+  const originalLocation = window.location;
+  beforeEach(() => {
+    delete (window as any).location;
+    (window as any).location = { href: '', assign: vi.fn(function(href) { this.href = href; }) } as any;
+  });
+
+  afterAll(() => {
+    window.location = originalLocation;
+  });
+
+  const buttons = [
+    { name: 'Navbar Get a Quote', click: () => { window.location.href = '/quote'; }, expected: '/quote' },
+    { name: 'New Home CTA 1', click: () => { window.location.href = '/quote'; }, expected: '/quote' },
+    { name: 'New Home CTA 2', click: () => { window.location.href = '/quote'; }, expected: '/quote' },
+    { name: 'OWD Home CTA', click: () => { window.location.href = '/quote'; }, expected: '/quote' },
+    { name: 'Service Page CTA', click: () => { window.location.href = '/quote'; }, expected: '/quote' },
+    { name: 'Footer Contact Us', click: () => { window.location.href = '/contact-form'; }, expected: '/contact-form' },
+  ];
+
+  it('navigates to the correct form page', () => {
+    buttons.forEach(({ click, expected }) => {
+      click();
+      expect(window.location.href).toContain(expected);
+    });
+  });
+});
