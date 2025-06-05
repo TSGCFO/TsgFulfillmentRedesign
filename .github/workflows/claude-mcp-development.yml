@@ -57,6 +57,7 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.P_A_T }}
           # Full development access
           allowed_tools: Bash(*),Bash(git status),Bash(git log),Bash(git show),Bash(git blame),Bash(git reflog),Bash(git stash list),Bash(git ls-files),Bash(git branch),Bash(git tag),Bash(git diff),Bash(npm run),Bash(npm test),View,GlobTool,GrepTool,BatchTool,mcp__github__*,mcp__github_file_ops__*,mcp__sequential-thinking__*,mcp__filesystem__*,mcp__web-search__*,mcp__database__*,mcp__memory__*
           mcp_config: |
