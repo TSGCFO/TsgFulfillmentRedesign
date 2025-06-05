@@ -528,7 +528,7 @@ const ServiceDetail = () => {
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
                 onClick={() => {
-                  setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
+                  setLocation(`/contact-form?service=${encodeURIComponent(service.title)}`);
                 }}
               >
                 Request a Quote
@@ -614,7 +614,7 @@ const ServiceDetail = () => {
                   size="lg"
                   className="bg-primary hover:bg-primary/90"
                   onClick={() => {
-                    setLocation(`/quote?service=${encodeURIComponent(service.title)}`);
+                    setLocation(`/contact-form?service=${encodeURIComponent(service.title)}`);
                   }}
                 >
                   Get Your Quote

@@ -215,7 +215,7 @@ const NewHome: React.FC = () => {
           <Button 
             className="bg-white hover:bg-gray-100 text-[#0056B3] px-8 py-3 text-lg font-bold"
             onClick={() => {
-              window.location.href = '/quote';
+              window.location.href = '/contact-form';
             }}
           >
             Request a Quote
@@ -339,7 +339,7 @@ const NewHome: React.FC = () => {
               <Button 
                 className="bg-white hover:bg-gray-100 text-blue-800 font-bold px-8 py-3 text-lg"
                 onClick={() => {
-                  window.location.href = '/quote';
+                  window.location.href = '/contact-form';
                 }}
               >
                 Request a Quote

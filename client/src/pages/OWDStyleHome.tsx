@@ -95,7 +95,7 @@ const OWDStyleHome: React.FC = () => {
           </div>
           <div className="flex items-center gap-4">
             <a href="/login" className="hover:text-blue-200 transition">Client Login</a>
-            <a href="/contact" className="hover:text-blue-200 transition">Contact Us</a>
+            <a href="/contact-form" className="hover:text-blue-200 transition">Contact Us</a>
           </div>
         </div>
       </div>
@@ -211,10 +211,10 @@ const OWDStyleHome: React.FC = () => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Get in touch with our team for a customized fulfillment solution that meets your business needs.
           </p>
-          <Button 
+          <Button
             className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 text-lg font-bold"
             onClick={() => {
-              window.location.href = '/quote';
+              window.location.href = '/contact-form';
             }}
           >
             Request a Quote
@@ -305,7 +305,7 @@ const OWDStyleHome: React.FC = () => {
                 <li><a href="/why-us" className="text-gray-400 hover:text-white transition-colors">Why Choose TSG</a></li>
                 <li><a href="/industries" className="text-gray-400 hover:text-white transition-colors">Industries We Serve</a></li>
                 <li><a href="/technology" className="text-gray-400 hover:text-white transition-colors">Technology</a></li>
-                <li><a href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                <li><a href="/contact-form" className="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
               </ul>
             </div>
             
@@ -336,7 +336,7 @@ const OWDStyleHome: React.FC = () => {
                 </li>
               </ul>
               <div className="mt-6">
-                <a href="/quote">
+                <a href="/contact-form">
                   <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6">
                     Request a Quote
                   </Button>

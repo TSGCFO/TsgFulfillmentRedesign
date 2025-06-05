@@ -13,7 +13,6 @@ const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const IndustryDetail = lazy(() => import("@/pages/IndustryDetail"));
 const About = lazy(() => import("@/pages/About"));
-const Contact = lazy(() => import("@/pages/Contact"));
 const Locations = lazy(() => import("@/pages/Locations"));
 const analyticsEnabled = import.meta.env.VITE_ANALYTICS_ENABLED === 'true';
 const Analytics = lazy(() => import("@/pages/Analytics"));
@@ -22,7 +21,6 @@ const PerformanceComparison = lazy(() => import("@/pages/PerformanceComparison")
 const CustomDashboard = lazy(() => import("@/pages/CustomDashboard"));
 const ImageManagement = lazy(() => import("@/pages/image-management"));
 const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
-const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
@@ -65,7 +63,6 @@ function Router() {
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
         <Route path="/about" component={About} />
-        <Route path="/contact" component={Contact} />
         <Route path="/locations" component={Locations} />
         {analyticsEnabled && (
           <>
@@ -77,7 +74,6 @@ function Router() {
         )}
         <Route path="/admin/images" component={ImageManagement} />
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
-        <Route path="/quote" component={QuoteRequest} />
         <Route path="/contact-form" component={ContactForm} />
         <Route component={NotFound} />
       </Switch>
