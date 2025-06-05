@@ -1,8 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi, expect, describe, it, beforeEach } from 'vitest';
+import { resetToasts } from '../use-toast';
 
 beforeEach(() => {
   vi.clearAllMocks();
+  resetToasts();
 });
 
 describe('useToast hook', () => {

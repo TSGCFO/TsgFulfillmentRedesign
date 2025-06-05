@@ -8,11 +8,12 @@ describe('useIntersectionObserver', () => {
     let callback: any;
     const observe = vi.fn();
     const unobserve = vi.fn();
+    const disconnect = vi.fn();
     class MockObserver {
       constructor(cb: any) { callback = cb; }
       observe = observe;
       unobserve = unobserve;
-      disconnect = vi.fn();
+      disconnect = disconnect;
     }
     (globalThis as any).IntersectionObserver = MockObserver;
 
@@ -24,6 +25,6 @@ describe('useIntersectionObserver', () => {
     expect(result.current[1]).toBe(true);
 
     unmount();
-    expect(MockObserver.prototype.disconnect).toHaveBeenCalled();
+    expect(disconnect).toHaveBeenCalled();
   });
 });

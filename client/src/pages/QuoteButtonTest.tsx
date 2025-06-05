@@ -171,10 +171,10 @@ const QuoteButtonTest: React.FC = () => {
               <div className="p-3 border rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="font-medium">Contact Page (/contact)</h4>
+                    <h4 className="font-medium">Contact Page (/contact-form)</h4>
                     <p className="text-sm text-gray-600">Test: Quote form accessibility and functionality</p>
                   </div>
-                  <a href="/contact" className="text-blue-600 hover:underline text-sm">Visit Page</a>
+                  <a href="/contact-form" className="text-blue-600 hover:underline text-sm">Visit Page</a>
                 </div>
               </div>
             </div>

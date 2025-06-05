@@ -43,7 +43,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
           <div className="flex items-center space-x-4">
             <a href="/login" className="hover:text-blue-200 transition-colors">Client Login</a>
-            <a href="/contact" className="hover:text-blue-200 transition-colors">Contact Us</a>
+            <a href="/contact-form" className="hover:text-blue-200 transition-colors">Contact Us</a>
           </div>
         </div>
       </div>
@@ -303,7 +303,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact">
+                  <Link href="/contact-form">
                     <a className="text-gray-400 hover:text-white transition-colors">Contact Us</a>
                   </Link>
                 </li>
@@ -330,7 +330,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </li>
               </ul>
               <div className="mt-6">
-                <Link href="/quote">
+                <Link href="/contact-form">
                   <Button className="bg-[#0056B3] hover:bg-[#004494] text-white px-6">
                     Request a Quote
                   </Button>
