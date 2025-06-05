@@ -20,7 +20,8 @@ const Navbar: React.FC = () => {
   const [mobileSubmenuOpen, setMobileSubmenuOpen] = useState<string | null>(null);
 
   const handleGetQuote = () => {
-    window.location.href = '/quote';
+    const [, navigate] = useLocation();
+    navigate('/quote');
   };
 
   useEffect(() => {
