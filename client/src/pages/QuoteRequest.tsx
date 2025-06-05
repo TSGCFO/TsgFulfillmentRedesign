@@ -1,6 +1,7 @@
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -79,7 +80,16 @@ const QuoteRequest = () => {
                   serviceOptions={services}
                   defaultValues={{ service: preselectedService }}
                 />
+              </motion.div>
+              
               {/* What Happens Next */}
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={fadeIn}
+                className="mt-16"
+              >
+                <h2 className="text-2xl font-bold text-center mb-8">What Happens Next?</h2>
               <motion.div
                 initial="hidden"
                 animate="visible"
