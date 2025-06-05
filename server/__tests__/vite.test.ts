@@ -12,7 +12,7 @@ import express from 'express';
 import { TextEncoder } from "util";
 (globalThis as any).TextEncoder = TextEncoder;
 
-describe.skip('vite helpers', () => {
+describe('vite helpers', () => {
   it('formats log output', async () => {
     const { log } = await import('../vite');
     const spy = vi.spyOn(console, 'log').mockImplementation(() => {});

@@ -225,7 +225,8 @@ describe('API routes', () => {
       method: 'POST',
       body: JSON.stringify({ name: 'Test', email: 'test@example.com', message: 'hello' })
     });
-    // Should still work or return appropriate error
-    expect([200, 400, 415]).toContain(res.status);
+    // Should return 400 or 415 for missing Content-Type
+    expect(res.status).toBeGreaterThanOrEqual(400);
+    expect(res.status).toBeLessThan(500);
   });
 });

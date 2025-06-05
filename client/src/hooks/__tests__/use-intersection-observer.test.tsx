@@ -5,12 +5,12 @@ import useIntersectionObserver from '../use-intersection-observer';
 
 describe('useIntersectionObserver', () => {
   it('updates intersection state and cleans up', () => {
-    let callback: any;
+    let callback: IntersectionObserverCallback;
     const observe = vi.fn();
     const unobserve = vi.fn();
     const disconnect = vi.fn();
     class MockObserver {
-      constructor(cb: any) { callback = cb; }
+      constructor(cb: IntersectionObserverCallback) { callback = cb; }
       observe = observe;
       unobserve = unobserve;
       disconnect = disconnect;
