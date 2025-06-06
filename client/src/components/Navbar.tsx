@@ -161,6 +161,13 @@ const Navbar: React.FC = () => {
                       ))}
                     </div>
                   </div>
+                ) : item.isLink ? (
+                  <Link
+                    href={`/${item.id}`}
+                    className="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                  >
+                    {item.label}
+                  </Link>
                 ) : (
                   <button
                     onClick={() => scrollTo(item.id)}
@@ -237,6 +244,13 @@ const Navbar: React.FC = () => {
                           </div>
                         )}
                       </>
+                    ) : item.isLink ? (
+                      <Link
+                        href={`/${item.id}`}
+                        className="block w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                      >
+                        {item.label}
+                      </Link>
                     ) : (
                       <button
                         onClick={() => scrollTo(item.id)}
