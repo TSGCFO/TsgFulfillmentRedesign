@@ -108,18 +108,29 @@ const Contact: React.FC = () => {
 
   return (
     <>
-      <Seo
-        title="Contact TSG Fulfillment | Logistics & Fulfillment Services in Vaughan, Ontario"
-        description="Contact TSG Fulfillment for information about our logistics and fulfillment services in Vaughan, Ontario. Request a quote, ask questions, or get support from our expert team."
-        keywords="contact fulfillment services, logistics company contact, warehousing contact, supply chain solutions, vaughan ontario fulfillment, contact tsg"
-        canonical="https://tsgfulfillment.com/contact"
-        ogType="website"
-        ogUrl="https://tsgfulfillment.com/contact"
-        ogImage="https://tsgfulfillment.com/images/contact-hero.jpg"
-        twitterCard="summary_large_image"
-        twitterTitle="Contact TSG Fulfillment | Logistics & Fulfillment Services"
-        twitterDescription="Contact TSG Fulfillment for logistics and fulfillment solutions based in Vaughan, Ontario."
-        structuredData={contactPageData}
+      <SEOManager 
+        page="contact"
+        canonical="/contact"
+        ogImage="/images/contact-hero.jpg"
+        breadcrumbs={generateBreadcrumbs('/contact')}
+        preloadImages={['/images/contact-hero.jpg', '/images/warehouse-contact.jpg']}
+        structuredData={[
+          contactPageData,
+          generateFAQStructuredData([
+            {
+              question: "How can I contact TSG Fulfillment?",
+              answer: "You can contact us by phone at (289) 815-5869, email at info@tsgfulfillment.com, or by visiting our location at 6750 Langstaff Road, Vaughan, Ontario."
+            },
+            {
+              question: "What information do I need to provide for a quote?",
+              answer: "For an accurate quote, please provide details about your product types, expected order volumes, storage requirements, and any special handling needs."
+            },
+            {
+              question: "How quickly can TSG respond to my inquiry?",
+              answer: "We typically respond to all inquiries within 24 hours during business days. For urgent requests, please call us directly."
+            }
+          ])
+        ]}
       />
       
       <Navbar />

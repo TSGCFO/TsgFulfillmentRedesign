@@ -7,7 +7,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { Separator } from '@/components/ui/separator';
-import Seo from '@/components/SEO/Seo';
+import SEOManager from '@/seo/SEOManager';
+import { generateBreadcrumbs, generateArticleStructuredData } from '@/seo/utils';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -166,18 +167,22 @@ const About: React.FC = () => {
 
   return (
     <>
-      <Seo
-        title="About TSG Fulfillment - Our Story, Values, and Team | Vaughan, Ontario"
-        description="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider in Canada based in Vaughan, Ontario."
-        keywords="fulfillment services, logistics company, warehousing, canadian fulfillment, vaughan ontario, supply chain, logistics provider, order fulfillment"
-        canonical="https://tsgfulfillment.com/about"
-        ogType="website"
-        ogUrl="https://tsgfulfillment.com/about"
-        ogImage="https://tsgfulfillment.com/images/about-hero.jpg"
-        twitterCard="summary_large_image"
-        twitterTitle="About TSG Fulfillment - Our Story, Values, and Team | Vaughan, Ontario"
-        twitterDescription="Learn about TSG Fulfillment's journey, our expert team, company values, and how we've become a leading logistics and fulfillment provider in Canada."
-        structuredData={aboutPageData}
+      <SEOManager 
+        page="about"
+        canonical="/about"
+        ogImage="/images/about-hero.jpg"
+        breadcrumbs={generateBreadcrumbs('/about')}
+        preloadImages={['/images/about-hero.jpg', '/images/team-photo.jpg', '/images/facility-tour.jpg']}
+        structuredData={[
+          aboutPageData,
+          generateArticleStructuredData(
+            "About TSG Fulfillment Services",
+            "Learn about TSG Fulfillment's mission, team, and commitment to providing exceptional logistics and fulfillment services across Ontario since 2015.",
+            "/about",
+            "2015-01-01",
+            new Date().toISOString().split('T')[0]
+          )
+        ]}
       />
       
       <Navbar />
