@@ -23,7 +23,15 @@ To generate a coverage report run:
 npx vitest run --coverage
 ```
 
+This will:
+- Run all tests with coverage collection enabled
+- Generate both text output and HTML reports in the `./coverage` directory
+- Display a summary table showing coverage percentages
+- Create detailed HTML reports you can open in your browser at `./coverage/index.html`
+
 The global report should show at least **98%** coverage for lines, branches, functions and statements.
+
+**Note:** If the coverage command appears to hang or run tests repeatedly, this is normal behavior as it needs to instrument code for coverage analysis. The process takes longer than regular test runs but will complete with a detailed coverage report.
 
 
 ## Test Structure
