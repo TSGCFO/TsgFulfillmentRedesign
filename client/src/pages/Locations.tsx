@@ -1,5 +1,6 @@
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEOManager from '@/seo/SEOManager';
+import { generateBreadcrumbs } from '@/seo/utils';
 import { MapPin, Phone, Mail, Clock, Car, Truck, Building2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,10 +25,41 @@ const Locations: React.FC = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Locations - TSG Fulfillment</title>
-        <meta name="description" content="Find TSG Fulfillment warehouse and distribution centers across Ontario. Strategic locations for optimal supply chain efficiency." />
-      </Helmet>
+      <SEOManager 
+        page="locations"
+        canonical="/locations"
+        ogImage="/images/warehouse-exterior.jpg"
+        breadcrumbs={generateBreadcrumbs('/locations')}
+        preloadImages={['/images/warehouse-exterior.jpg', '/images/vaughan-location.jpg']}
+        lastModified={new Date().toISOString()}
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Place",
+            "name": "TSG Fulfillment Services - Vaughan Location",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "6750 Langstaff Road",
+              "addressLocality": "Vaughan",
+              "addressRegion": "Ontario",
+              "postalCode": "L4H 5K2",
+              "addressCountry": "CA"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 43.7866333,
+              "longitude": -79.6527142
+            },
+            "telephone": "+1-289-815-5869",
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "09:00",
+              "closes": "17:00"
+            }
+          }
+        ]}
+      />
 
       <div className="min-h-screen bg-gray-50">
         {/* Header Section */}

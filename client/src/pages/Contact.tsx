@@ -4,7 +4,8 @@ import { Link } from 'wouter';
 import { Mail, Phone, MapPin, FileText, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { UnifiedContactForm } from '@/components/UnifiedContactForm';
-import Seo from '@/components/SEO/Seo';
+import SEOManager from '@/seo/SEOManager';
+import { generateBreadcrumbs, generateFAQStructuredData } from '@/seo/utils';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
