@@ -1,228 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
   <!-- Homepage -->
   <url>
     <loc>https://tsgfulfillment.com/</loc>
-    <changefreq>weekly</changefreq>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <!-- Multilingual alternatives -->
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/" />
-    <!-- Featured images -->
     <image:image>
       <image:loc>https://tsgfulfillment.com/images/hero-banner.jpg</image:loc>
-      <image:title>TSG Fulfillment Services</image:title>
-      <image:caption>Professional logistics and fulfillment services</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://tsgfulfillment.com/logo.png</image:loc>
-      <image:title>TSG Fulfillment Logo</image:title>
+      <image:title>TSG Fulfillment Services - Professional Logistics Solutions</image:title>
+      <image:caption>Modern fulfillment center providing comprehensive logistics and warehousing services</image:caption>
     </image:image>
   </url>
 
-  <!-- About Us Page -->
+  <!-- Services Page -->
   <url>
-    <loc>https://tsgfulfillment.com/about-us</loc>
+    <loc>https://tsgfulfillment.com/services</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/services-warehouse.jpg</image:loc>
+      <image:title>Fulfillment Services - Warehousing and Order Processing</image:title>
+      <image:caption>Comprehensive fulfillment services including warehousing, kitting, and order processing</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://tsgfulfillment.com/about</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/about-us" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/about-us" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/about-us" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/about-us" />
     <image:image>
-      <image:loc>https://tsgfulfillment.com/images/about-us-team.jpg</image:loc>
-      <image:title>TSG Fulfillment Team</image:title>
-      <image:caption>Our experienced logistics team</image:caption>
+      <image:loc>https://tsgfulfillment.com/images/about-team.jpg</image:loc>
+      <image:title>About TSG Fulfillment - Our Story and Team</image:title>
+      <image:caption>Learn about TSG Fulfillment's mission, values, and expert team</image:caption>
     </image:image>
   </url>
 
   <!-- Contact Page -->
   <url>
     <loc>https://tsgfulfillment.com/contact</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/contact-location.jpg</image:loc>
+      <image:title>Contact TSG Fulfillment - Get in Touch</image:title>
+      <image:caption>Contact information and location details for TSG Fulfillment Services</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Locations Page -->
+  <url>
+    <loc>https://tsgfulfillment.com/locations</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/contact" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/contact" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/contact" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/contact" />
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/vaughan-facility.jpg</image:loc>
+      <image:title>TSG Fulfillment Location - Vaughan Ontario Facility</image:title>
+      <image:caption>Our modern fulfillment center located in Vaughan, Ontario</image:caption>
+    </image:image>
   </url>
 
-  <!-- Service Pages -->
-  <!-- Order Fulfillment -->
+  <!-- Quote Request Page -->
+  <url>
+    <loc>https://tsgfulfillment.com/quote</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/quote-request.jpg</image:loc>
+      <image:title>Request a Quote - Custom Fulfillment Solutions</image:title>
+      <image:caption>Get a personalized quote for fulfillment and logistics services</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Analytics Page -->
+  <url>
+    <loc>https://tsgfulfillment.com/analytics</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/analytics-dashboard.jpg</image:loc>
+      <image:title>Analytics Dashboard - Performance Insights</image:title>
+      <image:caption>Advanced analytics and reporting for fulfillment operations</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Service Detail Pages -->
+  <url>
+    <loc>https://tsgfulfillment.com/services/warehousing</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/order-fulfillment" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/order-fulfillment" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/order-fulfillment" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/order-fulfillment" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1578575437130-527eed3abbec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Order Fulfillment Services</image:title>
-      <image:caption>Comprehensive order processing, picking, packing, and shipping</image:caption>
-    </image:image>
+    <priority>0.8</priority>
   </url>
 
-  <!-- Warehousing Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/warehousing-services</loc>
+    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/warehousing-services" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/warehousing-services" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/warehousing-services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/warehousing-services" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1583302729124-de1f8e61bcf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Warehousing Services</image:title>
-      <image:caption>Secure climate-controlled warehousing facilities</image:caption>
-    </image:image>
+    <priority>0.8</priority>
   </url>
 
-  <!-- Kitting Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/kitting-services</loc>
+    <loc>https://tsgfulfillment.com/services/transportation</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/kitting-services" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/kitting-services" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/kitting-services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/kitting-services" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1600494448655-ae58f58bb945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Kitting Services</image:title>
-      <image:caption>Custom product bundling and kitting solutions</image:caption>
-    </image:image>
+    <priority>0.8</priority>
   </url>
 
-  <!-- Hand Assembly -->
   <url>
-    <loc>https://tsgfulfillment.com/services/hand-assembly</loc>
+    <loc>https://tsgfulfillment.com/services/value-added</loc>
+    <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/hand-assembly" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/hand-assembly" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/hand-assembly" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/hand-assembly" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1523800378286-dae1f0dae656?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Hand Assembly Services</image:title>
-      <image:caption>Meticulous hand assembly with attention to detail</image:caption>
-    </image:image>
+    <priority>0.8</priority>
   </url>
 
-  <!-- Reverse Logistics -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/reverse-logistics</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/reverse-logistics" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/reverse-logistics" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/reverse-logistics" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/reverse-logistics" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1592842232655-e5d345cbc2d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Reverse Logistics</image:title>
-      <image:caption>Efficient returns management and processing</image:caption>
-    </image:image>
-  </url>
-
-  <!-- Inventory Management -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/inventory-management</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/inventory-management" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/inventory-management" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/inventory-management" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/inventory-management" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Inventory Management</image:title>
-      <image:caption>Real-time inventory tracking and management</image:caption>
-    </image:image>
-  </url>
-
-  <!-- Freight Forwarding -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/freight-forwarding" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/freight-forwarding" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/freight-forwarding" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/freight-forwarding" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Freight Forwarding</image:title>
-      <image:caption>International shipping and logistics coordination</image:caption>
-    </image:image>
-  </url>
-
-  <!-- Healthcare Marketing Services -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/healthcare-services</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/healthcare-services" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/healthcare-services" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/healthcare-services" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/healthcare-services" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1584982751601-97dcc096659c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Healthcare Marketing Services</image:title>
-      <image:caption>Specialized healthcare logistics and fulfillment</image:caption>
-    </image:image>
-  </url>
-
-  <!-- Custom Packaging -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/custom-packaging</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tsgfulfillment.com/services/custom-packaging" />
-    <xhtml:link rel="alternate" hreflang="es" href="https://tsgfulfillment.com/es/services/custom-packaging" />
-    <xhtml:link rel="alternate" hreflang="fr" href="https://tsgfulfillment.com/fr/services/custom-packaging" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tsgfulfillment.com/services/custom-packaging" />
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1605164599901-db99168331a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80</image:loc>
-      <image:title>Custom Packaging</image:title>
-      <image:caption>Branded and custom packaging solutions</image:caption>
-    </image:image>
-  </url>
-
-  <!-- Privacy Policy -->
-  <url>
-    <loc>https://tsgfulfillment.com/privacy-policy</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-  </url>
-
-  <!-- Terms of Service -->
-  <url>
-    <loc>https://tsgfulfillment.com/terms</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-    <lastmod>2025-04-14T12:00:00+00:00</lastmod>
-  </url>
 </urlset>
