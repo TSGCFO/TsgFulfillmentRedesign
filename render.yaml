@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: tsg-fulfillment
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tsg-fulfillment-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+
+databases:
+  - name: tsg-fulfillment-db
+    databaseName: tsg_fulfillment
+    user: tsg_user
+    plan: starter
