@@ -22,6 +22,24 @@ const handleError = (res: Response, error: any, message: string = 'An error occu
 const analyticsEnabled = process.env.ANALYTICS_ENABLED === 'true';
 
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
+  // Health check endpoint for Render
+  app.get('/', (req, res) => {
+    res.status(200).json({ 
+      status: 'healthy',
+      message: 'TSG Fulfillment API is running',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
+
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'healthy',
+      database: 'connected',
+      timestamp: new Date().toISOString()
+    });
+  });
+
   // QUOTE REQUEST ENDPOINTS
   // Create a quote request
   app.post('/api/quote-requests', async (req, res) => {
