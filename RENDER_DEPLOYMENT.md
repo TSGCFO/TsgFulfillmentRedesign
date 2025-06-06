@@ -36,20 +36,26 @@ After creation, save these from the database info page:
    - **Plan**: Choose based on your needs (Start with Starter)
 
 ### 2. Environment Variables
-Add these environment variables in Render:
+Add these environment variables in your Render Web Service:
 
 ```bash
 # Required Variables
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=[Use Internal Database URL from your PostgreSQL service]
-SESSION_SECRET=[Generate a secure random string]
+
+# Database Configuration (from your PostgreSQL service)
+DATABASE_URL=postgresql://rpm_auto_db_user:3rtvd9rkVV39XShKhq5nq8LUk@dpg-ctjhul56l47c73f2l1v0-a.ohio-postgres.render.com:5432/rpm_auto_db
+
+# Session Configuration
+SESSION_SECRET=[Generate a secure random string - use a password generator]
 
 # Supabase Configuration (from your current setup)
 SUPABASE_URL=https://ahnneaclpkspcdtoqzkp.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MzgzNDcsImV4cCI6MjA2MDMxNDM0N30.3xfgsXV391EQynu_1PaSldkDiMf12-ygoRKsdQo5SnQ
 SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDczODM0NywiZXhwIjoyMDYwMzE0MzQ3fQ.8chAkrs9jswOSCsTgSnSoClm3EUy_qjnhqbQDzuA8KU
 ```
+
+**Important**: For SESSION_SECRET, generate a random 64-character string using a password generator.
 
 ### 3. Build Settings
 - **Build Command**: `npm install && npm run build`
