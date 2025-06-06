@@ -33,7 +33,7 @@ Add these in your Render Web Service settings:
 ```
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment
+DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment?sslmode=require
 SESSION_SECRET=[Generate 64-character random string]
 SUPABASE_URL=https://ahnneaclpkspcdtoqzkp.supabase.co
 SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MzgzNDcsImV4cCI6MjA2MDMxNDM0N30.3xfgsXV391EQynu_1PaSldkDiMf12-ygoRKsdQo5SnQ

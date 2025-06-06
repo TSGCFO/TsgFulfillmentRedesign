@@ -44,7 +44,7 @@ NODE_ENV=production
 PORT=5000
 
 # Database Configuration (from your PostgreSQL service)
-DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment
+DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment?sslmode=require
 
 # Session Configuration
 SESSION_SECRET=[Generate a secure random string - use a password generator]
