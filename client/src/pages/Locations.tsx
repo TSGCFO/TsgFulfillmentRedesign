@@ -13,7 +13,7 @@ const Locations: React.FC = () => {
     email: 'info@tsgfulfillment.com',
     hours: 'Mon-Fri: 9:00 AM - 5:00 PM',
     services: ['Warehousing', 'Fulfillment', 'Transportation', 'Value Added Services'],
-    coordinates: { lat: 43.8013, lng: -79.5425 },
+    coordinates: { lat: 43.7866333, lng: -79.6527142 },
     description: 'Our fulfillment center serves businesses across Ontario with comprehensive logistics and warehousing solutions.'
   };
 
@@ -104,7 +104,7 @@ const Locations: React.FC = () => {
                     
                     <div className="pt-6">
                       <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`}
+                        href={`https://www.google.com/maps/place/Q8PW%2BMW3+Vaughan,+Ontario/@${location.coordinates.lat},${location.coordinates.lng},17z`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors font-medium"
@@ -135,7 +135,7 @@ const Locations: React.FC = () => {
             {/* Embedded Google Map */}
             <div className="bg-gray-100 rounded-lg overflow-hidden shadow-lg">
               <iframe
-                src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2874.123456789!2d${location.coordinates.lng}!3d${location.coordinates.lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDPCsDQ4JzA0LjciTiA3OcKwMzInMzMuMCJX!5e0!3m2!1sen!2sca!4v1649123456789!5m2!1sen!2sca`}
+                src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2874.123456789!2d-79.6527142!3d43.7866333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b3c4e3c4e3c4e%3A0x1234567890abcdef!2s6750%20Langstaff%20Rd%2C%20Vaughan%2C%20ON%20L4H%205K2%2C%20Canada!5e0!3m2!1sen!2sca!4v1649123456789!5m2!1sen!2sca`}
                 width="100%"
                 height="500"
                 style={{ border: 0 }}
