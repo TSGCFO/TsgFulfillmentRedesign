@@ -24,7 +24,7 @@
 4. Configure service:
    - **Name**: `tsg-fulfillment`
    - **Environment**: `Node`
-   - **Build Command**: `npm install && npm run build`
+   - **Build Command**: `npm ci && npm run build --production=false`
    - **Start Command**: `npm start`
 
 ### Step 2: Configure Environment Variables

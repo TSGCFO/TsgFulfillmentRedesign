@@ -2,22 +2,23 @@ services:
   - type: web
     name: tsg-fulfillment
     env: node
-    plan: starter
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
-    healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        fromService:
+          type: web
+          name: tsg-fulfillment
+          property: port
       - key: DATABASE_URL
-        fromDatabase:
-          name: tsg-fulfillment-db
-          property: connectionString
+        value: postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment?sslmode=require
       - key: SESSION_SECRET
         generateValue: true
-
-databases:
-  - name: tsg-fulfillment-db
-    databaseName: tsg_fulfillment
-    user: tsg_user
-    plan: starter
+      - key: SUPABASE_URL
+        value: https://ahnneaclpkspcdtoqzkp.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MzgzNDcsImV4cCI6MjA2MDMxNDM0N30.3xfgsXV391EQynu_1PaSldkDiMf12-ygoRKsdQo5SnQ
+      - key: SUPABASE_SERVICE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDczODM0NywiZXhwIjoyMDYwMzE0MzQ3fQ.8chAkrs9jswOSCsTgSnSoClm3EUy_qjnhqbQDzuA8KU
