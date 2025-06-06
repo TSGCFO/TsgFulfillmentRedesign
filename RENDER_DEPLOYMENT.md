@@ -58,10 +58,10 @@ SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 **Important**: For SESSION_SECRET, generate a random 64-character string using a password generator.
 
 ### 3. Build Settings
-- **Build Command**: `npm ci && npm run build`
+- **Build Command**: `npm ci && npm run build --production=false`
 - **Start Command**: `npm start`
 
-**Important**: Use `npm ci` instead of `npm install` for faster, more reliable builds in production.
+**Important**: The `--production=false` flag ensures devDependencies (like @vitejs/plugin-react) are available during build.
 - **Node Version**: Latest LTS (automatically detected)
 
 ## Database Migration
