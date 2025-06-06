@@ -79,7 +79,7 @@ jobs:
         with:
           script: |
             const body = context.payload.comment?.body || context.payload.review?.body || '';
-            const customTriggers = ['@claude-custom', '@claude-enhanced', '@claude-base'];
+            const customTriggers = ['@claude', '@claude-custom', '@claude-enhanced', '@claude-base'];
             return customTriggers.some(trigger => body.includes(trigger));
 
       - name: Extract custom prompt
@@ -89,7 +89,7 @@ jobs:
         with:
           script: |
             const body = context.payload.comment?.body || context.payload.review?.body || '';
-            const triggers = ['@claude-custom', '@claude-enhanced', '@claude-base'];
+            const triggers = ['@claude', '@claude-custom', '@claude-enhanced', '@claude-base'];
             let prompt = '';
             for (const trigger of triggers) {
               if (body.includes(trigger)) {
