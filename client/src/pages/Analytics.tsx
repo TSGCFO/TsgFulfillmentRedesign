@@ -32,7 +32,8 @@ import {
   DropdownMenuItem, DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import AnalyticsLayout from '@/components/analytics/Layout';
-import Seo from '@/components/SEO/Seo';
+import SEOManager from '@/seo/SEOManager';
+import { generateBreadcrumbs } from '@/seo/utils';
 
 // Analytics Dashboard Colors
 const COLORS = {

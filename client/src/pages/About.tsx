@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { Separator } from '@/components/ui/separator';
 import SEOManager from '@/seo/SEOManager';
-import { generateBreadcrumbs, generateArticleStructuredData } from '@/seo/utils';
+import { generateBreadcrumbs, generateArticleStructuredData, generateLocalBusinessStructuredData } from '@/seo/utils';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
