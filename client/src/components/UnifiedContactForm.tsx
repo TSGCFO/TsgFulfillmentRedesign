@@ -35,7 +35,7 @@ export function UnifiedContactForm({
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  let schema = z.object({
+  const baseSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
     phone: z.string().min(7, "Please enter a valid phone number"),
@@ -43,22 +43,19 @@ export function UnifiedContactForm({
     message: z.string().min(10, "Message must be at least 10 characters").optional(),
   });
 
-  if (includeService) {
-    schema = schema.extend({ service: z.string().min(1, "Please select a service") });
-  }
+  const extendedSchema = baseSchema
+    .extend(includeService ? { service: z.string().min(1, "Please select a service") } : {})
+    .extend(includeSubject ? { subject: z.string().min(1, "Please select a subject") } : {})
+    .extend(includeConsent ? { 
+      consent: z.boolean().refine(val => val === true, {
+        message: "You must agree to the privacy policy to submit this form"
+      })
+    } : {});
 
-  if (includeSubject) {
-    schema = schema.extend({ subject: z.string().min(1, "Please select a subject") });
-  }
-
-  if (includeConsent) {
-    schema = schema.extend({ consent: z.literal(true) });
-  }
-
-  type FormValues = z.infer<typeof schema>;
+  type FormValues = z.infer<typeof extendedSchema>;
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(extendedSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -74,29 +71,40 @@ export function UnifiedContactForm({
 
   const mutation = useMutation({
     mutationFn: async (data: FormValues) => {
+      console.log("Submitting form data:", data);
+      
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
+      console.log("Response status:", res.status);
+      
       if (!res.ok) {
-        throw new Error("Failed to submit form");
+        const errorText = await res.text();
+        console.error("Server error:", errorText);
+        throw new Error(`Server error: ${res.status}`);
       }
-      return res.json();
+      
+      const result = await res.json();
+      console.log("Success response:", result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Form submission successful:", data);
       toast({
-        title: "Form Submitted!",
-        description: "We'll get back to you within 24 hours.",
+        title: "Quote Request Submitted!",
+        description: "We'll get back to you within 24 hours with a detailed quote.",
       });
       setSubmitted(true);
       form.reset();
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Form submission error:", error);
       toast({
         title: "Error",
-        description: "Failed to submit form. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
         variant: "destructive",
       });
     },
