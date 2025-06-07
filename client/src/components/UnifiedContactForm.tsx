@@ -23,16 +23,19 @@ export interface UnifiedContactFormProps {
   defaultValues?: Partial<Record<string, string | boolean>>;
 }
 
-// Define a comprehensive schema that includes all possible fields
+// Quote form schema matching the original specification
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(7, "Please enter a valid phone number"),
+  email: z.string().email("Please enter a valid business email address"),
+  phone: z.string().min(7, "Please enter a valid mobile number"),
   company: z.string().min(2, "Company name must be at least 2 characters"),
+  currentShipments: z.string().min(1, "Please select current monthly shipments"),
+  expectedShipments: z.string().min(1, "Please select expected monthly shipments"),
+  services: z.string().min(1, "Please select fulfillment services"),
   message: z.string().optional(),
-  service: z.string().optional(),
-  subject: z.string().optional(),
-  consent: z.boolean().optional(),
+  consent: z.boolean().refine(val => val === true, {
+    message: "You must agree to the privacy policy to submit this form"
+  }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -56,9 +59,10 @@ export function UnifiedContactForm({
       email: "",
       phone: "",
       company: "",
+      currentShipments: "",
+      expectedShipments: "",
+      services: "",
       message: "",
-      service: "",
-      subject: "",
       consent: false,
       ...defaultValues,
     },
