@@ -23,6 +23,20 @@ export interface UnifiedContactFormProps {
   defaultValues?: Partial<Record<string, string | boolean>>;
 }
 
+// Define a comprehensive schema that includes all possible fields
+const formSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(7, "Please enter a valid phone number"),
+  company: z.string().min(2, "Company name must be at least 2 characters"),
+  message: z.string().optional(),
+  service: z.string().optional(),
+  subject: z.string().optional(),
+  consent: z.boolean().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 export function UnifiedContactForm({
   endpoint,
   includeService = false,
@@ -35,43 +49,35 @@ export function UnifiedContactForm({
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  const baseSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Please enter a valid email address"),
-    phone: z.string().min(7, "Please enter a valid phone number"),
-    company: z.string().min(2, "Company name must be at least 2 characters"),
-    message: z.string().min(10, "Message must be at least 10 characters").optional(),
-  });
-
-  const extendedSchema = baseSchema
-    .extend(includeService ? { service: z.string().min(1, "Please select a service") } : {})
-    .extend(includeSubject ? { subject: z.string().min(1, "Please select a subject") } : {})
-    .extend(includeConsent ? { 
-      consent: z.boolean().refine(val => val === true, {
-        message: "You must agree to the privacy policy to submit this form"
-      })
-    } : {});
-
-  type FormValues = z.infer<typeof extendedSchema>;
-
   const form = useForm<FormValues>({
-    resolver: zodResolver(extendedSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
       company: "",
       message: "",
-      ...(includeService ? { service: "" } : {}),
-      ...(includeSubject ? { subject: "" } : {}),
-      ...(includeConsent ? { consent: false } : {}),
-      ...(defaultValues ?? {}),
+      service: "",
+      subject: "",
+      consent: false,
+      ...defaultValues,
     },
   });
 
   const mutation = useMutation({
     mutationFn: async (data: FormValues) => {
       console.log("Submitting form data:", data);
+      
+      // Validate required fields based on props
+      if (includeService && !data.service) {
+        throw new Error("Please select a service");
+      }
+      if (includeSubject && !data.subject) {
+        throw new Error("Please select a subject");
+      }
+      if (includeConsent && !data.consent) {
+        throw new Error("You must agree to the privacy policy");
+      }
       
       const res = await fetch(endpoint, {
         method: "POST",
@@ -263,7 +269,10 @@ export function UnifiedContactForm({
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                       <FormControl>
-                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox 
+                          checked={field.value} 
+                          onCheckedChange={field.onChange} 
+                        />
                       </FormControl>
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-sm font-normal">
