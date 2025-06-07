@@ -103,7 +103,10 @@ export function UnifiedContactForm({
         email: data.email,
         phone: data.phone,
         company: data.company,
-        service: data.services, // Map services to service for API
+        service: data.services, // Keep for backward compatibility
+        currentShipments: data.currentShipments,
+        expectedShipments: data.expectedShipments,
+        services: data.services,
         message: data.message || `Current Shipments: ${data.currentShipments}/month, Expected: ${data.expectedShipments}/month`,
         consent: data.consent
       };
