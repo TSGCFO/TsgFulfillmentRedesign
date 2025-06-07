@@ -482,18 +482,13 @@ const AnalyticsPage: React.FC = () => {
   if (summaryLoading || shippingLoading || inventoryLoading) {
     return (
       <AnalyticsLayout title="Analytics Dashboard">
-        <Seo
-          title="Logistics Analytics Dashboard | TSG Fulfillment"
-          description="Comprehensive analytics and reporting platform for monitoring and optimizing your logistics and fulfillment operations with TSG Fulfillment."
-          keywords="logistics analytics, fulfillment reporting, shipment tracking, inventory management, supply chain metrics, performance dashboard"
-          canonical="https://tsgfulfillment.com/analytics"
-          ogType="website" 
-          ogUrl="https://tsgfulfillment.com/analytics"
-          ogImage="https://tsgfulfillment.com/images/analytics-dashboard.jpg"
-          twitterCard="summary_large_image"
-          twitterTitle="Logistics Analytics Dashboard | TSG Fulfillment"
-          twitterDescription="Monitor and optimize your logistics operations with our comprehensive analytics dashboard."
-          structuredData={analyticsStructuredData}
+        <SEOManager
+          page="analytics"
+          canonical="/analytics"
+          ogImage="/images/analytics-dashboard.jpg"
+          breadcrumbs={generateBreadcrumbs('/analytics')}
+          preloadImages={['/images/analytics-dashboard.jpg']}
+          lastModified={new Date().toISOString().split('T')[0]}
         />
         <AnalyticsDashboardSkeleton />
       </AnalyticsLayout>
@@ -502,18 +497,13 @@ const AnalyticsPage: React.FC = () => {
 
   return (
     <AnalyticsLayout title="Analytics Dashboard">
-      <Seo
-        title="Logistics Analytics Dashboard | TSG Fulfillment"
-        description="Comprehensive analytics and reporting platform for monitoring and optimizing your logistics and fulfillment operations with TSG Fulfillment."
-        keywords="logistics analytics, fulfillment reporting, shipment tracking, inventory management, supply chain metrics, performance dashboard"
-        canonical="https://tsgfulfillment.com/analytics"
-        ogType="website" 
-        ogUrl="https://tsgfulfillment.com/analytics"
-        ogImage="https://tsgfulfillment.com/images/analytics-dashboard.jpg"
-        twitterCard="summary_large_image"
-        twitterTitle="Logistics Analytics Dashboard | TSG Fulfillment"
-        twitterDescription="Monitor and optimize your logistics operations with our comprehensive analytics dashboard."
-        structuredData={analyticsStructuredData}
+      <SEOManager
+        page="analytics"
+        canonical="/analytics"
+        ogImage="/images/analytics-dashboard.jpg"
+        breadcrumbs={generateBreadcrumbs('/analytics')}
+        preloadImages={['/images/analytics-dashboard.jpg']}
+        lastModified={new Date().toISOString().split('T')[0]}
       />
       <div className="p-6 max-w-7xl mx-auto">
         <header className="mb-8">

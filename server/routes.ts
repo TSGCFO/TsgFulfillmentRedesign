@@ -21,6 +21,72 @@ const handleError = (res: Response, error: any, message: string = 'An error occu
 
 const analyticsEnabled = process.env.ANALYTICS_ENABLED === 'true';
 
+// SEO Utility Functions
+function generateSitemap(): string {
+  const baseUrl = 'https://tsgfulfillment.com';
+  const pages = [
+    { url: '/', priority: '1.0', changefreq: 'weekly' },
+    { url: '/about', priority: '0.8', changefreq: 'monthly' },
+    { url: '/contact', priority: '0.9', changefreq: 'weekly' },
+    { url: '/locations', priority: '0.8', changefreq: 'monthly' },
+    { url: '/quote', priority: '0.9', changefreq: 'weekly' },
+    { url: '/services/value-added-services', priority: '0.8', changefreq: 'monthly' },
+    { url: '/services/warehousing', priority: '0.8', changefreq: 'monthly' },
+    { url: '/services/order-fulfillment', priority: '0.8', changefreq: 'monthly' },
+    { url: '/services/freight-forwarding', priority: '0.8', changefreq: 'monthly' },
+    { url: '/services/returns-processing', priority: '0.8', changefreq: 'monthly' },
+    { url: '/industries/ecommerce', priority: '0.7', changefreq: 'monthly' },
+    { url: '/industries/healthcare', priority: '0.7', changefreq: 'monthly' },
+    { url: '/industries/retail', priority: '0.7', changefreq: 'monthly' },
+    { url: '/industries/technology', priority: '0.7', changefreq: 'monthly' }
+  ];
+
+  if (analyticsEnabled) {
+    pages.push(
+      { url: '/analytics', priority: '0.6', changefreq: 'weekly' },
+      { url: '/analytics/reports', priority: '0.5', changefreq: 'weekly' },
+      { url: '/analytics/comparison', priority: '0.5', changefreq: 'weekly' },
+      { url: '/analytics/dashboard', priority: '0.5', changefreq: 'weekly' }
+    );
+  }
+
+  const lastmod = new Date().toISOString().split('T')[0];
+  
+  const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  const sitemapOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  const sitemapClose = '</urlset>';
+  
+  const urlXml = pages.map(page => 
+    `  <url>\n` +
+    `    <loc>${baseUrl}${page.url}</loc>\n` +
+    `    <lastmod>${lastmod}</lastmod>\n` +
+    `    <changefreq>${page.changefreq}</changefreq>\n` +
+    `    <priority>${page.priority}</priority>\n` +
+    `  </url>\n`
+  ).join('');
+
+  return xmlHeader + sitemapOpen + urlXml + sitemapClose;
+}
+
+function generateRobotsTxt(): string {
+  return `User-agent: *
+Allow: /
+
+# Disallow admin and test pages
+Disallow: /admin/
+Disallow: /test/
+Disallow: /*.json$
+Disallow: /*?*utm_*
+Disallow: /*?*ref=*
+
+# Crawl delay for courtesy
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://tsgfulfillment.com/sitemap.xml
+`;
+}
+
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
   app.get('/health', (req, res) => {
     res.status(200).json({ 
@@ -29,6 +95,33 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development'
     });
+  });
+
+  // SEO ROUTES
+  // XML Sitemap
+  app.get('/sitemap.xml', (req, res) => {
+    try {
+      const sitemap = generateSitemap();
+      res.setHeader('Content-Type', 'application/xml');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(sitemap);
+    } catch (error) {
+      console.error('Error generating sitemap:', error);
+      res.status(500).send('Error generating sitemap');
+    }
+  });
+
+  // Robots.txt
+  app.get('/robots.txt', (req, res) => {
+    try {
+      const robotsTxt = generateRobotsTxt();
+      res.setHeader('Content-Type', 'text/plain');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(robotsTxt);
+    } catch (error) {
+      console.error('Error generating robots.txt:', error);
+      res.status(500).send('Error generating robots.txt');
+    }
   });
 
   // QUOTE REQUEST ENDPOINTS
