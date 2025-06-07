@@ -247,3 +247,145 @@ export const generateSitemapUrls = () => {
     lastmod: new Date().toISOString().split('T')[0]
   }));
 };
+
+/**
+ * Generate contact point structured data
+ */
+export const generateContactPointStructuredData = () => ({
+  "@context": "https://schema.org",
+  "@type": "ContactPoint",
+  "telephone": "+1-289-815-5869",
+  "contactType": "customer service",
+  "email": "info@tsgfulfillment.com",
+  "areaServed": ["CA", "Ontario", "Toronto", "GTA"],
+  "availableLanguage": ["English"],
+  "hoursAvailable": generateBusinessHoursStructuredData()
+});
+
+/**
+ * Generate local business structured data
+ */
+export const generateLocalBusinessStructuredData = () => ({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": SITE_CONFIG.siteName,
+  "image": `${SITE_CONFIG.siteUrl}/images/warehouse-exterior.jpg`,
+  "url": SITE_CONFIG.siteUrl,
+  "telephone": "+1-289-815-5869",
+  "email": "info@tsgfulfillment.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "6750 Langstaff Road",
+    "addressLocality": "Vaughan",
+    "addressRegion": "Ontario",
+    "postalCode": "L4H 5K2",
+    "addressCountry": "CA"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 43.7866333,
+    "longitude": -79.6527142
+  },
+  "openingHoursSpecification": generateBusinessHoursStructuredData(),
+  "priceRange": "$$",
+  "areaServed": ["Ontario", "Toronto", "GTA", "Canada"]
+});
+
+/**
+ * Generate how-to structured data
+ */
+export const generateHowToStructuredData = (
+  name: string,
+  description: string,
+  steps: Array<{ name: string; text: string }>
+) => ({
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": name,
+  "description": description,
+  "image": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+  "totalTime": "PT30M",
+  "estimatedCost": {
+    "@type": "MonetaryAmount",
+    "currency": "CAD",
+    "value": "0"
+  },
+  "step": steps.map((step, index) => ({
+    "@type": "HowToStep",
+    "position": index + 1,
+    "name": step.name,
+    "text": step.text
+  }))
+});
+
+/**
+ * Generate testimonial structured data
+ */
+export const generateTestimonialStructuredData = (
+  testimonials: Array<{ name: string; text: string; company?: string; rating?: number }>
+) => ({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": SITE_CONFIG.siteName,
+  "review": testimonials.map(testimonial => ({
+    "@type": "Review",
+    "reviewBody": testimonial.text,
+    "author": {
+      "@type": "Person",
+      "name": testimonial.name,
+      ...(testimonial.company && {
+        "worksFor": {
+          "@type": "Organization",
+          "name": testimonial.company
+        }
+      })
+    },
+    ...(testimonial.rating && {
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": testimonial.rating,
+        "bestRating": 5
+      }
+    })
+  }))
+});
+
+/**
+ * Optimize title for SEO best practices
+ */
+export const optimizeTitle = (title: string, maxLength: number = 60): string => {
+  if (title.length <= maxLength) return title;
+  
+  const truncated = title.substring(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(' ');
+  
+  if (lastSpace > maxLength * 0.8) {
+    return truncated.substring(0, lastSpace) + '...';
+  }
+  
+  return truncated + '...';
+};
+
+/**
+ * Generate hreflang tags
+ */
+export const generateHreflangTags = (currentPath: string): Array<{ lang: string; url: string }> => [
+  { lang: 'en-CA', url: generateCanonicalUrl(currentPath) },
+  { lang: 'en', url: generateCanonicalUrl(currentPath) },
+  { lang: 'x-default', url: generateCanonicalUrl(currentPath) }
+];
+
+/**
+ * Generate preload links for performance
+ */
+export const generatePreloadLinks = (images: string[] = []): Array<{ href: string; as: string; type?: string }> => {
+  const defaultPreloads = [
+    { href: '/images/logo.png', as: 'image' },
+    { href: '/fonts/poppins-v20-latin-regular.woff2', as: 'font', type: 'font/woff2' },
+    { href: '/fonts/poppins-v20-latin-600.woff2', as: 'font', type: 'font/woff2' }
+  ];
+  
+  const imagePreloads = images.map(image => ({ href: image, as: 'image' }));
+  
+  return [...defaultPreloads, ...imagePreloads];
+};

@@ -89,6 +89,30 @@ export const PAGE_TEMPLATES = {
     description: 'Get a personalized quote for fulfillment services tailored to your business needs. Fast response and competitive pricing for all logistics solutions.',
     keywords: 'fulfillment quote, warehousing pricing, logistics cost estimate, custom fulfillment solution, order processing quote',
     ogType: 'website' as const
+  },
+  analytics: {
+    title: 'Analytics Dashboard | Performance Metrics - TSG Fulfillment',
+    description: 'Access comprehensive analytics and performance metrics for your fulfillment operations. Real-time tracking and detailed reporting for optimized logistics.',
+    keywords: 'fulfillment analytics, logistics dashboard, inventory tracking, performance metrics, warehouse analytics, order tracking',
+    ogType: 'website' as const
+  },
+  reports: {
+    title: 'Report Generator | Custom Analytics Reports - TSG Fulfillment',
+    description: 'Generate custom reports for your fulfillment operations. Detailed analytics on inventory, orders, and performance metrics for data-driven decisions.',
+    keywords: 'fulfillment reports, custom analytics, inventory reports, logistics reporting, warehouse performance, data analytics',
+    ogType: 'website' as const
+  },
+  comparison: {
+    title: 'Performance Comparison | Benchmarking Tool - TSG Fulfillment',
+    description: 'Compare fulfillment performance metrics and benchmark against industry standards. Optimize your logistics operations with detailed comparisons.',
+    keywords: 'performance comparison, fulfillment benchmarking, logistics metrics, warehouse efficiency, industry comparison',
+    ogType: 'website' as const
+  },
+  dashboard: {
+    title: 'Custom Dashboard | Personalized Analytics - TSG Fulfillment',
+    description: 'Create personalized dashboards for your fulfillment operations. Customize metrics, reports, and analytics to match your business needs.',
+    keywords: 'custom dashboard, personalized analytics, fulfillment metrics, logistics dashboard, warehouse analytics',
+    ogType: 'website' as const
   }
 };
 
@@ -256,6 +280,78 @@ export const STRUCTURED_DATA_TEMPLATES = {
         "text": faq.answer
       }
     }))
+  }),
+
+  article: (title: string, description: string, datePublished: string, dateModified?: string) => ({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "image": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+    "author": {
+      "@type": "Organization",
+      "@id": `${SITE_CONFIG.siteUrl}#organization`
+    },
+    "publisher": {
+      "@id": `${SITE_CONFIG.siteUrl}#organization`
+    },
+    "datePublished": datePublished,
+    "dateModified": dateModified || datePublished,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": SITE_CONFIG.siteUrl
+    }
+  }),
+
+  howTo: (name: string, description: string, steps: Array<{ name: string; text: string }>) => ({
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": name,
+    "description": description,
+    "image": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+    "totalTime": "PT30M",
+    "estimatedCost": {
+      "@type": "MonetaryAmount",
+      "currency": "CAD",
+      "value": "0"
+    },
+    "supply": [{
+      "@type": "HowToSupply",
+      "name": "Business Information"
+    }],
+    "tool": [{
+      "@type": "HowToTool",
+      "name": "TSG Fulfillment Services"
+    }],
+    "step": steps.map((step, index) => ({
+      "@type": "HowToStep",
+      "position": index + 1,
+      "name": step.name,
+      "text": step.text
+    }))
+  }),
+
+  testimonial: (testimonials: Array<{ name: string; text: string; company?: string; rating?: number }>) => ({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_CONFIG.siteUrl}#organization`,
+    "review": testimonials.map(testimonial => ({
+      "@type": "Review",
+      "reviewBody": testimonial.text,
+      "author": {
+        "@type": "Person",
+        "name": testimonial.name,
+        "worksFor": testimonial.company ? {
+          "@type": "Organization",
+          "name": testimonial.company
+        } : undefined
+      },
+      "reviewRating": testimonial.rating ? {
+        "@type": "Rating",
+        "ratingValue": testimonial.rating,
+        "bestRating": 5
+      } : undefined
+    }))
   })
 };
 
@@ -271,3 +367,65 @@ export const PRELOAD_RESOURCES = [
   { href: '/fonts/poppins-v20-latin-600.woff2', as: 'font' as const, type: 'font/woff2', crossorigin: 'anonymous' as const },
   { href: '/images/logo.png', as: 'image' as const, fetchpriority: 'high' as const }
 ];
+
+// Service-specific SEO data for dynamic service pages
+export const SERVICE_SEO_DATA = {
+  'value-added-services': {
+    title: 'Value-Added Services | Custom Kitting & Assembly - TSG Fulfillment',
+    description: 'Professional value-added services including custom kitting, product assembly, labeling, and packaging solutions. Enhance your products with our specialized services.',
+    keywords: 'value added services, kitting services, product assembly, custom packaging, labeling services, fulfillment solutions',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Value-Added Services', description, '/services/value-added-services')
+  },
+  'warehousing': {
+    title: 'Warehousing Services | Secure Storage Solutions - TSG Fulfillment',
+    description: 'Secure and scalable warehousing solutions with advanced inventory management. Climate-controlled storage for all product types in our Ontario facility.',
+    keywords: 'warehousing services, inventory storage, warehouse management, secure storage, climate controlled, inventory tracking',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Warehousing', description, '/services/warehousing')
+  },
+  'order-fulfillment': {
+    title: 'Order Fulfillment Services | Pick, Pack & Ship - TSG Fulfillment',
+    description: 'Complete order fulfillment services including picking, packing, and shipping. Fast and accurate order processing for eCommerce and retail businesses.',
+    keywords: 'order fulfillment, pick pack ship, ecommerce fulfillment, order processing, shipping services, logistics solutions',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Order Fulfillment', description, '/services/order-fulfillment')
+  },
+  'freight-forwarding': {
+    title: 'Freight Forwarding | International Shipping - TSG Fulfillment',
+    description: 'Professional freight forwarding services for domestic and international shipping. Expert handling of customs, documentation, and logistics coordination.',
+    keywords: 'freight forwarding, international shipping, customs clearance, logistics coordination, shipping solutions, freight services',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Freight Forwarding', description, '/services/freight-forwarding')
+  },
+  'returns-processing': {
+    title: 'Returns Processing | Reverse Logistics - TSG Fulfillment',
+    description: 'Efficient returns processing and reverse logistics solutions. Streamlined handling of product returns, refurbishment, and inventory restocking.',
+    keywords: 'returns processing, reverse logistics, product returns, refurbishment services, inventory restocking, return management',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Returns Processing', description, '/services/returns-processing')
+  }
+};
+
+// Industry-specific SEO data for dynamic industry pages
+export const INDUSTRY_SEO_DATA = {
+  'ecommerce': {
+    title: 'eCommerce Fulfillment Services | Online Retail Solutions - TSG',
+    description: 'Specialized eCommerce fulfillment services for online retailers. Seamless integration with major platforms, fast shipping, and scalable solutions.',
+    keywords: 'ecommerce fulfillment, online retail fulfillment, shopify fulfillment, amazon fulfillment, marketplace integration',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('eCommerce Fulfillment', description, '/industries/ecommerce')
+  },
+  'healthcare': {
+    title: 'Healthcare Logistics | Medical Supply Fulfillment - TSG',
+    description: 'Specialized healthcare logistics and medical supply fulfillment. Compliant handling of medical devices, pharmaceuticals, and healthcare products.',
+    keywords: 'healthcare logistics, medical supply fulfillment, pharmaceutical logistics, medical device storage, healthcare compliance',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Healthcare Logistics', description, '/industries/healthcare')
+  },
+  'retail': {
+    title: 'Retail Fulfillment Services | B2B & B2C Solutions - TSG',
+    description: 'Comprehensive retail fulfillment services for both B2B and B2C operations. Store replenishment, direct-to-consumer shipping, and retail logistics.',
+    keywords: 'retail fulfillment, B2B fulfillment, B2C fulfillment, store replenishment, retail logistics, distribution services',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Retail Fulfillment', description, '/industries/retail')
+  },
+  'technology': {
+    title: 'Technology Product Fulfillment | Electronics Logistics - TSG',
+    description: 'Specialized fulfillment services for technology products and electronics. Secure handling, anti-static environments, and technical expertise.',
+    keywords: 'technology fulfillment, electronics logistics, tech product storage, computer fulfillment, electronics distribution',
+    structuredData: (description: string) => STRUCTURED_DATA_TEMPLATES.service('Technology Fulfillment', description, '/industries/technology')
+  }
+};
