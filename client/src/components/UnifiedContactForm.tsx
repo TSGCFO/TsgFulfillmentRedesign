@@ -9,22 +9,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Send } from "lucide-react";
 import { z } from "zod";
 import { useState } from "react";
 
 export interface UnifiedContactFormProps {
   endpoint: string;
-  includeService?: boolean;
-  includeSubject?: boolean;
-  includeConsent?: boolean;
-  serviceOptions?: string[];
-  subjectOptions?: string[];
-  defaultValues?: Partial<Record<string, string | boolean>>;
+  title?: string;
+  description?: string;
 }
 
-// Quote form schema matching the original specification
-const formSchema = z.object({
+// Complete quote form schema
+const quoteFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid business email address"),
   phone: z.string().min(7, "Please enter a valid mobile number"),
@@ -38,22 +34,52 @@ const formSchema = z.object({
   }),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type QuoteFormValues = z.infer<typeof quoteFormSchema>;
+
+// Define dropdown options
+const currentShipmentsOptions = [
+  "1-50",
+  "51-100", 
+  "101-250",
+  "251-500",
+  "501-1000",
+  "1001-2000",
+  "2000+"
+];
+
+const expectedShipmentsOptions = [
+  "1-50",
+  "51-100", 
+  "101-250",
+  "251-500",
+  "501-1000",
+  "1001-2000",
+  "2001-10000",
+  "10000+"
+];
+
+const servicesOptions = [
+  "Fulfillment Services",
+  "Warehousing", 
+  "Transportation",
+  "Supply Chain Consulting",
+  "E-commerce Solutions",
+  "Inventory Management",
+  "Reverse Logistics",
+  "Value-Added Services",
+  "Custom Solutions"
+];
 
 export function UnifiedContactForm({
   endpoint,
-  includeService = false,
-  includeSubject = false,
-  includeConsent = false,
-  serviceOptions = [],
-  subjectOptions = [],
-  defaultValues = {},
+  title = "Request a Quote",
+  description = "Get a customized quote for your fulfillment needs. Our team will analyze your requirements and provide competitive pricing within 24 hours."
 }: UnifiedContactFormProps) {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<QuoteFormValues>({
+    resolver: zodResolver(quoteFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -64,29 +90,28 @@ export function UnifiedContactForm({
       services: "",
       message: "",
       consent: false,
-      ...defaultValues,
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: FormValues) => {
-      console.log("Submitting form data:", data);
+    mutationFn: async (data: QuoteFormValues) => {
+      console.log("Submitting quote form:", data);
       
-      // Validate required fields based on props
-      if (includeService && !data.service) {
-        throw new Error("Please select a service");
-      }
-      if (includeSubject && !data.subject) {
-        throw new Error("Please select a subject");
-      }
-      if (includeConsent && !data.consent) {
-        throw new Error("You must agree to the privacy policy");
-      }
+      // Transform data to match API expectations
+      const submitData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        service: data.services, // Map services to service for API
+        message: data.message || `Current Shipments: ${data.currentShipments}/month, Expected: ${data.expectedShipments}/month`,
+        consent: data.consent
+      };
       
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(submitData),
       });
 
       console.log("Response status:", res.status);
@@ -102,7 +127,7 @@ export function UnifiedContactForm({
       return result;
     },
     onSuccess: (data) => {
-      console.log("Form submission successful:", data);
+      console.log("Quote form submission successful:", data);
       toast({
         title: "Quote Request Submitted!",
         description: "We'll get back to you within 24 hours with a detailed quote.",
@@ -111,29 +136,33 @@ export function UnifiedContactForm({
       form.reset();
     },
     onError: (error) => {
-      console.error("Form submission error:", error);
+      console.error("Quote form submission error:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to submit form. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit quote request. Please try again.",
         variant: "destructive",
       });
     },
   });
 
-  function onSubmit(values: FormValues) {
+  function onSubmit(values: QuoteFormValues) {
     mutation.mutate(values);
   }
 
   return (
     <Card className="shadow-lg border-0">
       <CardHeader className="bg-primary/5">
-        <CardTitle className="text-2xl font-poppins">Contact Us</CardTitle>
+        <CardTitle className="text-2xl font-poppins">{title}</CardTitle>
+        <p className="text-gray-600">{description}</p>
       </CardHeader>
       <CardContent className="p-8">
         {submitted ? (
           <div className="text-center space-y-4">
             <CheckCircle className="h-12 w-12 text-green-600 mx-auto" />
-            <p className="text-green-700">Thank you! We will be in touch soon.</p>
+            <div>
+              <h3 className="text-xl font-semibold text-green-800 mb-2">Quote Request Submitted Successfully!</h3>
+              <p className="text-green-700">Thank you for your interest in TSG Fulfillment. Our team will review your requirements and get back to you within 24 hours with a detailed quote.</p>
+            </div>
           </div>
         ) : (
           <Form {...form}>
@@ -144,7 +173,7 @@ export function UnifiedContactForm({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name *</FormLabel>
+                      <FormLabel>Name *</FormLabel>
                       <FormControl>
                         <Input placeholder="John Doe" {...field} />
                       </FormControl>
@@ -158,9 +187,9 @@ export function UnifiedContactForm({
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address *</FormLabel>
+                      <FormLabel>Business Email *</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="john@example.com" {...field} />
+                        <Input type="email" placeholder="john@company.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -174,7 +203,7 @@ export function UnifiedContactForm({
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number *</FormLabel>
+                      <FormLabel>Mobile Number *</FormLabel>
                       <FormControl>
                         <Input placeholder="(555) 123-4567" {...field} />
                       </FormControl>
@@ -190,7 +219,7 @@ export function UnifiedContactForm({
                     <FormItem>
                       <FormLabel>Company Name *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your Company" {...field} />
+                        <Input placeholder="Your Company Inc." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -198,21 +227,21 @@ export function UnifiedContactForm({
                 />
               </div>
 
-              {includeSubject && (
+              <div className="grid gap-6 md:grid-cols-2">
                 <FormField
                   control={form.control}
-                  name="subject"
+                  name="currentShipments"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Subject *</FormLabel>
+                      <FormLabel>Current Monthly Shipments *</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a subject" />
+                            <SelectValue placeholder="Select current shipments" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {subjectOptions.map((option) => (
+                          {currentShipmentsOptions.map((option) => (
                             <SelectItem key={option} value={option}>
                               {option}
                             </SelectItem>
@@ -223,25 +252,23 @@ export function UnifiedContactForm({
                     </FormItem>
                   )}
                 />
-              )}
 
-              {includeService && (
                 <FormField
                   control={form.control}
-                  name="service"
+                  name="expectedShipments"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Service Needed *</FormLabel>
+                      <FormLabel>Expected Monthly Shipments *</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a service" />
+                            <SelectValue placeholder="Select expected shipments" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {serviceOptions.map((service) => (
-                            <SelectItem key={service} value={service}>
-                              {service}
+                          {expectedShipmentsOptions.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -250,47 +277,89 @@ export function UnifiedContactForm({
                     </FormItem>
                   )}
                 />
-              )}
+              </div>
+
+              <FormField
+                control={form.control}
+                name="services"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Services Needed *</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {servicesOptions.map((service) => (
+                          <SelectItem key={service} value={service}>
+                            {service}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel>Additional Information</FormLabel>
                     <FormControl>
-                      <Textarea className="min-h-[120px]" {...field} />
+                      <Textarea 
+                        className="min-h-[120px]" 
+                        placeholder="Please describe your fulfillment needs, special requirements, or any questions you have..."
+                        {...field} 
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {includeConsent && (
-                <FormField
-                  control={form.control}
-                  name="consent"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox 
-                          checked={field.value} 
-                          onCheckedChange={field.onChange} 
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm font-normal">
-                          I agree to the privacy policy *
-                        </FormLabel>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              )}
+              <FormField
+                control={form.control}
+                name="consent"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox 
+                        checked={field.value} 
+                        onCheckedChange={field.onChange} 
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-sm font-normal">
+                        I agree to TSG Fulfillment's privacy policy and terms of service *
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
 
-              <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={mutation.isPending}>
-                {mutation.isPending ? "Submitting..." : "Submit"}
+              <Button 
+                type="submit" 
+                size="lg"
+                className="w-full bg-primary hover:bg-primary/90" 
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Submit Quote Request
+                  </>
+                )}
               </Button>
             </form>
           </Form>
