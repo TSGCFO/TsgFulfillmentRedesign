@@ -1036,5 +1036,5 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Use DatabaseStorage for production deployment
-export const storage = process.env.NODE_ENV === 'production' ? new DatabaseStorage() : new MemStorage();
+// Use DatabaseStorage to persist data to PostgreSQL database
+export const storage = new DatabaseStorage();
