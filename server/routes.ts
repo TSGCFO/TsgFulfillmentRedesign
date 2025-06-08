@@ -126,7 +126,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   // QUOTE REQUEST ENDPOINTS
   // Create a quote request
-  app.post('/api/quote-requests', async (req, res) => {
+  app.post('/api/quote', async (req, res) => {
     try {
       const validatedData = insertQuoteRequestSchema.parse(req.body);
       const quoteRequest = await storage.createQuoteRequest(validatedData);
@@ -153,19 +153,6 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       handleError(res, error, 'Error processing contact form');
     }
   });
-
-  app.post('/api/quote', async (req, res) => {
-    try {
-      const validatedData = insertQuoteRequestSchema.parse(req.body);
-      const quoteRequest = await storage.createQuoteRequest(validatedData);
-      res.status(200).json({ 
-        message: 'Quote request received successfully',
-        data: quoteRequest
-      });
-    } catch (error) {
-      handleError(res, error, 'Invalid quote request data');
-    }
-  });
   
   // Get all quote requests
   app.get('/api/quote', async (req, res) => {
@@ -181,6 +168,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get('/api/quote/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid quote request ID' });
+      }
+      
       const quoteRequest = await storage.getQuoteRequest(id);
       
       if (!quoteRequest) {
@@ -197,6 +188,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/quote/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid quote request ID' });
+      }
+      
       const updatedQuoteRequest = await storage.updateQuoteRequest(id, req.body);
       
       if (!updatedQuoteRequest) {
@@ -230,7 +225,14 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // Get all inventory levels with optional clientId filter
   app.get('/api/inventory', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
       const inventoryLevels = await storage.getInventoryLevels(clientId);
       res.status(200).json({ data: inventoryLevels });
     } catch (error) {
@@ -242,6 +244,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get('/api/inventory/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid inventory level ID' });
+      }
+      
       const inventoryLevel = await storage.getInventoryLevel(id);
       
       if (!inventoryLevel) {
@@ -258,6 +264,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/inventory/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid inventory level ID' });
+      }
+      
       const updatedInventoryLevel = await storage.updateInventoryLevel(id, req.body);
       
       if (!updatedInventoryLevel) {
@@ -291,7 +301,14 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // Get all shipments with optional clientId filter
   app.get('/api/shipments', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
       const shipments = await storage.getShipments(clientId);
       res.status(200).json({ data: shipments });
     } catch (error) {
@@ -303,6 +320,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get('/api/shipments/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid shipment ID' });
+      }
+      
       const shipment = await storage.getShipment(id);
       
       if (!shipment) {
@@ -319,6 +340,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/shipments/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid shipment ID' });
+      }
+      
       const updatedShipment = await storage.updateShipment(id, req.body);
       
       if (!updatedShipment) {
@@ -352,9 +377,30 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // Get order statistics with optional filters
   app.get('/api/order-statistics', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
-      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      if (req.query.startDate) {
+        startDate = new Date(req.query.startDate as string);
+        if (isNaN(startDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid start date format' });
+        }
+      }
+      
+      if (req.query.endDate) {
+        endDate = new Date(req.query.endDate as string);
+        if (isNaN(endDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid end date format' });
+        }
+      }
       
       const orderStatistics = await storage.getOrderStatistics(clientId, startDate, endDate);
       res.status(200).json({ data: orderStatistics });
@@ -367,6 +413,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/order-statistics/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid order statistic ID' });
+      }
+      
       const updatedStatistic = await storage.updateOrderStatistic(id, req.body);
       
       if (!updatedStatistic) {
@@ -400,9 +450,30 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // Get client KPIs with optional filters
   app.get('/api/client-kpis', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
-      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      if (req.query.startDate) {
+        startDate = new Date(req.query.startDate as string);
+        if (isNaN(startDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid start date format' });
+        }
+      }
+      
+      if (req.query.endDate) {
+        endDate = new Date(req.query.endDate as string);
+        if (isNaN(endDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid end date format' });
+        }
+      }
       
       const clientKpis = await storage.getClientKpis(clientId, startDate, endDate);
       res.status(200).json({ data: clientKpis });
@@ -415,6 +486,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/client-kpis/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid client KPI ID' });
+      }
+      
       const updatedKpi = await storage.updateClientKpi(id, req.body);
       
       if (!updatedKpi) {
@@ -449,6 +524,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get('/api/dashboard-settings/:userId', async (req, res) => {
     try {
       const userId = parseInt(req.params.userId);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+      }
+      
       const dashboardSettings = await storage.getDashboardSettings(userId);
       res.status(200).json({ data: dashboardSettings });
     } catch (error) {
@@ -460,6 +539,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.patch('/api/dashboard-settings/:userId/:widgetId', async (req, res) => {
     try {
       const userId = parseInt(req.params.userId);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: 'Invalid user ID' });
+      }
+      
       const widgetId = req.params.widgetId;
       const updatedSetting = await storage.updateDashboardSetting(userId, widgetId, req.body);
       
@@ -482,6 +565,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     app.get('/api/analytics/client-summary/:clientId', async (req, res) => {
     try {
       const clientId = parseInt(req.params.clientId);
+      if (isNaN(clientId)) {
+        return res.status(400).json({ message: 'Invalid client ID' });
+      }
+      
       const analyticsSummary = await storage.getClientAnalyticsSummary(clientId);
       res.status(200).json({ data: analyticsSummary });
     } catch (error) {
@@ -492,9 +579,30 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     // Get shipping performance analytics
     app.get('/api/analytics/shipping-performance', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
-      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      if (req.query.startDate) {
+        startDate = new Date(req.query.startDate as string);
+        if (isNaN(startDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid start date format' });
+        }
+      }
+      
+      if (req.query.endDate) {
+        endDate = new Date(req.query.endDate as string);
+        if (isNaN(endDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid end date format' });
+        }
+      }
       
       const shippingPerformance = await storage.getShippingPerformance(clientId, startDate, endDate);
       res.status(200).json({ data: shippingPerformance });
@@ -506,7 +614,14 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     // Get inventory report
     app.get('/api/analytics/inventory-report', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
       const inventoryReport = await storage.getInventoryReport(clientId);
       res.status(200).json({ data: inventoryReport });
     } catch (error) {
@@ -518,10 +633,32 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     // Get report data for customized reports
     app.get('/api/analytics/report-data', async (req, res) => {
     try {
-      const clientId = req.query.clientId ? parseInt(req.query.clientId as string) : undefined;
+      let clientId: number | undefined;
+      if (req.query.clientId) {
+        clientId = parseInt(req.query.clientId as string);
+        if (isNaN(clientId)) {
+          return res.status(400).json({ message: 'Invalid client ID' });
+        }
+      }
+      
       const reportType = req.query.reportType as string;
-      const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-      const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+      
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      if (req.query.startDate) {
+        startDate = new Date(req.query.startDate as string);
+        if (isNaN(startDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid start date format' });
+        }
+      }
+      
+      if (req.query.endDate) {
+        endDate = new Date(req.query.endDate as string);
+        if (isNaN(endDate.getTime())) {
+          return res.status(400).json({ message: 'Invalid end date format' });
+        }
+      }
       
       if (!clientId || !reportType || !startDate || !endDate) {
         return res.status(400).json({ error: 'Missing required parameters' });
@@ -544,12 +681,26 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       }
       
       const clientIdNum = parseInt(clientId as string);
+      if (isNaN(clientIdNum)) {
+        return res.status(400).json({ message: 'Invalid client ID' });
+      }
+      
+      const periodAStartDate = new Date(periodAStart as string);
+      const periodAEndDate = new Date(periodAEnd as string);
+      const periodBStartDate = new Date(periodBStart as string);
+      const periodBEndDate = new Date(periodBEnd as string);
+      
+      if (isNaN(periodAStartDate.getTime()) || isNaN(periodAEndDate.getTime()) || 
+          isNaN(periodBStartDate.getTime()) || isNaN(periodBEndDate.getTime())) {
+        return res.status(400).json({ message: 'Invalid date format in parameters' });
+      }
+      
       const comparisonData = await storage.getComparisonData(
         clientIdNum,
-        new Date(periodAStart as string),
-        new Date(periodAEnd as string),
-        new Date(periodBStart as string),
-        new Date(periodBEnd as string),
+        periodAStartDate,
+        periodAEndDate,
+        periodBStartDate,
+        periodBEndDate,
         metric as string
       );
       
@@ -557,6 +708,13 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     } catch (error) {
       handleError(res, error, 'Error retrieving comparison data');
     }
+    });
+  } else {
+    // Add 404 handlers for analytics routes when analytics is disabled
+    app.all('/api/analytics/*', (req, res) => {
+      res.status(404).json({ 
+        message: 'Analytics features are disabled. Enable analytics to access these endpoints.' 
+      });
     });
   }
 

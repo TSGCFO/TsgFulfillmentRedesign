@@ -8,7 +8,13 @@ declare global {
 
 // Initialize Google Analytics
 export const initGA = () => {
-  const measurementId = 'G-GSWN00Z35Q';
+  const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-GSWN00Z35Q';
+
+  // Only initialize if we have a measurement ID and we're not in development without it
+  if (!measurementId) {
+    console.warn('Google Analytics measurement ID not configured');
+    return;
+  }
 
   // Add Google Analytics script to the head
   const script1 = document.createElement('script');
@@ -31,7 +37,9 @@ export const initGA = () => {
 export const trackPageView = (url: string) => {
   if (typeof window === 'undefined' || !window.gtag) return;
   
-  window.gtag('config', 'G-GSWN00Z35Q', {
+  const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID || 'G-GSWN00Z35Q';
+  
+  window.gtag('config', measurementId, {
     page_path: url
   });
 };
