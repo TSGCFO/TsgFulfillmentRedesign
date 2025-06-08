@@ -5,7 +5,7 @@ import { ArrowRight, Award, Users, MapPin, Star, CheckCircle } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { EnhancedImage } from '@/components/ui/enhanced-image';
+
 import { Separator } from '@/components/ui/separator';
 import SEOManager from '@/seo/SEOManager';
 import { generateBreadcrumbs, generateArticleStructuredData, generateLocalBusinessStructuredData } from '@/seo/utils';
@@ -385,7 +385,7 @@ const About: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="h-64 overflow-hidden">
-                  <EnhancedImage 
+                  <img 
                     src={member.image}
                     alt={member.name}
                     width={400}
