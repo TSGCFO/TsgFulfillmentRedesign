@@ -13,8 +13,9 @@ import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
-import SEOManager from '@/seo/SEOManager';
-import { generateFAQStructuredData } from '@/seo/utils';
+import EnhancedSEOManager from '@/seo/EnhancedSEOManager';
+import { STRUCTURED_DATA_TEMPLATES } from '@/seo/seo-config';
+import { generatePageSchema } from '@/seo/advanced-schema';
 
 const Home: React.FC = () => {
   // Setup cookie consent functionality
@@ -33,13 +34,19 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <SEOManager 
+      <EnhancedSEOManager 
         page="home"
         canonical="/"
         ogImage="/images/og-home.jpg"
-        preloadImages={['/images/hero-banner.jpg', '/images/logo.png']}
+        criticalImages={['/images/hero-fulfillment-center.jpg', '/images/logo.png']}
+        preloadResources={['/css/critical.css', '/js/tracking.js']}
+        prefetchPages={['/services', '/about', '/contact', '/quote']}
+        enablePerformanceOptimization={true}
+        breadcrumbs={[
+          { name: 'Home', url: '/' }
+        ]}
         structuredData={[
-          generateFAQStructuredData([
+          STRUCTURED_DATA_TEMPLATES.faq([
             {
               question: "What fulfillment services does TSG offer?",
               answer: "TSG Fulfillment provides comprehensive order fulfillment, warehousing, kitting, assembly, and freight forwarding services for eCommerce and retail businesses."
