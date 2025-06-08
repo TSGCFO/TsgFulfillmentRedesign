@@ -5,7 +5,7 @@ import { ArrowRight, Award, Users, MapPin, Star, CheckCircle } from 'lucide-reac
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
+import { EnhancedImage } from '@/components/ui/enhanced-image';
 import { Separator } from '@/components/ui/separator';
 import SEOManager from '@/seo/SEOManager';
 import { generateBreadcrumbs, generateArticleStructuredData, generateLocalBusinessStructuredData } from '@/seo/utils';
@@ -190,7 +190,7 @@ const About: React.FC = () => {
       {/* Hero Section */}
       <section className="relative pt-20 pb-20 bg-primary overflow-hidden">
         <div className="absolute inset-0 z-0 opacity-20">
-          <img 
+          <EnhancedImage 
             src="https://images.unsplash.com/photo-1566232392379-afd9a0db2138?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
             alt="TSG Fulfillment warehouse operations"
             width={1920}
@@ -289,7 +289,7 @@ const About: React.FC = () => {
               variants={fadeInRight}
             >
               <div className="relative">
-                <img 
+                <EnhancedImage 
                   src="https://images.unsplash.com/photo-1581872388288-bf2d207a7fbc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80"
                   alt="TSG Fulfillment warehouse operations"
                   width={1025}
@@ -385,7 +385,7 @@ const About: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="h-64 overflow-hidden">
-                  <img 
+                  <EnhancedImage 
                     src={member.image}
                     alt={member.name}
                     width={400}
