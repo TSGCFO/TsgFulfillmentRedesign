@@ -38,13 +38,21 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      window.scrollTo({
-        top: element.offsetTop - 100,
-        behavior: 'smooth',
-      });
+  const [location] = useLocation();
+
+  const handleNavigation = (id: string) => {
+    // If we're on the homepage, scroll to the section
+    if (location === '/') {
+      const element = document.getElementById(id);
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop - 100,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      // If we're on a different page, navigate to homepage with anchor
+      setLocation(`/#${id}`);
     }
   };
 
@@ -69,7 +77,7 @@ const Navbar: React.FC = () => {
       dropdownItems: serviceItems
     },
     { label: 'Industries', id: 'industries' },
-    { label: 'About Us', id: 'about' },
+    { label: 'About Us', id: 'about', isLink: true },
     { label: 'Locations', id: 'locations', isLink: true },
     { label: 'Contact Us', id: 'quote', isLink: true }
   ];
@@ -152,7 +160,7 @@ const Navbar: React.FC = () => {
                         ) : (
                           <button
                             key={dropdownItem.id}
-                            onClick={() => scrollTo(dropdownItem.id)}
+                            onClick={() => handleNavigation(dropdownItem.id)}
                             className="block w-full text-left px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-200"
                           >
                             {dropdownItem.label}
@@ -170,7 +178,7 @@ const Navbar: React.FC = () => {
                   </Link>
                 ) : (
                   <button
-                    onClick={() => scrollTo(item.id)}
+                    onClick={() => handleNavigation(item.id)}
                     className="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
                   >
                     {item.label}
@@ -234,7 +242,7 @@ const Navbar: React.FC = () => {
                               ) : (
                                 <button
                                   key={dropdownItem.id}
-                                  onClick={() => scrollTo(dropdownItem.id)}
+                                  onClick={() => handleNavigation(dropdownItem.id)}
                                   className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
                                 >
                                   {dropdownItem.label}
@@ -253,7 +261,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     ) : (
                       <button
-                        onClick={() => scrollTo(item.id)}
+                        onClick={() => handleNavigation(item.id)}
                         className="block w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
                       >
                         {item.label}
