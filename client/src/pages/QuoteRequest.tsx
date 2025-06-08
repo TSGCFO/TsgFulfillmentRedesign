@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { UnifiedContactForm } from "@/components/UnifiedContactForm";
+import SEOManager from "@/seo/SEOManager";
+import { generateBreadcrumbs, generateServiceStructuredData } from "@/seo/utils";
 
 
 const services = [
@@ -33,6 +35,20 @@ const QuoteRequest = () => {
 
   return (
     <>
+      <SEOManager 
+        page="quote"
+        canonical="/quote"
+        ogImage="/images/quote-hero.jpg"
+        breadcrumbs={generateBreadcrumbs('/quote')}
+        preloadImages={['/images/quote-hero.jpg']}
+        structuredData={[
+          generateServiceStructuredData(
+            "Custom Fulfillment Quote",
+            "Get a personalized quote for fulfillment services tailored to your business needs. Fast response and competitive pricing for all logistics solutions.",
+            "/quote"
+          )
+        ]}
+      />
       <Navbar />
       
       <main className="min-h-screen bg-gray-50 pt-20">

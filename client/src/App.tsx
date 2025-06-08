@@ -6,6 +6,8 @@ import { lazy, Suspense, useEffect } from "react";
 import { checkRedirect, setCanonicalUrl } from "./lib/redirects";
 import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
+import { initGA } from "./lib/analytics";
+import { useAnalytics } from "./hooks/use-analytics";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -38,6 +40,9 @@ const PageLoader = () => (
 
 function Router() {
   const [location, setLocation] = useLocation();
+  
+  // Track page views when routes change
+  useAnalytics();
   
   // Handle 301 redirects and set canonical URLs
   useEffect(() => {
@@ -99,6 +104,11 @@ if (typeof document !== 'undefined') {
 }
 
 function App() {
+  // Initialize Google Analytics when app loads
+  useEffect(() => {
+    initGA();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>

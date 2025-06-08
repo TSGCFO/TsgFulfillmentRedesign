@@ -51,7 +51,7 @@ const Navbar: React.FC = () => {
   const topbarLinks = [
     { icon: <Phone className="h-4 w-4 mr-2" />, label: '(289) 815-5869', href: 'tel:2898155869' },
     { icon: <Mail className="h-4 w-4 mr-2" />, label: 'info@tsgfulfillment.com', href: 'mailto:info@tsgfulfillment.com' },
-    { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '/locations' },
+    { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '/locations', isRoute: true },
   ];
 
   const serviceItems = [
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
     { label: 'Industries', id: 'industries' },
     { label: 'About Us', id: 'about' },
     { label: 'Locations', id: 'locations', isLink: true },
-    { label: 'Contact', id: 'contact-form', isLink: true }
+    { label: 'Contact Us', id: 'quote', isLink: true }
   ];
   
   const pageLinks = analyticsEnabled
@@ -85,14 +85,25 @@ const Navbar: React.FC = () => {
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center space-x-6">
             {topbarLinks.map((item, index) => (
-              <a 
-                key={index} 
-                href={item.href} 
-                className="flex items-center hover:text-gray-200 transition-colors"
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </a>
+              item.isRoute ? (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="flex items-center hover:text-gray-200 transition-colors"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              ) : (
+                <a 
+                  key={index} 
+                  href={item.href} 
+                  className="flex items-center hover:text-gray-200 transition-colors"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </a>
+              )
             ))}
           </div>
           <div className="flex items-center space-x-4">
@@ -150,6 +161,13 @@ const Navbar: React.FC = () => {
                       ))}
                     </div>
                   </div>
+                ) : item.isLink ? (
+                  <Link
+                    href={`/${item.id}`}
+                    className="px-4 py-2 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                  >
+                    {item.label}
+                  </Link>
                 ) : (
                   <button
                     onClick={() => scrollTo(item.id)}
@@ -226,6 +244,13 @@ const Navbar: React.FC = () => {
                           </div>
                         )}
                       </>
+                    ) : item.isLink ? (
+                      <Link
+                        href={`/${item.id}`}
+                        className="block w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                      >
+                        {item.label}
+                      </Link>
                     ) : (
                       <button
                         onClick={() => scrollTo(item.id)}

@@ -21,7 +21,9 @@ import { EnhancedImage } from "@/components/ui/enhanced-image";
 import { getServiceImage } from "@/lib/images";
 import { ServiceDetailSkeleton } from "@/components/ui/skeletons";
 
-import Seo from "@/components/SEO/Seo";
+import SEOManager from "@/seo/SEOManager";
+import { SERVICE_SEO_DATA } from "@/seo/seo-config";
+import { generateBreadcrumbs, generateServiceStructuredData, generateHowToStructuredData } from "@/seo/utils";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -413,49 +415,40 @@ const ServiceDetail = () => {
     return <ServiceDetailSkeleton />;
   }
 
-  // Create structured data for this service
-  const serviceSchema = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: service.title,
-    description: service.longDescription[0] || service.description,
-    provider: {
-      "@type": "Organization",
-      name: "TSG Fulfillment Services",
-      url: "https://tsgfulfillment.com",
-    },
-    serviceType: service.title,
-    areaServed: {
-      "@type": "Country",
-      name: "Canada",
-    },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Logistics and Fulfillment Services",
-      itemListElement: service.features.map((feature, index) => ({
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: feature,
-        },
-      })),
-    },
-  };
+  // Generate comprehensive SEO data for this service
+  const serviceSEO = SERVICE_SEO_DATA[service.slug as keyof typeof SERVICE_SEO_DATA];
+  const breadcrumbs = generateBreadcrumbs(`/services/${service.slug}`);
+  
+  const serviceStructuredData = generateServiceStructuredData(
+    service.title,
+    service.longDescription[0] || service.description,
+    `/services/${service.slug}`
+  );
+
+  const howToData = generateHowToStructuredData(
+    `How to Use ${service.title}`,
+    `Step-by-step guide to utilizing our ${service.title.toLowerCase()} services`,
+    [
+      { name: "Contact Us", text: "Reach out to discuss your specific requirements" },
+      { name: "Consultation", text: "We'll assess your needs and provide a customized solution" },
+      { name: "Implementation", text: "Our team will implement the service according to your specifications" },
+      { name: "Ongoing Support", text: "Receive continuous support and optimization" }
+    ]
+  );
 
   return (
     <>
-      <Seo
-        title={`${service.title} - TSG Fulfillment Services`}
-        description={service.description}
-        keywords={`fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`}
-        canonical={`https://tsgfulfillment.com/services/${service.slug}`}
+      <SEOManager
+        title={serviceSEO?.title || `${service.title} - TSG Fulfillment Services`}
+        description={serviceSEO?.description || service.description}
+        keywords={serviceSEO?.keywords || `fulfillment services, logistics, ${service.title.toLowerCase()}, warehousing, supply chain`}
+        canonical={`/services/${service.slug}`}
         ogType="website"
-        ogUrl={`https://tsgfulfillment.com/services/${service.slug}`}
         ogImage={getServiceImage(service.slug)}
-        twitterCard="summary_large_image"
-        twitterTitle={`${service.title} - TSG Fulfillment Services`}
-        twitterDescription={service.description}
-        structuredData={serviceSchema}
+        breadcrumbs={breadcrumbs}
+        structuredData={[serviceStructuredData, howToData]}
+        preloadImages={[getServiceImage(service.slug)]}
+        lastModified={new Date().toISOString().split('T')[0]}
       />
       <header className="py-4 bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6">

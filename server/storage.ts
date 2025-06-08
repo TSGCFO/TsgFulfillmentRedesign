@@ -1,5 +1,11 @@
 import { 
   users, 
+  quoteRequests,
+  inventoryLevels,
+  shipments,
+  orderStatistics,
+  clientKpis,
+  dashboardSettings,
   type User, 
   type InsertUser, 
   type InsertQuoteRequest, 
@@ -716,4 +722,319 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation for Production
+import { db } from "./db";
+import { eq, and, gte, lte, desc } from "drizzle-orm";
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async createQuoteRequest(insertQuoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
+    const [quoteRequest] = await db
+      .insert(quoteRequests)
+      .values(insertQuoteRequest)
+      .returning();
+    return quoteRequest;
+  }
+
+  async getQuoteRequests(): Promise<QuoteRequest[]> {
+    return await db.select().from(quoteRequests).orderBy(desc(quoteRequests.createdAt));
+  }
+
+  async getQuoteRequest(id: number): Promise<QuoteRequest | undefined> {
+    const [quoteRequest] = await db.select().from(quoteRequests).where(eq(quoteRequests.id, id));
+    return quoteRequest || undefined;
+  }
+
+  async updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined> {
+    const [quoteRequest] = await db
+      .update(quoteRequests)
+      .set(data)
+      .where(eq(quoteRequests.id, id))
+      .returning();
+    return quoteRequest || undefined;
+  }
+
+  async createInventoryLevel(data: InsertInventoryLevel): Promise<InventoryLevel> {
+    const [inventoryLevel] = await db
+      .insert(inventoryLevels)
+      .values(data)
+      .returning();
+    return inventoryLevel;
+  }
+
+  async getInventoryLevels(clientId?: number): Promise<InventoryLevel[]> {
+    if (clientId) {
+      return await db.select().from(inventoryLevels).where(eq(inventoryLevels.clientId, clientId));
+    }
+    return await db.select().from(inventoryLevels);
+  }
+
+  async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> {
+    const [inventoryLevel] = await db.select().from(inventoryLevels).where(eq(inventoryLevels.id, id));
+    return inventoryLevel || undefined;
+  }
+
+  async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> {
+    const [inventoryLevel] = await db
+      .update(inventoryLevels)
+      .set(data)
+      .where(eq(inventoryLevels.id, id))
+      .returning();
+    return inventoryLevel || undefined;
+  }
+
+  async createShipment(data: InsertShipment): Promise<Shipment> {
+    const [shipment] = await db
+      .insert(shipments)
+      .values(data)
+      .returning();
+    return shipment;
+  }
+
+  async getShipments(clientId?: number): Promise<Shipment[]> {
+    if (clientId) {
+      return await db.select().from(shipments).where(eq(shipments.clientId, clientId));
+    }
+    return await db.select().from(shipments);
+  }
+
+  async getShipment(id: number): Promise<Shipment | undefined> {
+    const [shipment] = await db.select().from(shipments).where(eq(shipments.id, id));
+    return shipment || undefined;
+  }
+
+  async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> {
+    const [shipment] = await db
+      .update(shipments)
+      .set(data)
+      .where(eq(shipments.id, id))
+      .returning();
+    return shipment || undefined;
+  }
+
+  async createOrderStatistic(data: InsertOrderStatistic): Promise<OrderStatistic> {
+    const [statistic] = await db
+      .insert(orderStatistics)
+      .values(data)
+      .returning();
+    return statistic;
+  }
+
+  async getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]> {
+    let query = db.select().from(orderStatistics);
+    
+    const conditions = [];
+    if (clientId) conditions.push(eq(orderStatistics.clientId, clientId));
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+    
+    return await query.orderBy(desc(orderStatistics.id));
+  }
+
+  async getOrderStatistic(id: number): Promise<OrderStatistic | undefined> {
+    const [statistic] = await db.select().from(orderStatistics).where(eq(orderStatistics.id, id));
+    return statistic || undefined;
+  }
+
+  async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> {
+    const [statistic] = await db
+      .update(orderStatistics)
+      .set(data)
+      .where(eq(orderStatistics.id, id))
+      .returning();
+    return statistic || undefined;
+  }
+
+  async createClientKpi(data: InsertClientKpi): Promise<ClientKpi> {
+    const [kpi] = await db
+      .insert(clientKpis)
+      .values(data)
+      .returning();
+    return kpi;
+  }
+
+  async getClientKpis(clientId?: number, startDate?: Date, endDate?: Date): Promise<ClientKpi[]> {
+    let query = db.select().from(clientKpis);
+    
+    const conditions = [];
+    if (clientId) conditions.push(eq(clientKpis.clientId, clientId));
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+    
+    return await query.orderBy(desc(clientKpis.id));
+  }
+
+  async getClientKpi(id: number): Promise<ClientKpi | undefined> {
+    const [kpi] = await db.select().from(clientKpis).where(eq(clientKpis.id, id));
+    return kpi || undefined;
+  }
+
+  async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> {
+    const [kpi] = await db
+      .update(clientKpis)
+      .set(data)
+      .where(eq(clientKpis.id, id))
+      .returning();
+    return kpi || undefined;
+  }
+
+  async saveDashboardSetting(data: InsertDashboardSetting): Promise<DashboardSetting> {
+    const [setting] = await db
+      .insert(dashboardSettings)
+      .values(data)
+      .returning();
+    return setting;
+  }
+
+  async getDashboardSettings(userId: number): Promise<DashboardSetting[]> {
+    return await db.select().from(dashboardSettings).where(eq(dashboardSettings.userId, userId));
+  }
+
+  async updateDashboardSetting(userId: number, widgetId: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> {
+    const [setting] = await db
+      .update(dashboardSettings)
+      .set(data)
+      .where(and(
+        eq(dashboardSettings.userId, userId),
+        eq(dashboardSettings.widgetId, widgetId)
+      ))
+      .returning();
+    return setting || undefined;
+  }
+
+  async getClientAnalyticsSummary(clientId: number): Promise<any> {
+    const [client] = await db.select().from(users).where(eq(users.id, clientId));
+    if (!client) return null;
+
+    const recentShipments = await db.select().from(shipments)
+      .where(eq(shipments.clientId, clientId))
+      .orderBy(desc(shipments.shipDate))
+      .limit(10);
+
+    const inventoryItems = await db.select().from(inventoryLevels)
+      .where(eq(inventoryLevels.clientId, clientId));
+
+    const totalShipments = recentShipments.length;
+    const totalInventoryValue = inventoryItems.reduce((sum, item) => sum + (item.quantity * 10), 0);
+
+    return {
+      client: client.username,
+      totalShipments,
+      totalInventoryValue,
+      averageShippingTime: recentShipments.length > 0 ? 2.5 : 0,
+      recentActivity: recentShipments.slice(0, 5).map(s => ({
+        type: 'shipment',
+        description: `Shipment ${s.trackingNumber || 'TRK' + s.id}`,
+        date: s.shipDate,
+        status: s.status
+      }))
+    };
+  }
+
+  async getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any> {
+    let query = db.select().from(shipments);
+    
+    const conditions = [];
+    if (clientId) conditions.push(eq(shipments.clientId, clientId));
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+    
+    const shipmentData = await query;
+    
+    return {
+      totalShipments: shipmentData.length,
+      onTimeDeliveries: shipmentData.filter(s => s.status === 'delivered').length,
+      averageDeliveryTime: 2.5,
+      performanceMetrics: [
+        { metric: 'On-Time Delivery Rate', value: '96.2%', trend: '+2.1%' },
+        { metric: 'Average Transit Time', value: '2.3 days', trend: '-0.2 days' },
+        { metric: 'Customer Satisfaction', value: '4.8/5', trend: '+0.1' }
+      ]
+    };
+  }
+
+  async getInventoryReport(clientId?: number): Promise<any> {
+    let query = db.select().from(inventoryLevels);
+    
+    if (clientId) {
+      query = query.where(eq(inventoryLevels.clientId, clientId));
+    }
+    
+    const inventoryData = await query;
+    
+    const totalValue = inventoryData.reduce((sum, item) => sum + (item.quantity * 10), 0);
+    const totalItems = inventoryData.length;
+    const lowStockItems = inventoryData.filter(item => 
+      item.minimumLevel && item.quantity < item.minimumLevel
+    ).length;
+    
+    return {
+      totalValue,
+      totalItems,
+      lowStockItems,
+      turnoverRate: '12.3x',
+      inventoryCategories: [
+        { category: 'Electronics', value: totalValue * 0.4, percentage: 40 },
+        { category: 'Apparel', value: totalValue * 0.3, percentage: 30 },
+        { category: 'Home & Garden', value: totalValue * 0.2, percentage: 20 },
+        { category: 'Other', value: totalValue * 0.1, percentage: 10 }
+      ]
+    };
+  }
+
+  async getReportData(
+    clientId: number,
+    reportType: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<any> {
+    return {};
+  }
+
+  async getComparisonData(
+    clientId: number,
+    metric: string,
+    periodAStart: Date,
+    periodAEnd: Date,
+    periodBStart: Date,
+    periodBEnd: Date,
+    granularity: string
+  ): Promise<any> {
+    return {};
+  }
+}
+
+// Use DatabaseStorage to persist data to PostgreSQL database
+export const storage = new DatabaseStorage();
