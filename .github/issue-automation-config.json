@@ -119,6 +119,18 @@
     "infrastructure": {
       "title": "🏗️ [AUTO] Infrastructure Change: {message}",
       "sections": ["summary", "infrastructure-checklist", "deployment", "monitoring"]
+    },
+    "deployment-review": {
+      "title": "🚀 [AUTO] Deployment Review: {message}",
+      "sections": ["summary", "platform-checklist", "testing", "verification"]
+    },
+    "replit-deployment": {
+      "title": "⚡ [AUTO] Replit Configuration Update: {message}",
+      "sections": ["summary", "replit-checklist", "environment", "testing"]
+    },
+    "render-deployment": {
+      "title": "🌐 [AUTO] Render Deployment Update: {message}",
+      "sections": ["summary", "render-checklist", "build", "monitoring"]
     }
   },
   "notifications": {
@@ -134,6 +146,28 @@
     "email": {
       "enabled": false,
       "recipients": ["team@example.com"]
+    }
+  },
+  "deploymentPlatforms": {
+    "replit": {
+      "enabled": true,
+      "priority": "primary",
+      "autoTrigger": true
+    },
+    "render": {
+      "enabled": true,
+      "priority": "primary", 
+      "autoTrigger": true
+    },
+    "code": {
+      "enabled": true,
+      "priority": "secondary",
+      "autoTrigger": false
+    },
+    "codex": {
+      "enabled": true,
+      "priority": "secondary",
+      "autoTrigger": false
     }
   },
   "integrations": {

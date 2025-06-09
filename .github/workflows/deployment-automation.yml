@@ -1,0 +1,330 @@
+name: Deployment Platform Automation
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - '.replit'
+      - 'replit.nix'
+      - 'replit.toml'
+      - 'render.yaml'
+      - 'Procfile'
+      - 'package.json'
+      - 'server/**'
+      - 'client/**'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Target deployment platform'
+        required: true
+        default: 'replit'
+        type: choice
+        options:
+        - replit
+        - render
+        - code
+        - codex
+        - all
+
+env:
+  DEFAULT_PLATFORMS: "replit,render,code,codex"
+
+jobs:
+  detect-platform-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      affected_platforms: ${{ steps.detection.outputs.platforms }}
+      should_deploy: ${{ steps.detection.outputs.should_deploy }}
+      issue_needed: ${{ steps.detection.outputs.issue_needed }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Detect affected platforms
+      id: detection
+      run: |
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | tr '\n' ' ')
+        echo "Changed files: $CHANGED_FILES"
+        
+        PLATFORMS=""
+        SHOULD_DEPLOY="false"
+        ISSUE_NEEDED="false"
+        
+        # Check for Replit-specific changes
+        if [[ "$CHANGED_FILES" =~ (\.replit|replit\.nix|replit\.toml) ]]; then
+          PLATFORMS="${PLATFORMS}replit,"
+          ISSUE_NEEDED="true"
+        fi
+        
+        # Check for Render-specific changes
+        if [[ "$CHANGED_FILES" =~ (render\.yaml|Procfile) ]]; then
+          PLATFORMS="${PLATFORMS}render,"
+          ISSUE_NEEDED="true"
+        fi
+        
+        # Check for general application changes affecting all platforms
+        if [[ "$CHANGED_FILES" =~ (package\.json|server/|client/|src/) ]]; then
+          PLATFORMS="$DEFAULT_PLATFORMS"
+          SHOULD_DEPLOY="true"
+          ISSUE_NEEDED="true"
+        fi
+        
+        # Manual trigger
+        if [ "${{ github.event.inputs.platform }}" != "" ]; then
+          if [ "${{ github.event.inputs.platform }}" = "all" ]; then
+            PLATFORMS="$DEFAULT_PLATFORMS"
+          else
+            PLATFORMS="${{ github.event.inputs.platform }}"
+          fi
+          SHOULD_DEPLOY="true"
+          ISSUE_NEEDED="true"
+        fi
+        
+        # Clean up platforms list
+        PLATFORMS=$(echo "$PLATFORMS" | sed 's/,$//')
+        
+        echo "platforms=$PLATFORMS" >> $GITHUB_OUTPUT
+        echo "should_deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+        echo "issue_needed=$ISSUE_NEEDED" >> $GITHUB_OUTPUT
+        
+        echo "Detected platforms: $PLATFORMS"
+        echo "Should deploy: $SHOULD_DEPLOY"
+        echo "Issue needed: $ISSUE_NEEDED"
+
+  create-deployment-issue:
+    needs: detect-platform-changes
+    if: needs.detect-platform-changes.outputs.issue_needed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Get commit information
+      id: commit-info
+      run: |
+        COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s' 2>/dev/null || echo "Manual deployment trigger")
+        COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo "manual")
+        COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an' 2>/dev/null || echo "${{ github.actor }}")
+        
+        echo "message=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+        echo "hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+        echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+
+    - name: Generate deployment checklist
+      id: checklist
+      run: |
+        PLATFORMS="${{ needs.detect-platform-changes.outputs.affected_platforms }}"
+        
+        REPLIT_CHECKLIST=""
+        RENDER_CHECKLIST=""
+        CODE_CHECKLIST=""
+        CODEX_CHECKLIST=""
+        
+        if [[ "$PLATFORMS" =~ "replit" ]]; then
+          REPLIT_CHECKLIST="
+### Replit Deployment
+- [ ] **Configuration**: Verify .replit and replit.toml settings
+- [ ] **Dependencies**: Check replit.nix package installation
+- [ ] **Environment**: Validate environment variables in Secrets
+- [ ] **Port Binding**: Ensure server binds to 0.0.0.0:\$PORT
+- [ ] **Run Command**: Verify run configuration in .replit
+- [ ] **Database**: Check database connection and migrations
+- [ ] **Static Files**: Ensure proper asset serving
+- [ ] **Live Testing**: Test functionality in Replit environment"
+        fi
+        
+        if [[ "$PLATFORMS" =~ "render" ]]; then
+          RENDER_CHECKLIST="
+### Render Deployment  
+- [ ] **Build Settings**: Verify render.yaml configuration
+- [ ] **Environment**: Check environment variables in dashboard
+- [ ] **Build Command**: Validate build process
+- [ ] **Start Command**: Ensure correct start script
+- [ ] **Health Checks**: Configure health check endpoints
+- [ ] **Database**: Verify PostgreSQL connection
+- [ ] **Static Assets**: Check static file serving
+- [ ] **Custom Domain**: Update DNS if using custom domain
+- [ ] **SSL**: Verify HTTPS configuration"
+        fi
+        
+        if [[ "$PLATFORMS" =~ "code" ]]; then
+          CODE_CHECKLIST="
+### Code Platform Deployment
+- [ ] **Repository**: Ensure code is pushed to main branch
+- [ ] **Build Process**: Verify CI/CD pipeline configuration
+- [ ] **Dependencies**: Check package.json and lock files
+- [ ] **Environment**: Set up environment variables
+- [ ] **Database**: Configure database connections
+- [ ] **Testing**: Run test suite before deployment
+- [ ] **Monitoring**: Set up logging and monitoring
+- [ ] **Documentation**: Update deployment documentation"
+        fi
+        
+        if [[ "$PLATFORMS" =~ "codex" ]]; then
+          CODEX_CHECKLIST="
+### Codex Platform Deployment
+- [ ] **Code Quality**: Run static analysis and linting
+- [ ] **Security Scan**: Perform security vulnerability check
+- [ ] **Performance**: Validate Core Web Vitals and load times
+- [ ] **SEO**: Verify sitemap and meta tag optimization
+- [ ] **Accessibility**: Check WCAG compliance
+- [ ] **Mobile**: Test responsive design and functionality
+- [ ] **Browser Compatibility**: Cross-browser testing
+- [ ] **API Endpoints**: Validate all API functionality"
+        fi
+        
+        # Combine all checklists
+        ALL_CHECKLISTS="$REPLIT_CHECKLIST$RENDER_CHECKLIST$CODE_CHECKLIST$CODEX_CHECKLIST"
+        
+        echo "checklists<<EOF" >> $GITHUB_OUTPUT
+        echo "$ALL_CHECKLISTS" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Create deployment issue
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const platforms = `${{ needs.detect-platform-changes.outputs.affected_platforms }}`;
+          const commitMessage = `${{ steps.commit-info.outputs.message }}`;
+          const commitHash = `${{ steps.commit-info.outputs.hash }}`;
+          const commitAuthor = `${{ steps.commit-info.outputs.author }}`;
+          const checklists = `${{ steps.checklist.outputs.checklists }}`;
+          
+          const title = `🚀 [DEPLOY] Multi-Platform Deployment: ${commitMessage}`;
+          
+          const body = `## 🚀 Multi-Platform Deployment Required
+
+### Deployment Summary
+- **Platforms**: ${platforms}
+- **Trigger**: ${commitMessage}
+- **Commit**: \`${commitHash}\`
+- **Author**: ${commitAuthor}
+- **Timestamp**: ${new Date().toISOString()}
+
+### 🎯 Affected Platforms
+${platforms.split(',').map(p => `- **${p.charAt(0).toUpperCase() + p.slice(1)}**: Production deployment required`).join('\n')}
+
+${checklists}
+
+### 🔧 General Deployment Checklist
+- [ ] **Pre-Deployment**: Backup current production state
+- [ ] **Dependencies**: Verify all package installations
+- [ ] **Environment Variables**: Confirm all secrets are configured
+- [ ] **Database Migrations**: Apply any pending migrations
+- [ ] **Feature Flags**: Check feature toggle states
+- [ ] **Monitoring**: Ensure logging and monitoring active
+- [ ] **Rollback Plan**: Prepare rollback strategy if needed
+
+### 📊 SEO & Performance Validation
+- [ ] **Sitemap**: Verify XML sitemaps are accessible
+- [ ] **Robots.txt**: Check crawler directives
+- [ ] **Meta Tags**: Validate title and description tags
+- [ ] **Structured Data**: Test JSON-LD schema markup
+- [ ] **Core Web Vitals**: Monitor LCP, FID, CLS scores
+- [ ] **Page Speed**: Check load times across platforms
+- [ ] **Mobile Usability**: Test responsive functionality
+
+### 🛡️ Security & Quality Assurance
+- [ ] **Security Headers**: Verify HTTPS and security headers
+- [ ] **Vulnerability Scan**: Check for known vulnerabilities
+- [ ] **Data Protection**: Ensure user data privacy compliance
+- [ ] **API Security**: Validate endpoint authentication
+- [ ] **Error Handling**: Test error pages and fallbacks
+- [ ] **Input Validation**: Check form and API input handling
+
+### 📱 Cross-Platform Testing
+- [ ] **Desktop Browsers**: Chrome, Firefox, Safari, Edge
+- [ ] **Mobile Devices**: iOS Safari, Android Chrome
+- [ ] **Tablet Interfaces**: iPad, Android tablets
+- [ ] **Screen Readers**: Accessibility testing
+- [ ] **Slow Networks**: 3G/4G connection testing
+- [ ] **Offline Functionality**: Service worker behavior
+
+### 🔗 Platform-Specific URLs
+${platforms.split(',').map(platform => {
+  switch(platform.trim()) {
+    case 'replit':
+      return '- **Replit**: [Development Environment](https://replit.com/@yourusername/your-repl)';
+    case 'render':
+      return '- **Render**: [Production Dashboard](https://dashboard.render.com)';
+    case 'code':
+      return '- **Code**: [Deployment Status](https://code.platform.url)';
+    case 'codex':
+      return '- **Codex**: [Quality Dashboard](https://codex.platform.url)';
+    default:
+      return \`- **\${platform}**: Platform-specific URL needed\`;
+  }
+}).join('\n')}
+
+### 📋 Post-Deployment Verification
+- [ ] **Functionality**: Test critical user journeys
+- [ ] **Performance**: Monitor initial performance metrics
+- [ ] **Error Monitoring**: Check for deployment-related errors
+- [ ] **User Feedback**: Monitor support channels for issues
+- [ ] **Analytics**: Verify tracking and analytics functionality
+- [ ] **Search Console**: Check for crawl errors or issues
+
+### ⚠️ Rollback Procedures
+If issues are detected post-deployment:
+1. **Immediate**: Revert to previous stable version
+2. **Investigate**: Analyze logs and error reports
+3. **Fix Forward**: Apply hotfix if issue is minor
+4. **Communication**: Notify stakeholders of status
+
+---
+**Deployment Checklist Auto-Generated** | **Assignee**: @${commitAuthor}
+          `;
+          
+          const labels = ['deployment', 'multi-platform', 'needs-review'];
+          if (platforms.includes('replit')) labels.push('replit');
+          if (platforms.includes('render')) labels.push('render');
+          if (platforms.includes('code')) labels.push('code');
+          if (platforms.includes('codex')) labels.push('codex');
+          
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: labels,
+            assignees: [context.actor]
+          });
+          
+          console.log(`Created deployment issue #${issue.data.number}`);
+          
+          // Add platform-specific comments for additional context
+          const platformDetails = {
+            replit: "🔧 **Replit Specific**: Ensure replit.nix includes all system dependencies and .replit configuration is optimized for your stack.",
+            render: "🌐 **Render Specific**: Verify render.yaml build settings and environment variables are properly configured in the dashboard.",
+            code: "💻 **Code Platform**: Ensure CI/CD pipeline is configured and all automated tests pass before deployment.",
+            codex: "🔍 **Codex Platform**: Run comprehensive code quality checks and ensure all security scans pass."
+          };
+          
+          const platformComments = platforms.split(',')
+            .map(p => p.trim())
+            .filter(p => platformDetails[p])
+            .map(p => platformDetails[p])
+            .join('\n\n');
+          
+          if (platformComments) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.data.number,
+              body: `## 🏗️ Platform-Specific Deployment Notes\n\n${platformComments}`
+            });
+          }
+
+  notify-deployment:
+    needs: [detect-platform-changes, create-deployment-issue]
+    if: needs.detect-platform-changes.outputs.should_deploy == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deployment notification
+      run: |
+        echo "🚀 Deployment automation completed for platforms: ${{ needs.detect-platform-changes.outputs.affected_platforms }}"
+        echo "Issue created for deployment tracking and verification"
+        echo "Manual deployment steps may be required for some platforms"
