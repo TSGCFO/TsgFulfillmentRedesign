@@ -137,6 +137,7 @@ function generateMainSitemap(): string {
   const urlsetClose = '</urlset>';
   
   const urlXml = pages.map(page => {
+
     let xml = `  <url>
     <loc>${baseUrl}${page.url}</loc>
     <lastmod>${lastmod}</lastmod>
@@ -172,10 +173,12 @@ function generateMainSitemap(): string {
     return xml;
   }).join('\n');
 
+
   return xmlHeader + urlsetOpen + urlXml + urlsetClose;
 }
 
 function generateServicesSitemap(): string {
+
   try {
     const baseUrl = 'https://tsgfulfillment.com';
     const lastmod = new Date().toISOString();
@@ -262,6 +265,7 @@ function generateServicesSitemap(): string {
   </url>
 </urlset>`;
   }
+
 }
 
 function generateImageSitemap(): string {
@@ -365,6 +369,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   app.get('/sitemap-main.xml', (req, res) => {
     try {
+
       const sitemap = generateMainSitemap();
       res.set({
         'Content-Type': 'application/xml; charset=utf-8',
@@ -375,6 +380,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     } catch (error) {
       console.error('Error generating main sitemap:', error);
       res.status(500).set('Content-Type', 'text/plain').send(`Error generating main sitemap: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
     }
   });
 
@@ -393,6 +399,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   app.get('/sitemap-services.xml', (req, res) => {
     try {
+
       console.log('Generating services sitemap...');
       const sitemap = generateServicesSitemap();
       console.log('Services sitemap generated successfully, length:', sitemap.length);
@@ -407,6 +414,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       console.error('Error generating services sitemap:', error);
       console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
       res.status(500).set('Content-Type', 'text/plain').send(`Error generating services sitemap: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
     }
   });
 
