@@ -137,20 +137,40 @@ function generateMainSitemap(): string {
   const urlsetClose = '</urlset>';
   
   const urlXml = pages.map(page => {
-    let xml = `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n`;
+    let xml = `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>`;
     
     // Add hero images for main pages
     if (page.url === '/') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/hero-fulfillment-center.jpg</image:loc>\n      <image:caption>TSG Fulfillment modern warehouse facility</image:caption>\n      <image:title>Professional Fulfillment Center</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/hero-fulfillment-center.jpg</image:loc>
+      <image:caption>TSG Fulfillment modern warehouse facility</image:caption>
+      <image:title>Professional Fulfillment Center</image:title>
+    </image:image>`;
     } else if (page.url === '/about') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/team-photo.jpg</image:loc>\n      <image:caption>TSG Fulfillment professional team</image:caption>\n      <image:title>Our Expert Team</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/team-photo.jpg</image:loc>
+      <image:caption>TSG Fulfillment professional team</image:caption>
+      <image:title>Our Expert Team</image:title>
+    </image:image>`;
     } else if (page.url === '/services') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/fulfillment-services.jpg</image:loc>\n      <image:caption>Comprehensive fulfillment services</image:caption>\n      <image:title>Fulfillment Services Overview</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/fulfillment-services.jpg</image:loc>
+      <image:caption>Comprehensive fulfillment services</image:caption>
+      <image:title>Fulfillment Services Overview</image:title>
+    </image:image>`;
     }
     
-    xml += `  </url>\n`;
+    xml += `
+  </url>`;
     return xml;
-  }).join('');
+  }).join('\n');
 
   return xmlHeader + urlsetOpen + urlXml + urlsetClose;
 }
@@ -193,15 +213,35 @@ function generateServicesSitemap(): string {
     
     const serviceUrls = services.map(service => {
       const escapedName = escapeXml(service.name);
-      return `  <url>\n    <loc>${baseUrl}/services/${service.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${service.priority}</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/services/${service.slug}.jpg</image:loc>\n      <image:caption>${escapedName} professional services</image:caption>\n      <image:title>${escapedName}</image:title>\n    </image:image>\n  </url>\n`;
-    }).join('');
+      return `  <url>
+    <loc>${baseUrl}/services/${service.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${service.priority}</priority>
+    <image:image>
+      <image:loc>${baseUrl}/images/services/${service.slug}.jpg</image:loc>
+      <image:caption>${escapedName} professional services</image:caption>
+      <image:title>${escapedName}</image:title>
+    </image:image>
+  </url>`;
+    }).join('\n');
 
     const industryUrls = industries.map(industry => {
       const escapedName = escapeXml(industry.name);
-      return `  <url>\n    <loc>${baseUrl}/industries/${industry.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${industry.priority}</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/industries/${industry.slug}.jpg</image:loc>\n      <image:caption>${escapedName} specialized solutions</image:caption>\n      <image:title>${escapedName}</image:title>\n    </image:image>\n  </url>\n`;
-    }).join('');
+      return `  <url>
+    <loc>${baseUrl}/industries/${industry.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${industry.priority}</priority>
+    <image:image>
+      <image:loc>${baseUrl}/images/industries/${industry.slug}.jpg</image:loc>
+      <image:caption>${escapedName} specialized solutions</image:caption>
+      <image:title>${escapedName}</image:title>
+    </image:image>
+  </url>`;
+    }).join('\n');
 
-    const fullXml = xmlHeader + urlsetOpen + serviceUrls + industryUrls + urlsetClose;
+    const fullXml = xmlHeader + urlsetOpen + serviceUrls + '\n' + industryUrls + '\n' + urlsetClose;
     
     // Basic XML validation
     if (!fullXml.includes('<?xml') || !fullXml.includes('</urlset>')) {
