@@ -38,7 +38,9 @@ const Home: React.FC = () => {
     <div className="min-h-screen">
 
       <EnhancedSEOManager 
-        page="home"
+
+        page="homepage"
+
         canonical="/"
         ogImage="/images/og-home.jpg"
         criticalImages={['/images/hero-fulfillment-center.jpg', '/images/logo.png']}

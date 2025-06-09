@@ -41,7 +41,7 @@ function generateSitemap(): string {
     { url: '/industries/technology', priority: '0.7', changefreq: 'monthly' }
   ];
 
-  if (analyticsEnabled) {
+  if (process.env.ANALYTICS_ENABLED === 'true') {
     pages.push(
       { url: '/analytics', priority: '0.6', changefreq: 'weekly' },
       { url: '/analytics/reports', priority: '0.5', changefreq: 'weekly' },
@@ -137,58 +137,135 @@ function generateMainSitemap(): string {
   const urlsetClose = '</urlset>';
   
   const urlXml = pages.map(page => {
-    let xml = `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n`;
+
+    let xml = `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>`;
     
     // Add hero images for main pages
     if (page.url === '/') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/hero-fulfillment-center.jpg</image:loc>\n      <image:caption>TSG Fulfillment modern warehouse facility</image:caption>\n      <image:title>Professional Fulfillment Center</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/hero-fulfillment-center.jpg</image:loc>
+      <image:caption>TSG Fulfillment modern warehouse facility</image:caption>
+      <image:title>Professional Fulfillment Center</image:title>
+    </image:image>`;
     } else if (page.url === '/about') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/team-photo.jpg</image:loc>\n      <image:caption>TSG Fulfillment professional team</image:caption>\n      <image:title>Our Expert Team</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/team-photo.jpg</image:loc>
+      <image:caption>TSG Fulfillment professional team</image:caption>
+      <image:title>Our Expert Team</image:title>
+    </image:image>`;
     } else if (page.url === '/services') {
-      xml += `    <image:image>\n      <image:loc>${baseUrl}/images/fulfillment-services.jpg</image:loc>\n      <image:caption>Comprehensive fulfillment services</image:caption>\n      <image:title>Fulfillment Services Overview</image:title>\n    </image:image>\n`;
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}/images/fulfillment-services.jpg</image:loc>
+      <image:caption>Comprehensive fulfillment services</image:caption>
+      <image:title>Fulfillment Services Overview</image:title>
+    </image:image>`;
     }
     
-    xml += `  </url>\n`;
+    xml += `
+  </url>`;
     return xml;
-  }).join('');
+  }).join('\n');
+
 
   return xmlHeader + urlsetOpen + urlXml + urlsetClose;
 }
 
 function generateServicesSitemap(): string {
-  const baseUrl = 'https://tsgfulfillment.com';
-  const lastmod = new Date().toISOString();
-  
-  const services = [
-    { slug: 'order-fulfillment', name: 'Order Fulfillment', priority: '0.8' },
-    { slug: 'warehousing', name: 'Warehousing Services', priority: '0.8' },
-    { slug: 'kitting-services', name: 'Kitting & Assembly', priority: '0.7' },
-    { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.7' },
-    { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.6' },
-    { slug: 'returns-processing', name: 'Returns Processing', priority: '0.6' }
-  ];
 
-  const industries = [
-    { slug: 'ecommerce', name: 'eCommerce Fulfillment', priority: '0.7' },
-    { slug: 'healthcare', name: 'Healthcare Logistics', priority: '0.6' },
-    { slug: 'retail', name: 'Retail Distribution', priority: '0.6' },
-    { slug: 'technology', name: 'Technology Products', priority: '0.6' },
-    { slug: 'consumer-goods', name: 'Consumer Goods', priority: '0.6' }
-  ];
-  
-  const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  const urlsetOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
-  const urlsetClose = '</urlset>';
-  
-  const serviceUrls = services.map(service => 
-    `  <url>\n    <loc>${baseUrl}/services/${service.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${service.priority}</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/services/${service.slug}.jpg</image:loc>\n      <image:caption>${service.name} professional services</image:caption>\n      <image:title>${service.name}</image:title>\n    </image:image>\n  </url>\n`
-  ).join('');
+  try {
+    const baseUrl = 'https://tsgfulfillment.com';
+    const lastmod = new Date().toISOString();
+    
+    const services = [
+      { slug: 'order-fulfillment', name: 'Order Fulfillment', priority: '0.8' },
+      { slug: 'warehousing', name: 'Warehousing Services', priority: '0.8' },
+      { slug: 'kitting-services', name: 'Kitting & Assembly', priority: '0.7' },
+      { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.7' },
+      { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.6' },
+      { slug: 'returns-processing', name: 'Returns Processing', priority: '0.6' }
+    ];
 
-  const industryUrls = industries.map(industry => 
-    `  <url>\n    <loc>${baseUrl}/industries/${industry.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${industry.priority}</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/industries/${industry.slug}.jpg</image:loc>\n      <image:caption>${industry.name} specialized solutions</image:caption>\n      <image:title>${industry.name}</image:title>\n    </image:image>\n  </url>\n`
-  ).join('');
+    const industries = [
+      { slug: 'ecommerce', name: 'eCommerce Fulfillment', priority: '0.7' },
+      { slug: 'healthcare', name: 'Healthcare Logistics', priority: '0.6' },
+      { slug: 'retail', name: 'Retail Distribution', priority: '0.6' },
+      { slug: 'technology', name: 'Technology Products', priority: '0.6' },
+      { slug: 'consumer-goods', name: 'Consumer Goods', priority: '0.6' }
+    ];
+    
+    const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    const urlsetOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
+    const urlsetClose = '</urlset>';
+    
+    // Helper function to escape XML special characters
+    const escapeXml = (text: string): string => {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    };
+    
+    const serviceUrls = services.map(service => {
+      const escapedName = escapeXml(service.name);
+      return `  <url>
+    <loc>${baseUrl}/services/${service.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${service.priority}</priority>
+    <image:image>
+      <image:loc>${baseUrl}/images/services/${service.slug}.jpg</image:loc>
+      <image:caption>${escapedName} professional services</image:caption>
+      <image:title>${escapedName}</image:title>
+    </image:image>
+  </url>`;
+    }).join('\n');
 
-  return xmlHeader + urlsetOpen + serviceUrls + industryUrls + urlsetClose;
+    const industryUrls = industries.map(industry => {
+      const escapedName = escapeXml(industry.name);
+      return `  <url>
+    <loc>${baseUrl}/industries/${industry.slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>${industry.priority}</priority>
+    <image:image>
+      <image:loc>${baseUrl}/images/industries/${industry.slug}.jpg</image:loc>
+      <image:caption>${escapedName} specialized solutions</image:caption>
+      <image:title>${escapedName}</image:title>
+    </image:image>
+  </url>`;
+    }).join('\n');
+
+    const fullXml = xmlHeader + urlsetOpen + serviceUrls + '\n' + industryUrls + '\n' + urlsetClose;
+    
+    // Basic XML validation
+    if (!fullXml.includes('<?xml') || !fullXml.includes('</urlset>')) {
+      throw new Error('Generated XML is malformed');
+    }
+    
+    return fullXml;
+  } catch (error) {
+    console.error('Error in generateServicesSitemap:', error);
+    // Return a minimal valid sitemap as fallback
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://tsgfulfillment.com/services</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>`;
+  }
+
 }
 
 function generateImageSitemap(): string {
@@ -292,14 +369,18 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   app.get('/sitemap-main.xml', (req, res) => {
     try {
+
+      const sitemap = generateMainSitemap();
       res.set({
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=86400'
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400',
+        'X-Robots-Tag': 'noindex'
       });
-      res.send(generateMainSitemap());
+      res.send(sitemap);
     } catch (error) {
       console.error('Error generating main sitemap:', error);
-      res.status(500).send('Error generating main sitemap');
+      res.status(500).set('Content-Type', 'text/plain').send(`Error generating main sitemap: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
     }
   });
 
@@ -318,14 +399,22 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   app.get('/sitemap-services.xml', (req, res) => {
     try {
+
+      console.log('Generating services sitemap...');
+      const sitemap = generateServicesSitemap();
+      console.log('Services sitemap generated successfully, length:', sitemap.length);
+      
       res.set({
-        'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=86400'
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=86400',
+        'X-Robots-Tag': 'noindex'
       });
-      res.send(generateServicesSitemap());
+      res.send(sitemap);
     } catch (error) {
       console.error('Error generating services sitemap:', error);
-      res.status(500).send('Error generating services sitemap');
+      console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
+      res.status(500).set('Content-Type', 'text/plain').send(`Error generating services sitemap: ${error instanceof Error ? error.message : 'Unknown error'}`);
+
     }
   });
 

@@ -54,7 +54,7 @@ export const BUSINESS_INFO = {
 };
 
 export const PAGE_TEMPLATES = {
-  home: {
+  homepage: {
     title: 'TSG Fulfillment Services | Professional Order Fulfillment & Warehousing',
     description: 'Leading fulfillment center in Ontario providing comprehensive order fulfillment, warehousing, kitting, and logistics solutions for eCommerce and retail businesses.',
     keywords: 'order fulfillment Ontario, warehousing services Toronto, ecommerce fulfillment Canada, logistics solutions GTA, inventory management, distribution center Vaughan',

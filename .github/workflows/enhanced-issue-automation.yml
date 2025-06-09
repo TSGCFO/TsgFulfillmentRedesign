@@ -1,0 +1,543 @@
+name: Enhanced Issue Automation
+
+on:
+  push:
+    branches: [ replit, render, code, codex ]
+  pull_request:
+    branches: [ replit, render, code, codex ]
+    types: [ opened, closed, synchronize, reopened ]
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch for issue creation'
+        required: false
+        default: 'replit'
+        type: choice
+        options:
+        - replit
+        - render  
+        - code
+        - codex
+      issue_type:
+        description: 'Type of issue to create'
+        required: false
+        default: 'auto-detect'
+        type: choice
+        options:
+        - auto-detect
+        - seo-audit
+        - security-review
+        - performance-analysis
+        - code-review
+        - deployment-check
+
+env:
+  AUTOMATION_ENABLED: true
+  
+jobs:
+  branch-analysis:
+    runs-on: ubuntu-latest
+    outputs:
+      branch_context: ${{ steps.branch-info.outputs.context }}
+      should_proceed: ${{ steps.branch-info.outputs.should_proceed }}
+      branch_priority: ${{ steps.branch-info.outputs.priority }}
+    
+    steps:
+    - name: Analyze branch context
+      id: branch-info
+      run: |
+        BRANCH="${{ github.ref_name }}"
+        echo "Analyzing branch: $BRANCH"
+        
+        case $BRANCH in
+          "replit")
+            echo "context=development" >> $GITHUB_OUTPUT
+            echo "should_proceed=true" >> $GITHUB_OUTPUT
+            echo "priority=medium" >> $GITHUB_OUTPUT
+            echo "Branch: Replit development environment"
+            ;;
+          "render")
+            echo "context=production" >> $GITHUB_OUTPUT
+            echo "should_proceed=true" >> $GITHUB_OUTPUT
+            echo "priority=high" >> $GITHUB_OUTPUT
+            echo "Branch: Render production deployment"
+            ;;
+          "code")
+            echo "context=staging" >> $GITHUB_OUTPUT
+            echo "should_proceed=true" >> $GITHUB_OUTPUT
+            echo "priority=medium" >> $GITHUB_OUTPUT
+            echo "Branch: Code staging environment"
+            ;;
+          "codex")
+            echo "context=experimental" >> $GITHUB_OUTPUT
+            echo "should_proceed=true" >> $GITHUB_OUTPUT
+            echo "priority=low" >> $GITHUB_OUTPUT
+            echo "Branch: Codex experimental features"
+            ;;
+          *)
+            echo "context=unknown" >> $GITHUB_OUTPUT
+            echo "should_proceed=false" >> $GITHUB_OUTPUT
+            echo "priority=low" >> $GITHUB_OUTPUT
+            echo "Branch: Unknown branch - skipping automation"
+            ;;
+        esac
+
+  commit-analysis:
+    needs: branch-analysis
+    if: needs.branch-analysis.outputs.should_proceed == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      analysis_result: ${{ steps.analyze.outputs.result }}
+      issue_data: ${{ steps.prepare-issue.outputs.data }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 10
+        
+    - name: Load configuration
+      id: config
+      run: |
+        if [ -f ".github/issue-automation-config.json" ]; then
+          echo "Config file found, loading settings..."
+          CONFIG=$(cat .github/issue-automation-config.json)
+          echo "config=$CONFIG" >> $GITHUB_OUTPUT
+        else
+          echo "No config file found, using defaults"
+          echo 'config={"enabled": true, "settings": {"defaultBranches": ["replit", "render", "code", "codex"]}}' >> $GITHUB_OUTPUT
+        fi
+
+    - name: Extract comprehensive commit data
+      id: commit-data
+      run: |
+        # Get detailed commit information
+        COMMIT_MSG=$(git log -1 --pretty=format:'%s')
+        COMMIT_BODY=$(git log -1 --pretty=format:'%b')
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+        COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
+        COMMIT_DATE=$(git log -1 --pretty=format:'%ci')
+        
+        # Analyze file changes
+        if [ "${{ github.event_name }}" = "push" ]; then
+          CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD || echo "")
+          ADDED_LINES=$(git diff --numstat HEAD~1 HEAD | awk '{sum += $1} END {print sum+0}')
+          DELETED_LINES=$(git diff --numstat HEAD~1 HEAD | awk '{sum += $2} END {print sum+0}')
+        else
+          # For PRs, compare against base branch
+          BASE_SHA=${{ github.event.pull_request.base.sha }}
+          CHANGED_FILES=$(git diff --name-only $BASE_SHA...HEAD || echo "")
+          ADDED_LINES=$(git diff --numstat $BASE_SHA...HEAD | awk '{sum += $1} END {print sum+0}')
+          DELETED_LINES=$(git diff --numstat $BASE_SHA...HEAD | awk '{sum += $2} END {print sum+0}')
+        fi
+        
+        # Categorize files
+        SEO_FILES=$(echo "$CHANGED_FILES" | grep -E "(sitemap|robots|schema|meta)" || echo "")
+        SECURITY_FILES=$(echo "$CHANGED_FILES" | grep -E "(auth|security|login|password)" || echo "")
+        PERFORMANCE_FILES=$(echo "$CHANGED_FILES" | grep -E "(webpack|vite|bundle|perf)" || echo "")
+        INFRA_FILES=$(echo "$CHANGED_FILES" | grep -E "(docker|yml|yaml|json)" || echo "")
+        
+        # Output data
+        echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+        echo "body=$COMMIT_BODY" >> $GITHUB_OUTPUT
+        echo "hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+        echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+        echo "email=$COMMIT_EMAIL" >> $GITHUB_OUTPUT
+        echo "date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "added_lines=$ADDED_LINES" >> $GITHUB_OUTPUT
+        echo "deleted_lines=$DELETED_LINES" >> $GITHUB_OUTPUT
+        echo "seo_files=$SEO_FILES" >> $GITHUB_OUTPUT
+        echo "security_files=$SECURITY_FILES" >> $GITHUB_OUTPUT
+        echo "performance_files=$PERFORMANCE_FILES" >> $GITHUB_OUTPUT
+        echo "infra_files=$INFRA_FILES" >> $GITHUB_OUTPUT
+
+    - name: Intelligent analysis
+      id: analyze
+      run: |
+        MESSAGE="${{ steps.commit-data.outputs.message }}"
+        BRANCH="${{ github.ref_name }}"
+        BRANCH_CONTEXT="${{ needs.branch-analysis.outputs.branch_context }}"
+        ADDED_LINES="${{ steps.commit-data.outputs.added_lines }}"
+        DELETED_LINES="${{ steps.commit-data.outputs.deleted_lines }}"
+        SEO_FILES="${{ steps.commit-data.outputs.seo_files }}"
+        SECURITY_FILES="${{ steps.commit-data.outputs.security_files }}"
+        PERFORMANCE_FILES="${{ steps.commit-data.outputs.performance_files }}"
+        
+        echo "Analyzing commit: $MESSAGE"
+        echo "Branch context: $BRANCH_CONTEXT"
+        echo "Change size: +$ADDED_LINES/-$DELETED_LINES"
+        
+        # Initialize decision variables
+        CREATE_ISSUE="false"
+        ISSUE_TYPE="standard"
+        PRIORITY="medium"
+        TEMPLATE="code-review"
+        LABELS="auto-generated"
+        
+        # Branch-specific logic
+        case $BRANCH_CONTEXT in
+          "production")
+            PRIORITY="high"
+            LABELS="$LABELS,production,critical-review"
+            echo "Production branch - elevated priority"
+            ;;
+          "staging")
+            PRIORITY="medium"
+            LABELS="$LABELS,staging,pre-production"
+            echo "Staging branch - standard priority"
+            ;;
+          "experimental")
+            PRIORITY="low"
+            LABELS="$LABELS,experimental,research"
+            echo "Experimental branch - low priority"
+            ;;
+        esac
+        
+        # Message pattern analysis
+        if [[ "$MESSAGE" =~ ^(feat|feature): ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="feature"
+          TEMPLATE="feature-review"
+          LABELS="$LABELS,enhancement"
+        elif [[ "$MESSAGE" =~ ^(fix|bugfix): ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="bugfix"
+          TEMPLATE="bug-review"
+          LABELS="$LABELS,bug"
+          PRIORITY="high"
+        elif [[ "$MESSAGE" =~ ^(security|sec): ]] || [[ "$SECURITY_FILES" != "" ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="security"
+          TEMPLATE="security-audit"
+          LABELS="$LABELS,security,urgent"
+          PRIORITY="critical"
+        elif [[ "$MESSAGE" =~ (seo|SEO|search) ]] || [[ "$SEO_FILES" != "" ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="seo"
+          TEMPLATE="seo-audit"
+          LABELS="$LABELS,seo,performance"
+        elif [[ "$MESSAGE" =~ (perf|performance) ]] || [[ "$PERFORMANCE_FILES" != "" ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="performance"
+          TEMPLATE="performance-review"
+          LABELS="$LABELS,performance"
+        elif [[ "$MESSAGE" =~ (breaking|BREAKING) ]]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="breaking"
+          TEMPLATE="breaking-change"
+          LABELS="$LABELS,breaking-change,urgent"
+          PRIORITY="critical"
+        fi
+        
+        # Size-based triggers
+        if [ "$ADDED_LINES" -gt 300 ] || [ "$DELETED_LINES" -gt 200 ]; then
+          CREATE_ISSUE="true"
+          ISSUE_TYPE="major-change"
+          PRIORITY="high"
+          LABELS="$LABELS,major-change"
+          echo "Large change detected - triggering review"
+        fi
+        
+        # Manual override from workflow dispatch
+        if [ "${{ github.event.inputs.issue_type }}" != "" ] && [ "${{ github.event.inputs.issue_type }}" != "auto-detect" ]; then
+          CREATE_ISSUE="true"
+          TEMPLATE="${{ github.event.inputs.issue_type }}"
+          echo "Manual override - using specified template"
+        fi
+        
+        echo "create_issue=$CREATE_ISSUE" >> $GITHUB_OUTPUT
+        echo "issue_type=$ISSUE_TYPE" >> $GITHUB_OUTPUT
+        echo "priority=$PRIORITY" >> $GITHUB_OUTPUT
+        echo "template=$TEMPLATE" >> $GITHUB_OUTPUT
+        echo "labels=$LABELS" >> $GITHUB_OUTPUT
+        
+        echo "Decision: Create=$CREATE_ISSUE, Type=$ISSUE_TYPE, Priority=$PRIORITY"
+
+    - name: Prepare issue content
+      id: prepare-issue
+      if: steps.analyze.outputs.create_issue == 'true'
+      run: |
+        TEMPLATE="${{ steps.analyze.outputs.template }}"
+        PRIORITY="${{ steps.analyze.outputs.priority }}"
+        BRANCH="${{ github.ref_name }}"
+        BRANCH_CONTEXT="${{ needs.branch-analysis.outputs.branch_context }}"
+        
+        MESSAGE="${{ steps.commit-data.outputs.message }}"
+        HASH="${{ steps.commit-data.outputs.hash }}"
+        AUTHOR="${{ steps.commit-data.outputs.author }}"
+        DATE="${{ steps.commit-data.outputs.date }}"
+        CHANGED_FILES="${{ steps.commit-data.outputs.changed_files }}"
+        ADDED_LINES="${{ steps.commit-data.outputs.added_lines }}"
+        DELETED_LINES="${{ steps.commit-data.outputs.deleted_lines }}"
+        
+        # Priority emoji
+        case $PRIORITY in
+          critical) EMOJI="🚨" ;;
+          high) EMOJI="⚠️" ;;
+          medium) EMOJI="📝" ;;
+          *) EMOJI="📋" ;;
+        esac
+        
+        # Branch emoji
+        case $BRANCH in
+          replit) BRANCH_EMOJI="🔧" ;;
+          render) BRANCH_EMOJI="🚀" ;;
+          code) BRANCH_EMOJI="🔍" ;;
+          codex) BRANCH_EMOJI="🧪" ;;
+        esac
+        
+        TITLE="@claude $EMOJI [$BRANCH_CONTEXT] $MESSAGE ($BRANCH)"
+        
+        # Generate template-specific content
+        case $TEMPLATE in
+          "seo-audit")
+            BODY="@claude Please review commit \`$HASH\` for SEO impact and provide optimization recommendations for the $BRANCH_CONTEXT environment.
+
+## 🔍 SEO Audit Required - $BRANCH_CONTEXT Environment
+
+$BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
+
+### Change Summary
+- **Commit:** \`$HASH\`
+- **Author:** $AUTHOR  
+- **Date:** $DATE
+- **Impact:** +$ADDED_LINES/-$DELETED_LINES lines
+
+### SEO Impact Checklist
+- [ ] **Meta Tags Analysis**
+  - [ ] Title tag optimization (30-60 characters)
+  - [ ] Meta description effectiveness (120-160 characters)
+  - [ ] Open Graph tags validation
+  - [ ] Twitter Card implementation
+
+- [ ] **Technical SEO**
+  - [ ] XML sitemap generation and validation
+  - [ ] Robots.txt directive accuracy
+  - [ ] URL structure and canonicalization
+  - [ ] Schema markup implementation
+
+- [ ] **Performance & Core Web Vitals**
+  - [ ] Largest Contentful Paint (LCP) < 2.5s
+  - [ ] First Input Delay (FID) < 100ms
+  - [ ] Cumulative Layout Shift (CLS) < 0.1
+  - [ ] Page speed optimization
+
+- [ ] **Content & Structure**
+  - [ ] H1-H6 heading hierarchy
+  - [ ] Image alt text optimization
+  - [ ] Internal linking strategy
+  - [ ] Content quality and relevance
+
+### Tools & Validation
+- [ ] Google Search Console verification
+- [ ] PageSpeed Insights analysis  
+- [ ] Schema markup validator testing
+- [ ] Mobile-friendly test completion
+
+### Files Modified
+\`\`\`
+$CHANGED_FILES
+\`\`\`"
+            ;;
+            
+          "security-audit")
+            BODY="@claude Please conduct a comprehensive security review of commit \`$HASH\` and identify any potential vulnerabilities or security concerns in the $BRANCH_CONTEXT environment.
+
+## 🛡️ Security Review Required - $BRANCH_CONTEXT Environment
+
+$BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
+
+### Security Assessment Details
+- **Risk Level:** $PRIORITY
+- **Commit:** \`$HASH\`
+- **Author:** $AUTHOR
+- **Environment:** $BRANCH_CONTEXT
+
+### Security Audit Checklist
+- [ ] **Code Security**
+  - [ ] Input validation and sanitization
+  - [ ] SQL injection prevention
+  - [ ] XSS protection mechanisms
+  - [ ] CSRF token implementation
+
+- [ ] **Authentication & Authorization**
+  - [ ] Access control verification
+  - [ ] Session management review
+  - [ ] Password security standards
+  - [ ] Multi-factor authentication
+
+- [ ] **Data Protection**
+  - [ ] Sensitive data encryption
+  - [ ] PII handling compliance
+  - [ ] Database security measures
+  - [ ] API security implementation
+
+- [ ] **Infrastructure Security**
+  - [ ] HTTPS enforcement
+  - [ ] Security headers configuration
+  - [ ] Dependency vulnerability scan
+  - [ ] Environment variable protection
+
+### Security Tools Required
+- [ ] SAST (Static Application Security Testing)
+- [ ] Dependency vulnerability scanning
+- [ ] Secrets detection in codebase
+- [ ] Security headers validation
+
+### Files Modified
+\`\`\`
+$CHANGED_FILES
+\`\`\`"
+            ;;
+            
+          "performance-review")
+            BODY="@claude Please analyze commit \`$HASH\` for performance impact and provide optimization recommendations for the $BRANCH_CONTEXT environment.
+
+## ⚡ Performance Analysis Required - $BRANCH_CONTEXT Environment
+
+$BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
+
+### Performance Impact Assessment
+- **Change Scope:** +$ADDED_LINES/-$DELETED_LINES lines
+- **Commit:** \`$HASH\`
+- **Author:** $AUTHOR
+- **Environment:** $BRANCH_CONTEXT
+
+### Performance Optimization Checklist
+- [ ] **Core Web Vitals**
+  - [ ] Largest Contentful Paint (LCP) monitoring
+  - [ ] First Input Delay (FID) measurement
+  - [ ] Cumulative Layout Shift (CLS) validation
+  - [ ] Time to First Byte (TTFB) optimization
+
+- [ ] **Resource Optimization**
+  - [ ] JavaScript bundle size analysis
+  - [ ] CSS optimization and minification
+  - [ ] Image compression and format optimization
+  - [ ] Font loading strategy optimization
+
+- [ ] **Caching & Delivery**
+  - [ ] Browser caching configuration
+  - [ ] CDN implementation verification
+  - [ ] Service worker cache strategy
+  - [ ] Compression (gzip/brotli) validation
+
+- [ ] **Database & Backend**
+  - [ ] Query performance analysis
+  - [ ] Database indexing optimization
+  - [ ] API response time monitoring
+  - [ ] Memory usage assessment
+
+### Performance Testing Tools
+- [ ] Lighthouse audit completion
+- [ ] WebPageTest analysis
+- [ ] Bundle analyzer review
+- [ ] Real User Monitoring (RUM) setup
+
+### Files Modified
+\`\`\`
+$CHANGED_FILES
+\`\`\`"
+            ;;
+            
+          *)
+            BODY="@claude Please review commit \`$HASH\` and provide feedback on code quality, implementation, and any potential improvements for the $BRANCH_CONTEXT environment.
+
+## 📋 Code Review Required - $BRANCH_CONTEXT Environment
+
+$BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
+
+### Change Summary
+- **Type:** ${{ steps.analyze.outputs.issue_type }}
+- **Priority:** $PRIORITY
+- **Commit:** \`$HASH\`
+- **Author:** $AUTHOR
+- **Date:** $DATE
+- **Impact:** +$ADDED_LINES/-$DELETED_LINES lines
+
+### Review Checklist
+- [ ] **Code Quality**
+  - [ ] Code standards compliance
+  - [ ] Error handling implementation
+  - [ ] Code documentation adequacy
+  - [ ] Performance considerations
+
+- [ ] **Testing & Validation**
+  - [ ] Unit test coverage
+  - [ ] Integration test validation
+  - [ ] Manual testing completion
+  - [ ] Edge case handling
+
+- [ ] **Deployment Readiness**
+  - [ ] Build process verification
+  - [ ] Environment configuration
+  - [ ] Database migration requirements
+  - [ ] Rollback strategy preparation
+
+### Files Modified
+\`\`\`
+$CHANGED_FILES
+\`\`\`"
+            ;;
+        esac
+        
+        echo "title=$TITLE" >> $GITHUB_OUTPUT
+        echo "body<<EOF" >> $GITHUB_OUTPUT
+        echo "$BODY" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+  create-issue:
+    needs: [branch-analysis, commit-analysis]
+    if: needs.commit-analysis.outputs.analysis_result == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create enhanced GitHub issue
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const title = `${{ needs.commit-analysis.outputs.issue_data }}`.split('\n')[0];
+          const body = `${{ needs.commit-analysis.outputs.issue_data }}`;
+          const labels = `${{ needs.commit-analysis.outputs.analysis_result }}`.split(',');
+          const priority = `${{ needs.branch-analysis.outputs.branch_priority }}`;
+          const branch = `${{ github.ref_name }}`;
+          
+          // Create the issue
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: labels,
+            assignees: ['${{ github.actor }}']
+          });
+          
+          console.log(`Created issue #${issue.data.number} for branch ${branch}`);
+          
+          // Add branch-specific comment
+          let branchComment = '';
+          switch(branch) {
+            case 'render':
+              branchComment = '🚀 **Production Environment** - This issue affects the live production system. Please prioritize and test thoroughly before deployment.';
+              break;
+            case 'code':
+              branchComment = '🔍 **Staging Environment** - This issue is in the staging environment. Validate all changes before promoting to production.';
+              break;
+            case 'codex':
+              branchComment = '🧪 **Experimental Branch** - This issue involves experimental features. Document findings and impacts for future reference.';
+              break;
+            default:
+              branchComment = '🔧 **Development Environment** - This issue is in the development environment. Ensure proper testing before advancement.';
+          }
+          
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issue.data.number,
+            body: branchComment
+          });
+          
+          return issue.data.number;

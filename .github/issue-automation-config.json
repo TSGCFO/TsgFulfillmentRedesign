@@ -1,0 +1,151 @@
+{
+  "enabled": true,
+  "settings": {
+    "minChangedFiles": 1,
+    "minLinesChanged": 10,
+    "excludeBranches": ["dependabot/*", "renovate/*", "temp/*"],
+    "defaultBranches": ["replit", "render", "code", "codex"],
+    "enableNotifications": false,
+    "autoAssign": true,
+    "defaultPriority": "medium"
+  },
+  "triggers": {
+    "commitPatterns": {
+      "feat|feature": {
+        "priority": "medium",
+        "template": "feature",
+        "labels": ["enhancement", "auto-generated"]
+      },
+      "fix|bugfix": {
+        "priority": "high", 
+        "template": "bugfix",
+        "labels": ["bug", "auto-generated"]
+      },
+      "security|sec": {
+        "priority": "critical",
+        "template": "security-audit", 
+        "labels": ["security", "urgent", "auto-generated"]
+      },
+      "seo|SEO|optimization": {
+        "priority": "medium",
+        "template": "seo-focused",
+        "labels": ["seo", "performance", "auto-generated"]
+      },
+      "perf|performance": {
+        "priority": "medium",
+        "template": "performance-review",
+        "labels": ["performance", "auto-generated"]
+      },
+      "breaking|BREAKING": {
+        "priority": "critical",
+        "template": "breaking-change",
+        "labels": ["breaking-change", "urgent", "auto-generated"]
+      }
+    },
+    "filePatterns": {
+      "package.json|yarn.lock|package-lock.json": {
+        "priority": "medium",
+        "template": "dependency-update",
+        "labels": ["dependencies", "auto-generated"]
+      },
+      "Dockerfile|docker-compose.*": {
+        "priority": "medium", 
+        "template": "infrastructure",
+        "labels": ["infrastructure", "docker", "auto-generated"]
+      },
+      "*.yml|*.yaml": {
+        "priority": "low",
+        "template": "ci-cd",
+        "labels": ["ci-cd", "auto-generated"]
+      },
+      "sitemap.*|robots.txt|*.schema.*": {
+        "priority": "medium",
+        "template": "seo-focused", 
+        "labels": ["seo", "auto-generated"]
+      },
+      "*.test.*|*.spec.*": {
+        "priority": "low",
+        "template": "testing",
+        "labels": ["testing", "auto-generated"]
+      }
+    },
+    "sizeThresholds": {
+      "majorChange": {
+        "linesAdded": 200,
+        "linesDeleted": 100,
+        "priority": "high",
+        "template": "major-change"
+      },
+      "massiveChange": {
+        "linesAdded": 500,
+        "linesDeleted": 300,
+        "priority": "critical", 
+        "template": "massive-change"
+      }
+    }
+  },
+  "templates": {
+    "standard": {
+      "title": "📋 [AUTO] Code Review Required: {message}",
+      "sections": ["summary", "checklist", "files", "actions"]
+    },
+    "feature": {
+      "title": "✨ [AUTO] Feature Implementation: {message}",
+      "sections": ["summary", "feature-checklist", "testing", "documentation"]
+    },
+    "bugfix": {
+      "title": "🐛 [AUTO] Bug Fix Review: {message}",
+      "sections": ["summary", "bug-checklist", "testing", "regression"]
+    },
+    "seo-focused": {
+      "title": "🔍 [AUTO] SEO Impact Review: {message}",
+      "sections": ["summary", "seo-checklist", "performance", "tools"]
+    },
+    "security-audit": {
+      "title": "🛡️ [AUTO] Security Review Required: {message}",
+      "sections": ["summary", "security-checklist", "tools", "compliance"]
+    },
+    "performance-review": {
+      "title": "⚡ [AUTO] Performance Impact Review: {message}",
+      "sections": ["summary", "performance-checklist", "metrics", "tools"]
+    },
+    "breaking-change": {
+      "title": "🚨 [AUTO] Breaking Change Alert: {message}",
+      "sections": ["summary", "breaking-checklist", "migration", "communication"]
+    },
+    "dependency-update": {
+      "title": "📦 [AUTO] Dependency Update Review: {message}",
+      "sections": ["summary", "dependency-checklist", "security", "compatibility"]
+    },
+    "infrastructure": {
+      "title": "🏗️ [AUTO] Infrastructure Change: {message}",
+      "sections": ["summary", "infrastructure-checklist", "deployment", "monitoring"]
+    }
+  },
+  "notifications": {
+    "slack": {
+      "enabled": false,
+      "webhook": "",
+      "channels": {
+        "critical": "#alerts",
+        "high": "#development", 
+        "medium": "#general"
+      }
+    },
+    "email": {
+      "enabled": false,
+      "recipients": ["team@example.com"]
+    }
+  },
+  "integrations": {
+    "jira": {
+      "enabled": false,
+      "createTickets": false,
+      "projectKey": ""
+    },
+    "linear": {
+      "enabled": false,
+      "teamId": ""
+    }
+  }
+}
