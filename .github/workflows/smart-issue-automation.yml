@@ -359,9 +359,11 @@ $CHANGED_FILES
         esac
         
         echo "title=$TITLE" >> $GITHUB_OUTPUT
-        echo "body<<EOF" >> $GITHUB_OUTPUT
-        echo "$BODY" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        {
+          echo "body<<EOF"
+          echo "$BODY"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
         echo "labels=$LABELS" >> $GITHUB_OUTPUT
 
     - name: Create GitHub Issue
