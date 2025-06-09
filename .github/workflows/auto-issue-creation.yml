@@ -1,0 +1,244 @@
+name: Auto Create Issues on Commit
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+    types: [ opened, closed ]
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Get commit information
+      id: commit-info
+      run: |
+        COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+        COMMIT_DATE=$(git log -1 --pretty=format:'%ci')
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | tr '\n' ', ' | sed 's/,$//')
+        
+        echo "commit_message=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+        echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+        echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+        echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+    - name: Check if issue should be created
+      id: should-create
+      run: |
+        # Define conditions for when to create issues
+        COMMIT_MESSAGE="${{ steps.commit-info.outputs.commit_message }}"
+        
+        # Create issue for specific commit types
+        if [[ "$COMMIT_MESSAGE" =~ ^(feat|fix|refactor|perf): ]] || \
+           [[ "$COMMIT_MESSAGE" =~ (SEO|security|performance) ]] || \
+           [[ "${{ steps.commit-info.outputs.changed_files }}" =~ (package\.json|docker|\.yml|\.yaml) ]]; then
+          echo "create=true" >> $GITHUB_OUTPUT
+          echo "Creating issue for commit: $COMMIT_MESSAGE"
+        else
+          echo "create=false" >> $GITHUB_OUTPUT
+          echo "Skipping issue creation for commit: $COMMIT_MESSAGE"
+        fi
+
+    - name: Determine issue type and priority
+      id: issue-classification
+      if: steps.should-create.outputs.create == 'true'
+      run: |
+        COMMIT_MSG="${{ steps.commit-info.outputs.commit_message }}"
+        
+        # Classify issue type and priority
+        if [[ "$COMMIT_MSG" =~ ^fix: ]] || [[ "$COMMIT_MSG" =~ (security|urgent) ]]; then
+          echo "priority=high" >> $GITHUB_OUTPUT
+          echo "labels=bug,high-priority,auto-generated" >> $GITHUB_OUTPUT
+          echo "issue_type=Bug Fix Required" >> $GITHUB_OUTPUT
+        elif [[ "$COMMIT_MSG" =~ ^feat: ]] || [[ "$COMMIT_MSG" =~ (enhancement|feature) ]]; then
+          echo "priority=medium" >> $GITHUB_OUTPUT
+          echo "labels=enhancement,medium-priority,auto-generated" >> $GITHUB_OUTPUT
+          echo "issue_type=Feature Enhancement" >> $GITHUB_OUTPUT
+        elif [[ "$COMMIT_MSG" =~ (SEO|performance) ]]; then
+          echo "priority=medium" >> $GITHUB_OUTPUT
+          echo "labels=performance,seo,medium-priority,auto-generated" >> $GITHUB_OUTPUT
+          echo "issue_type=Performance/SEO Optimization" >> $GITHUB_OUTPUT
+        elif [[ "${{ steps.commit-info.outputs.changed_files }}" =~ (package\.json|yarn\.lock|requirements\.txt) ]]; then
+          echo "priority=low" >> $GITHUB_OUTPUT
+          echo "labels=dependencies,low-priority,auto-generated" >> $GITHUB_OUTPUT
+          echo "issue_type=Dependency Update" >> $GITHUB_OUTPUT
+        else
+          echo "priority=low" >> $GITHUB_OUTPUT
+          echo "labels=maintenance,low-priority,auto-generated" >> $GITHUB_OUTPUT
+          echo "issue_type=Code Maintenance" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Create GitHub Issue
+      if: steps.should-create.outputs.create == 'true'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const commitInfo = {
+            message: `${{ steps.commit-info.outputs.commit_message }}`,
+            hash: `${{ steps.commit-info.outputs.commit_hash }}`,
+            author: `${{ steps.commit-info.outputs.commit_author }}`,
+            date: `${{ steps.commit-info.outputs.commit_date }}`,
+            changedFiles: `${{ steps.commit-info.outputs.changed_files }}`
+          };
+          
+          const issueType = `${{ steps.issue-classification.outputs.issue_type }}`;
+          const priority = `${{ steps.issue-classification.outputs.priority }}`;
+          const labels = `${{ steps.issue-classification.outputs.labels }}`.split(',');
+          
+          // Generate issue title
+          const issueTitle = `[AUTO] ${issueType}: ${commitInfo.message}`;
+          
+          // Generate comprehensive issue body
+          const issueBody = `
+## 🤖 Automated Issue Creation
+
+This issue was automatically created based on commit activity that requires attention or follow-up.
+
+### 📝 Commit Details
+- **Commit Hash:** \`${commitInfo.hash}\`
+- **Author:** ${commitInfo.author}
+- **Date:** ${commitInfo.date}
+- **Message:** ${commitInfo.message}
+
+### 📁 Files Modified
+\`\`\`
+${commitInfo.changedFiles}
+\`\`\`
+
+### 🎯 Issue Classification
+- **Type:** ${issueType}
+- **Priority:** ${priority.toUpperCase()}
+- **Auto-Generated Labels:** ${labels.join(', ')}
+
+### 📋 Recommended Actions
+
+${priority === 'high' ? `
+#### 🚨 High Priority Actions Required
+- [ ] **Immediate Review:** Code changes require urgent attention
+- [ ] **Security Check:** Verify no security vulnerabilities introduced
+- [ ] **Testing:** Ensure comprehensive testing is completed
+- [ ] **Deployment:** Coordinate deployment if applicable
+` : priority === 'medium' ? `
+#### ⚡ Medium Priority Actions
+- [ ] **Code Review:** Schedule peer review within 24-48 hours
+- [ ] **Documentation:** Update relevant documentation
+- [ ] **Testing:** Add or update unit/integration tests
+- [ ] **Performance:** Verify performance impact if applicable
+` : `
+#### 📝 Low Priority Maintenance
+- [ ] **Documentation:** Update if needed
+- [ ] **Monitoring:** Check for any impact on metrics
+- [ ] **Cleanup:** Consider code cleanup opportunities
+`}
+
+### 🔍 SEO & Performance Considerations
+${commitInfo.message.includes('SEO') || commitInfo.message.includes('performance') ? `
+- [ ] **SEO Impact:** Verify search engine optimization is maintained
+- [ ] **Core Web Vitals:** Check performance metrics
+- [ ] **Sitemap:** Update XML sitemaps if page structure changed
+- [ ] **Schema Markup:** Validate structured data
+- [ ] **Meta Tags:** Ensure proper meta tag implementation
+` : `
+- [ ] **Performance Check:** Monitor for any performance regressions
+- [ ] **SEO Validation:** Quick check that SEO elements are intact
+`}
+
+### 🛠 Technical Validation Checklist
+- [ ] **Build Status:** Verify successful build and deployment
+- [ ] **Error Monitoring:** Check for new errors in logs
+- [ ] **Browser Compatibility:** Test across major browsers
+- [ ] **Mobile Responsiveness:** Verify mobile functionality
+- [ ] **Accessibility:** Ensure WCAG compliance maintained
+
+### 📊 Quality Assurance
+- [ ] **Code Quality:** Run linting and static analysis
+- [ ] **Security Scan:** Perform security vulnerability check
+- [ ] **Performance Metrics:** Validate Core Web Vitals scores
+- [ ] **User Experience:** Test critical user journeys
+
+### 🔗 Related Resources
+- [Commit Details](https://github.com/${{ github.repository }}/commit/${{ steps.commit-info.outputs.commit_hash }})
+- [Repository](https://github.com/${{ github.repository }})
+- [Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+### 📝 Notes
+> This issue was automatically generated by GitHub Actions. Please review the changes and complete the applicable checklist items.
+> 
+> **Assignee:** @${{ github.actor }}
+> **Created:** ${new Date().toISOString()}
+
+---
+*Automated issue creation powered by GitHub Actions*
+          `;
+          
+          // Create the issue
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: issueTitle,
+            body: issueBody,
+            labels: labels,
+            assignees: ['${{ github.actor }}']
+          });
+          
+          console.log(`Created issue #${issue.data.number}: ${issueTitle}`);
+          
+          // Add priority label as a comment for visibility
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issue.data.number,
+            body: `🏷️ **Priority Level:** ${priority.toUpperCase()}\n\n${priority === 'high' ? '⚠️ This issue requires immediate attention!' : priority === 'medium' ? '📝 Please address within 24-48 hours.' : '📋 Address when convenient during regular maintenance.'}`
+          });
+
+    - name: Notify on Slack (Optional)
+      if: steps.should-create.outputs.create == 'true' && steps.issue-classification.outputs.priority == 'high'
+      run: |
+        # Uncomment and configure if you want Slack notifications
+        # curl -X POST -H 'Content-type: application/json' \
+        #   --data '{"text":"🚨 High priority issue created: ${{ steps.commit-info.outputs.commit_message }}"}' \
+        #   ${{ secrets.SLACK_WEBHOOK_URL }}
+        echo "High priority issue created - consider enabling Slack notifications"
+
+    - name: Create Pull Request Review Reminder
+      if: github.event_name == 'pull_request' && github.event.action == 'opened'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: `## 🔍 Automated PR Review Checklist
+
+### 📋 Pre-Merge Validation
+- [ ] **SEO Impact Assessment:** Verify no negative SEO impact
+- [ ] **Performance Testing:** Check Core Web Vitals scores
+- [ ] **Security Review:** Scan for security vulnerabilities
+- [ ] **Browser Testing:** Validate across major browsers
+- [ ] **Mobile Compatibility:** Test responsive design
+- [ ] **Accessibility:** Ensure WCAG compliance
+
+### 🎯 Quality Gates
+- [ ] **Build Success:** All CI checks passing
+- [ ] **Code Coverage:** Maintain or improve test coverage
+- [ ] **Documentation:** Update relevant docs if needed
+- [ ] **Breaking Changes:** Document any breaking changes
+
+*This checklist was automatically generated to ensure quality standards.*`
+          });
