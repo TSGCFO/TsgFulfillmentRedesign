@@ -87,6 +87,7 @@ Sitemap: https://tsgfulfillment.com/sitemap.xml
 `;
 }
 
+
 // Enhanced Sitemap Generation Functions
 function generateEnhancedSitemap(): string {
   const baseUrl = 'https://tsgfulfillment.com';
@@ -260,6 +261,7 @@ Host: https://tsgfulfillment.com
 `;
 }
 
+
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
   app.get('/health', (req, res) => {
     res.status(200).json({ 
@@ -270,6 +272,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     });
   });
 
+
   // SEO ROUTES - Enhanced with Dynamic Sitemap Generation
   app.get('/sitemap.xml', (req, res) => {
     try {
@@ -279,11 +282,13 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
         'Last-Modified': new Date().toUTCString()
       });
       res.send(generateEnhancedSitemap());
+
     } catch (error) {
       console.error('Error generating sitemap:', error);
       res.status(500).send('Error generating sitemap');
     }
   });
+
 
   app.get('/sitemap-main.xml', (req, res) => {
     try {
@@ -331,11 +336,13 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
         'Cache-Control': 'public, max-age=86400'
       });
       res.send(generateEnhancedRobotsTxt());
+
     } catch (error) {
       console.error('Error generating robots.txt:', error);
       res.status(500).send('Error generating robots.txt');
     }
   });
+
 
   // SEO Analytics Endpoint
   app.get('/api/seo/analytics', (req, res) => {
@@ -389,6 +396,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       handleError(res, error, 'Failed to validate schema markup');
     }
   });
+
 
   // QUOTE REQUEST ENDPOINTS
   // Create a quote request

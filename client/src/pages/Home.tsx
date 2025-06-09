@@ -13,9 +13,11 @@ import FAQSection from '@/components/FAQSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
+
 import EnhancedSEOManager from '@/seo/EnhancedSEOManager';
 import { STRUCTURED_DATA_TEMPLATES } from '@/seo/seo-config';
 import { generatePageSchema } from '@/seo/advanced-schema';
+
 
 const Home: React.FC = () => {
   // Setup cookie consent functionality
@@ -34,6 +36,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+
       <EnhancedSEOManager 
         page="home"
         canonical="/"
@@ -47,6 +50,7 @@ const Home: React.FC = () => {
         ]}
         structuredData={[
           STRUCTURED_DATA_TEMPLATES.faq([
+
             {
               question: "What fulfillment services does TSG offer?",
               answer: "TSG Fulfillment provides comprehensive order fulfillment, warehousing, kitting, assembly, and freight forwarding services for eCommerce and retail businesses."
