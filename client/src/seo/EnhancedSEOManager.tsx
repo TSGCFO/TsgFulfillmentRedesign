@@ -98,7 +98,7 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
   }, [keywords, pageTemplate?.keywords]);
   
   const canonicalUrl = useMemo(() => 
-    canonical || generateCanonicalUrl(window.location.pathname),
+    canonical || (typeof window !== 'undefined' ? generateCanonicalUrl(window.location.pathname) : ''),
     [canonical]
   );
   
@@ -251,7 +251,7 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
           rel={hint.rel}
           href={hint.href}
           {...(hint.as && { as: hint.as })}
-          {...(hint.crossorigin && { crossOrigin: hint.crossorigin })}
+          {...(hint.crossorigin && { crossOrigin: hint.crossorigin as 'anonymous' | 'use-credentials' })}
         />
       ))}
       
@@ -263,7 +263,7 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
           href={font.href}
           as={font.as}
           type={font.type}
-          crossOrigin={font.crossorigin}
+          crossOrigin={font.crossorigin as 'anonymous' | 'use-credentials'}
         />
       ))}
       

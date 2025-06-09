@@ -41,7 +41,7 @@ function generateSitemap(): string {
     { url: '/industries/technology', priority: '0.7', changefreq: 'monthly' }
   ];
 
-  if (analyticsEnabled) {
+  if (process.env.ANALYTICS_ENABLED === 'true') {
     pages.push(
       { url: '/analytics', priority: '0.6', changefreq: 'weekly' },
       { url: '/analytics/reports', priority: '0.5', changefreq: 'weekly' },
