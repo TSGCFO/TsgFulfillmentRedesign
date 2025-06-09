@@ -443,7 +443,9 @@ $CHANGED_FILES
             ;;
             
           *)
-            BODY="## 📋 Code Review Required - $BRANCH_CONTEXT Environment
+            BODY="@claude Please review commit \`$HASH\` and provide feedback on code quality, implementation, and any potential improvements for the $BRANCH_CONTEXT environment.
+
+## 📋 Code Review Required - $BRANCH_CONTEXT Environment
 
 $BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
 
