@@ -274,7 +274,9 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
           rel={image.rel}
           href={image.href}
           as={image.as}
-          {...(image.fetchpriority && { fetchPriority: image.fetchpriority })}
+          {...(image.fetchpriority && { 
+            fetchPriority: image.fetchpriority as 'high' | 'low' | 'auto' 
+          })}
         />
       ))}
       
