@@ -180,10 +180,10 @@ const Footer: React.FC = () => {
               &copy; {new Date().getFullYear()} TSG Fulfillment Services Inc. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Cookie Policy</a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Sitemap</a>
+              <a href="/privacy-policy" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
+              <a href="/terms-of-service" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
+              <a href="/cookie-policy" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Cookie Policy</a>
+              <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Sitemap</a>
             </div>
           </div>
         </div>
