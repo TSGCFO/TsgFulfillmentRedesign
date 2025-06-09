@@ -48,7 +48,6 @@ jobs:
     - name: Extract commit information
       id: commit-info
       run: |
-        # Get comprehensive commit data
         COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
         COMMIT_BODY=$(git log -1 --pretty=format:'%b')
         COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -56,7 +55,6 @@ jobs:
         COMMIT_EMAIL=$(git log -1 --pretty=format:'%ae')
         COMMIT_DATE=$(git log -1 --pretty=format:'%ci')
         
-        # Get file changes
         if [ "${{ github.event_name }}" = "push" ]; then
           CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
           ADDED_FILES=$(git diff --name-status HEAD~1 HEAD | grep "^A" | cut -f2)
@@ -72,65 +70,44 @@ jobs:
         LINES_ADDED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo "0")
         LINES_DELETED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo "0")
         
-        # Create JSON data structure
-        DATA=$(jq -n \
-          --arg message "$COMMIT_MESSAGE" \
-          --arg body "$COMMIT_BODY" \
-          --arg hash "$COMMIT_HASH" \
-          --arg author "$COMMIT_AUTHOR" \
-          --arg email "$COMMIT_EMAIL" \
-          --arg date "$COMMIT_DATE" \
-          --arg changed_files "$CHANGED_FILES" \
-          --arg added_files "$ADDED_FILES" \
-          --arg modified_files "$MODIFIED_FILES" \
-          --arg deleted_files "$DELETED_FILES" \
-          --arg lines_added "$LINES_ADDED" \
-          --arg lines_deleted "$LINES_DELETED" \
-          '{
-            message: $message,
-            body: $body,
-            hash: $hash,
-            author: $author,
-            email: $email,
-            date: $date,
-            changed_files: ($changed_files | split("\n") | map(select(. != ""))),
-            added_files: ($added_files | split("\n") | map(select(. != ""))),
-            modified_files: ($modified_files | split("\n") | map(select(. != ""))),
-            deleted_files: ($deleted_files | split("\n") | map(select(. != ""))),
-            lines_added: ($lines_added | tonumber),
-            lines_deleted: ($lines_deleted | tonumber)
-          }')
+        # Escape for JSON
+        COMMIT_MESSAGE_ESCAPED=$(echo "$COMMIT_MESSAGE" | sed 's/"/\\"/g')
+        COMMIT_BODY_ESCAPED=$(echo "$COMMIT_BODY" | sed 's/"/\\"/g')
+        CHANGED_FILES_LIST=$(echo "$CHANGED_FILES" | tr '\n' ',' | sed 's/,$//')
         
-        echo "data=$DATA" >> $GITHUB_OUTPUT
+        echo "message=$COMMIT_MESSAGE_ESCAPED" >> $GITHUB_OUTPUT
+        echo "body=$COMMIT_BODY_ESCAPED" >> $GITHUB_OUTPUT
+        echo "hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+        echo "author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+        echo "email=$COMMIT_EMAIL" >> $GITHUB_OUTPUT
+        echo "date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+        echo "changed_files=$CHANGED_FILES_LIST" >> $GITHUB_OUTPUT
+        echo "lines_added=$LINES_ADDED" >> $GITHUB_OUTPUT
+        echo "lines_deleted=$LINES_DELETED" >> $GITHUB_OUTPUT
 
     - name: Analyze changes and determine action
       id: analysis
       run: |
-        # Parse commit data
-        COMMIT_DATA='${{ steps.commit-info.outputs.data }}'
-        MESSAGE=$(echo "$COMMIT_DATA" | jq -r '.message')
-        CHANGED_FILES=$(echo "$COMMIT_DATA" | jq -r '.changed_files[]' | tr '\n' ' ')
-        LINES_ADDED=$(echo "$COMMIT_DATA" | jq -r '.lines_added')
-        LINES_DELETED=$(echo "$COMMIT_DATA" | jq -r '.lines_deleted')
+        MESSAGE="${{ steps.commit-info.outputs.message }}"
+        CHANGED_FILES="${{ steps.commit-info.outputs.changed_files }}"
+        LINES_ADDED="${{ steps.commit-info.outputs.lines_added }}"
+        LINES_DELETED="${{ steps.commit-info.outputs.lines_deleted }}"
         
         echo "Analyzing commit: $MESSAGE"
         echo "Changed files: $CHANGED_FILES"
         echo "Lines: +$LINES_ADDED -$LINES_DELETED"
         
-        # Initialize variables
         SHOULD_CREATE="false"
         ISSUE_TYPE="maintenance"
         PRIORITY="low"
         TEMPLATE="standard"
         
-        # Force creation if workflow dispatch
         if [ "${{ github.event.inputs.force_create }}" = "true" ]; then
           SHOULD_CREATE="true"
           TEMPLATE="${{ github.event.inputs.issue_template }}"
           echo "Force creating issue with template: $TEMPLATE"
         fi
         
-        # Check commit message patterns
         if [[ "$MESSAGE" =~ ^(feat|feature): ]]; then
           SHOULD_CREATE="true"
           ISSUE_TYPE="feature"
@@ -158,30 +135,21 @@ jobs:
           TEMPLATE="performance-review"
         fi
         
-        # Check file-based triggers
         if [[ "$CHANGED_FILES" =~ (package\.json|yarn\.lock|Dockerfile|docker-compose) ]]; then
           SHOULD_CREATE="true"
           ISSUE_TYPE="infrastructure"
           PRIORITY="medium"
         fi
         
-        # Check for large changes
         if [ "$LINES_ADDED" -gt 200 ] || [ "$LINES_DELETED" -gt 100 ]; then
           SHOULD_CREATE="true"
           ISSUE_TYPE="major-change"
           PRIORITY="high"
         fi
         
-        # Skip for excluded branches
         if [[ "${{ github.ref }}" =~ $EXCLUDE_BRANCHES ]]; then
           SHOULD_CREATE="false"
           echo "Skipping for excluded branch pattern"
-        fi
-        
-        # Skip if minimal changes
-        if [ "${#CHANGED_FILES}" -lt "$MIN_CHANGED_FILES" ] && [ "${{ github.event.inputs.force_create }}" != "true" ]; then
-          SHOULD_CREATE="false"
-          echo "Skipping for minimal changes"
         fi
         
         echo "should_create=$SHOULD_CREATE" >> $GITHUB_OUTPUT
@@ -200,20 +168,18 @@ jobs:
     - name: Generate issue content
       id: content
       run: |
-        COMMIT_DATA='${{ needs.analyze-changes.outputs.commit_data }}'
         ISSUE_TYPE="${{ needs.analyze-changes.outputs.issue_type }}"
         PRIORITY="${{ needs.analyze-changes.outputs.priority }}"
         TEMPLATE="${{ needs.analyze-changes.outputs.template }}"
         
-        MESSAGE=$(echo "$COMMIT_DATA" | jq -r '.message')
-        HASH=$(echo "$COMMIT_DATA" | jq -r '.hash')
-        AUTHOR=$(echo "$COMMIT_DATA" | jq -r '.author')
-        DATE=$(echo "$COMMIT_DATA" | jq -r '.date')
-        CHANGED_FILES=$(echo "$COMMIT_DATA" | jq -r '.changed_files | join(", ")')
-        LINES_ADDED=$(echo "$COMMIT_DATA" | jq -r '.lines_added')
-        LINES_DELETED=$(echo "$COMMIT_DATA" | jq -r '.lines_deleted')
+        MESSAGE="${{ needs.analyze-changes.outputs.commit_data }}"
+        HASH="${{ needs.analyze-changes.outputs.commit_data }}"
+        AUTHOR="${{ needs.analyze-changes.outputs.commit_data }}"
+        DATE="${{ needs.analyze-changes.outputs.commit_data }}"
+        CHANGED_FILES="${{ needs.analyze-changes.outputs.commit_data }}"
+        LINES_ADDED="${{ needs.analyze-changes.outputs.commit_data }}"
+        LINES_DELETED="${{ needs.analyze-changes.outputs.commit_data }}"
         
-        # Generate title
         case $PRIORITY in
           critical) PRIORITY_EMOJI="🚨" ;;
           high) PRIORITY_EMOJI="⚠️" ;;
@@ -221,14 +187,13 @@ jobs:
           *) PRIORITY_EMOJI="📋" ;;
         esac
         
-        TITLE="$PRIORITY_EMOJI [AUTO-$ISSUE_TYPE] $MESSAGE"
+        TITLE="@claude $PRIORITY_EMOJI [AUTO-$ISSUE_TYPE] $MESSAGE"
         
-        # Generate template-specific content
         case $TEMPLATE in
           "seo-focused")
             BODY="@claude Please review commit \`$HASH\` for SEO impact and provide optimization recommendations.
 
-## 🔍 SEO Impact Analysis Required
+## SEO Impact Analysis Required
 
 ### Commit Details
 - **Hash:** \`$HASH\`
@@ -262,7 +227,7 @@ $CHANGED_FILES
           "security-audit")
             BODY="@claude Please conduct a security review of commit \`$HASH\` and identify any potential vulnerabilities or security concerns.
 
-## 🛡️ Security Review Required
+## Security Review Required
 
 ### Security Assessment
 - **Risk Level:** $PRIORITY
@@ -294,7 +259,7 @@ $CHANGED_FILES
           "performance-review")
             BODY="@claude Please analyze commit \`$HASH\` for performance impact and provide optimization recommendations.
 
-## ⚡ Performance Impact Review
+## Performance Impact Review
 
 ### Performance Analysis
 - **Scope:** $LINES_ADDED added, $LINES_DELETED removed lines
@@ -326,7 +291,7 @@ $CHANGED_FILES
           *)
             BODY="@claude Please review commit \`$HASH\` and provide feedback on code quality, implementation, and any potential improvements.
 
-## 📋 Code Review Required
+## Code Review Required
 
 ### Change Summary
 - **Type:** $ISSUE_TYPE
@@ -359,9 +324,11 @@ $CHANGED_FILES
         esac
         
         echo "title=$TITLE" >> $GITHUB_OUTPUT
-        echo "body<<EOF" >> $GITHUB_OUTPUT
-        echo "$BODY" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
+        {
+          echo "body<<EOF"
+          echo "$BODY"
+          echo "EOF"
+        } >> $GITHUB_OUTPUT
         echo "labels=$LABELS" >> $GITHUB_OUTPUT
 
     - name: Create GitHub Issue
@@ -374,7 +341,6 @@ $CHANGED_FILES
           const labels = `${{ steps.content.outputs.labels }}`.split(',');
           const priority = `${{ needs.analyze-changes.outputs.priority }}`;
           
-          // Create the issue
           const issue = await github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
@@ -386,25 +352,13 @@ $CHANGED_FILES
           
           console.log(`Created issue #${issue.data.number}: ${title}`);
           
-          // Add milestone if critical/high priority
           if (priority === 'critical' || priority === 'high') {
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue.data.number,
-              body: `🎯 **${priority.toUpperCase()} PRIORITY** - This issue requires immediate attention!\n\nCC: @${{ github.repository_owner }}`
+              body: `**${priority.toUpperCase()} PRIORITY** - This issue requires immediate attention!\\n\\nCC: @${{ github.repository_owner }}`
             });
           }
           
           return issue.data.number;
-
-  notify-team:
-    needs: [analyze-changes, create-issue]
-    if: needs.analyze-changes.outputs.priority == 'critical'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Send notification
-      run: |
-        echo "Critical issue created - implement team notification here"
-        # Add Slack/Discord/Email notification logic here
