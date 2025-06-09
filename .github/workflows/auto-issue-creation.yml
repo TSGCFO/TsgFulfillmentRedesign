@@ -100,10 +100,12 @@ jobs:
           const labels = `${{ steps.issue-classification.outputs.labels }}`.split(',');
           
           // Generate issue title
-          const issueTitle = `[AUTO] ${issueType}: ${commitInfo.message}`;
+          const issueTitle = `@claude [AUTO] ${issueType}: ${commitInfo.message}`;
           
           // Generate comprehensive issue body
           const issueBody = `
+@claude Please review the changes in commit \`${commitInfo.hash}\` and provide feedback on the implementation.
+
 ## 🤖 Automated Issue Creation
 
 This issue was automatically created based on commit activity that requires attention or follow-up.

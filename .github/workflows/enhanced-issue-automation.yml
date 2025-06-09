@@ -288,12 +288,14 @@ jobs:
           codex) BRANCH_EMOJI="🧪" ;;
         esac
         
-        TITLE="$EMOJI [$BRANCH_CONTEXT] $MESSAGE ($BRANCH)"
+        TITLE="@claude $EMOJI [$BRANCH_CONTEXT] $MESSAGE ($BRANCH)"
         
         # Generate template-specific content
         case $TEMPLATE in
           "seo-audit")
-            BODY="## 🔍 SEO Audit Required - $BRANCH_CONTEXT Environment
+            BODY="@claude Please review commit \`$HASH\` for SEO impact and provide optimization recommendations for the $BRANCH_CONTEXT environment.
+
+## 🔍 SEO Audit Required - $BRANCH_CONTEXT Environment
 
 $BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
 
@@ -341,7 +343,9 @@ $CHANGED_FILES
             ;;
             
           "security-audit")
-            BODY="## 🛡️ Security Review Required - $BRANCH_CONTEXT Environment
+            BODY="@claude Please conduct a comprehensive security review of commit \`$HASH\` and identify any potential vulnerabilities or security concerns in the $BRANCH_CONTEXT environment.
+
+## 🛡️ Security Review Required - $BRANCH_CONTEXT Environment
 
 $BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
 
@@ -389,7 +393,9 @@ $CHANGED_FILES
             ;;
             
           "performance-review")
-            BODY="## ⚡ Performance Analysis Required - $BRANCH_CONTEXT Environment
+            BODY="@claude Please analyze commit \`$HASH\` for performance impact and provide optimization recommendations for the $BRANCH_CONTEXT environment.
+
+## ⚡ Performance Analysis Required - $BRANCH_CONTEXT Environment
 
 $BRANCH_EMOJI **Branch:** $BRANCH ($BRANCH_CONTEXT)
 

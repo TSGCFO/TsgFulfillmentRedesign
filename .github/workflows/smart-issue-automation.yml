@@ -227,7 +227,9 @@ jobs:
         # Generate template-specific content
         case $TEMPLATE in
           "seo-focused")
-            BODY="## 🔍 SEO Impact Analysis Required
+            BODY="@claude Please review commit \`$HASH\` for SEO impact and provide optimization recommendations.
+
+## 🔍 SEO Impact Analysis Required
 
 ### Commit Details
 - **Hash:** \`$HASH\`
@@ -259,7 +261,9 @@ $CHANGED_FILES
             ;;
             
           "security-audit")
-            BODY="## 🛡️ Security Review Required
+            BODY="@claude Please conduct a security review of commit \`$HASH\` and identify any potential vulnerabilities or security concerns.
+
+## 🛡️ Security Review Required
 
 ### Security Assessment
 - **Risk Level:** $PRIORITY
@@ -289,7 +293,9 @@ $CHANGED_FILES
             ;;
             
           "performance-review")
-            BODY="## ⚡ Performance Impact Review
+            BODY="@claude Please analyze commit \`$HASH\` for performance impact and provide optimization recommendations.
+
+## ⚡ Performance Impact Review
 
 ### Performance Analysis
 - **Scope:** $LINES_ADDED added, $LINES_DELETED removed lines
@@ -319,7 +325,9 @@ $CHANGED_FILES
             ;;
             
           *)
-            BODY="## 📋 Code Review Required
+            BODY="@claude Please review commit \`$HASH\` and provide feedback on code quality, implementation, and any potential improvements.
+
+## 📋 Code Review Required
 
 ### Change Summary
 - **Type:** $ISSUE_TYPE
