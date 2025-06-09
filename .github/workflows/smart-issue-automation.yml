@@ -2,9 +2,9 @@ name: Smart Issue Automation
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ replit, render, code, codex ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ replit, render, code, codex ]
     types: [ opened, closed, synchronize ]
   workflow_dispatch:
     inputs:

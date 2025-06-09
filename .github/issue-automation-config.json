@@ -4,6 +4,7 @@
     "minChangedFiles": 1,
     "minLinesChanged": 10,
     "excludeBranches": ["dependabot/*", "renovate/*", "temp/*"],
+    "defaultBranches": ["replit", "render", "code", "codex"],
     "enableNotifications": false,
     "autoAssign": true,
     "defaultPriority": "medium"

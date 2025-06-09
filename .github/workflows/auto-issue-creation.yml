@@ -2,9 +2,9 @@ name: Auto Create Issues on Commit
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ replit, render, code, codex ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ replit, render, code, codex ]
     types: [ opened, closed ]
 
 jobs:
