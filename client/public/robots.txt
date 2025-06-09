@@ -42,6 +42,7 @@ Disallow: /cache/
 # Sitemaps
 Sitemap: https://tsgfulfillment.com/sitemap.xml
 Sitemap: https://tsgfulfillment.com/sitemap-images.xml
+Sitemap: https://www.tsgfulfillment.com/sitemap-services.xml
 
 # Crawl delay for better server performance
 Crawl-delay: 1
