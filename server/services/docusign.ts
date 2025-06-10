@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 // Temporary interface until schema import is fixed
 interface Contract {
   id: number;
@@ -94,13 +96,6 @@ class DocuSignService {
   }
 
   private createJWT(): string {
-    // In a real implementation, you would use a proper JWT library
-    // For now, this is a placeholder that would need proper JWT signing
-    const header = {
-      alg: 'RS256',
-      typ: 'JWT'
-    };
-
     const payload = {
       iss: this.integrationKey,
       sub: this.userId,
@@ -110,9 +105,13 @@ class DocuSignService {
       scope: 'signature impersonation'
     };
 
-    // This would need proper RS256 signing with the private key
-    // For demo purposes, returning a placeholder
-    return 'jwt_token_placeholder';
+    return jwt.sign(payload, this.privateKey, { 
+      algorithm: 'RS256',
+      header: {
+        alg: 'RS256',
+        typ: 'JWT'
+      }
+    });
   }
 
   private async makeRequest(endpoint: string, method: string = 'GET', body?: any) {
