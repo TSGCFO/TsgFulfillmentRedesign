@@ -62,9 +62,17 @@ const MemoryStore = createMemoryStore(session);
 
 // Updated interface with all CRUD methods for analytics
 export interface IStorage {
-  // Employee methods (formerly user methods)
+  // User authentication methods
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
+  createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, userData: Partial<User>): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
+  
+  // Employee portal methods
   getEmployee(id: number): Promise<Employee | undefined>;
-  getEmployeeByUsername(username: string): Promise<Employee | undefined>;
+  getEmployeeByEmail(email: string): Promise<Employee | undefined>;
   getAllEmployees(): Promise<Employee[]>;
   createEmployee(employee: InsertEmployee): Promise<Employee>;
   updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined>;
