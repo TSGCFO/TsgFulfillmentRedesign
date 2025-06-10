@@ -29,6 +29,7 @@ const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
 const EmployeePortal = lazy(() => import("@/pages/EmployeePortal"));
 const UserManagement = lazy(() => import("@/pages/user-management"));
+const CustomerInquiries = lazy(() => import("@/pages/customer-inquiries"));
 const AuthPage = lazy(() => import("@/pages/auth-page"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
