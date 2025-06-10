@@ -55,7 +55,9 @@ class HubSpotService {
     });
 
     if (!response.ok) {
-      throw new Error(`HubSpot API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.log('HubSpot API error response:', errorText);
+      throw new Error(`HubSpot API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     return response.json();
