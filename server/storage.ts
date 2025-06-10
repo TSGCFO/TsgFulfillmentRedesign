@@ -60,8 +60,10 @@ export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getAllUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, userData: Partial<User>): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
   
   // Quote request methods
   createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest>;
