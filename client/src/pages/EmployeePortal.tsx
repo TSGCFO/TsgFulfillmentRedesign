@@ -49,7 +49,7 @@ export default function EmployeePortal() {
     }
   };
 
-  const getRoleBadgeVariant = (role: string) => {
+  const getRoleBadgeVariant = (role: string): "destructive" | "default" | "secondary" => {
     switch (role) {
       case "SuperAdmin":
         return "destructive";
@@ -82,7 +82,7 @@ export default function EmployeePortal() {
                   <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
                   <div className="flex items-center space-x-1">
                     {getRoleIcon(user.role)}
-                    <Badge variant={getRoleBadgeVariant(user.role) as any}>
+                    <Badge variant={getRoleBadgeVariant(user.role)}>
                       {user.role}
                     </Badge>
                   </div>

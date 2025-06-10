@@ -115,7 +115,7 @@ class DocuSignService {
 
     const data = await response.json();
     this.accessToken = data.access_token;
-    return this.accessToken;
+    return this.accessToken || '';
   }
 
   private createJWT(): string {
@@ -341,8 +341,7 @@ class DocuSignService {
           authenticated: false,
           accountId: this.accountId,
           message: 'DocuSign requires user consent. Try one of the consent URLs below based on your redirect URI configuration.',
-          consentUrl: consentUrls[0].url, // Primary URL for backward compatibility
-          allConsentUrls: consentUrls
+          consentUrl: consentUrls[0].url // Primary URL for backward compatibility
         };
       }
       
