@@ -493,34 +493,30 @@ export default function CustomerInquiries() {
                 <div>
                   <Label>Service Type</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    {selectedInquiry.service || "General Inquiry"}
+                    {selectedInquiry.serviceType || "General Inquiry"}
                   </div>
                 </div>
                 
                 <div>
                   <Label>Message/Requirements</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md min-h-[100px] whitespace-pre-wrap">
-                    {selectedInquiry.message || "No additional message provided."}
+                    {selectedInquiry.description || "No additional message provided."}
                   </div>
                 </div>
                 
-                {selectedInquiry.currentShipments && (
-                  <div>
-                    <Label>Current Shipments</Label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {selectedInquiry.currentShipments}
-                    </div>
+                <div>
+                  <Label>Budget Range</Label>
+                  <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                    ${selectedInquiry.budgetRange || "Not specified"}
                   </div>
-                )}
+                </div>
                 
-                {selectedInquiry.expectedShipments && (
-                  <div>
-                    <Label>Expected Shipments</Label>
-                    <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {selectedInquiry.expectedShipments}
-                    </div>
+                <div>
+                  <Label>Timeline</Label>
+                  <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                    {selectedInquiry.timeline || "Not specified"}
                   </div>
-                )}
+                </div>
               </TabsContent>
               
               <TabsContent value="actions" className="space-y-4">
