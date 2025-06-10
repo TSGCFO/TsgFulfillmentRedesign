@@ -1190,6 +1190,30 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // DocuSign OAuth callback handler
+  app.get('/auth/docusign/callback', async (req, res) => {
+    try {
+      const { code, state } = req.query;
+      
+      if (!code) {
+        return res.status(400).json({ error: 'Authorization code missing' });
+      }
+      
+      // Here you would exchange the code for an access token
+      // For now, we'll just confirm the callback was received
+      res.json({
+        success: true,
+        message: 'DocuSign authorization callback received',
+        code: code,
+        state: state,
+        next_steps: 'The authorization code can now be exchanged for an access token'
+      });
+    } catch (error) {
+      console.error('DocuSign callback error:', error);
+      res.status(500).json({ error: 'Callback processing failed' });
+    }
+  });
+
   // Test endpoints for third-party integrations
   app.get('/api/test/docusign', async (req, res) => {
     try {

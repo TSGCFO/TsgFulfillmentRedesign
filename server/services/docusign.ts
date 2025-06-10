@@ -315,13 +315,26 @@ gqBN/se1wy4MC/7DoVlrUSmwU7G2ZXJifkalUoJ7ggN79EkyuYJu8g==
       
       // Check if it's a consent error
       if (error instanceof Error && error.message.includes('consent_required')) {
-        const consentUrl = `https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20impersonation&client_id=${this.integrationKey}&redirect_uri=https://www.tsgfulfillment.com/employee&state=docusign_consent`;
+        // Try different redirect URIs that might be configured
+        const possibleRedirects = [
+          'https://www.tsgfulfillment.com/employee',
+          'https://www.tsgfulfillment.com/auth/docusign/callback',
+          'https://localhost:5000/auth/docusign/callback',
+          'http://localhost:5000/auth/docusign/callback'
+        ];
+        
+        // Generate multiple consent URLs with different redirect URIs
+        const consentUrls = possibleRedirects.map((redirect, index) => ({
+          url: `https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20impersonation&client_id=${this.integrationKey}&redirect_uri=${encodeURIComponent(redirect)}&state=docusign_consent`,
+          description: index === 0 ? 'Production URL' : index === 1 ? 'Auth callback' : `Local development ${index - 1}`
+        }));
         
         return {
           authenticated: false,
           accountId: this.accountId,
-          message: 'DocuSign requires user consent. Please visit the consent URL to authorize the application.',
-          consentUrl: consentUrl
+          message: 'DocuSign requires user consent. Try one of the consent URLs below based on your redirect URI configuration.',
+          consentUrl: consentUrls[0].url, // Primary URL for backward compatibility
+          allConsentUrls: consentUrls
         };
       }
       
