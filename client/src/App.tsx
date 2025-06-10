@@ -28,6 +28,7 @@ const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
 const EmployeePortal = lazy(() => import("@/pages/EmployeePortal"));
+const UserManagement = lazy(() => import("@/pages/user-management"));
 const AuthPage = lazy(() => import("@/pages/auth-page"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
@@ -91,6 +92,11 @@ function Router() {
           path="/employee" 
           component={EmployeePortal} 
           requiredRoles={["SuperAdmin", "Admin", "User"]} 
+        />
+        <ProtectedRoute 
+          path="/employee/users" 
+          component={UserManagement} 
+          requiredRoles={["SuperAdmin", "Admin"]} 
         />
         <Route component={NotFound} />
       </Switch>
