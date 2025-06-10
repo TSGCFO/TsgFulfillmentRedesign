@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AlertCircle, Plus, Edit, Trash2, User, Shield, Crown } from "lucide-react";
@@ -251,24 +251,38 @@ export default function UserManagement() {
                 />
               </div>
               <div>
-                <Label htmlFor="role">Role</Label>
-                <Select
+                <Label>Role</Label>
+                <RadioGroup
                   value={newUser.role}
                   onValueChange={(value: "SuperAdmin" | "Admin" | "User") => setNewUser({ ...newUser, role: value })}
+                  className="mt-2"
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="User">User</SelectItem>
-                    {user?.role === "SuperAdmin" && (
-                      <>
-                        <SelectItem value="Admin">Admin</SelectItem>
-                        <SelectItem value="SuperAdmin">SuperAdmin</SelectItem>
-                      </>
-                    )}
-                  </SelectContent>
-                </Select>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="User" id="role-user" />
+                    <Label htmlFor="role-user" className="flex items-center space-x-2 cursor-pointer">
+                      <User className="h-4 w-4" />
+                      <span>User</span>
+                    </Label>
+                  </div>
+                  {user?.role === "SuperAdmin" && (
+                    <>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="Admin" id="role-admin" />
+                        <Label htmlFor="role-admin" className="flex items-center space-x-2 cursor-pointer">
+                          <Shield className="h-4 w-4" />
+                          <span>Admin</span>
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="SuperAdmin" id="role-superadmin" />
+                        <Label htmlFor="role-superadmin" className="flex items-center space-x-2 cursor-pointer">
+                          <Crown className="h-4 w-4" />
+                          <span>SuperAdmin</span>
+                        </Label>
+                      </div>
+                    </>
+                  )}
+                </RadioGroup>
               </div>
             </div>
             <DialogFooter>
@@ -389,24 +403,40 @@ export default function UserManagement() {
                 />
               </div>
               <div>
-                <Label htmlFor="editRole">Role</Label>
-                <Select
+                <Label>Role</Label>
+                <RadioGroup
                   value={editingUser.role}
                   onValueChange={(value: "SuperAdmin" | "Admin" | "User") => 
                     setEditingUser({ ...editingUser, role: value })
                   }
+                  className="mt-2"
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="User">User</SelectItem>
-                    <SelectItem value="Admin">Admin</SelectItem>
-                    {user?.role === "SuperAdmin" && (
-                      <SelectItem value="SuperAdmin">SuperAdmin</SelectItem>
-                    )}
-                  </SelectContent>
-                </Select>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="User" id="edit-role-user" />
+                    <Label htmlFor="edit-role-user" className="flex items-center space-x-2 cursor-pointer">
+                      <User className="h-4 w-4" />
+                      <span>User</span>
+                    </Label>
+                  </div>
+                  {(user?.role === "SuperAdmin" || (user?.role === "Admin" && editingUser.role !== "SuperAdmin")) && (
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Admin" id="edit-role-admin" />
+                      <Label htmlFor="edit-role-admin" className="flex items-center space-x-2 cursor-pointer">
+                        <Shield className="h-4 w-4" />
+                        <span>Admin</span>
+                      </Label>
+                    </div>
+                  )}
+                  {user?.role === "SuperAdmin" && (
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="SuperAdmin" id="edit-role-superadmin" />
+                      <Label htmlFor="edit-role-superadmin" className="flex items-center space-x-2 cursor-pointer">
+                        <Crown className="h-4 w-4" />
+                        <span>SuperAdmin</span>
+                      </Label>
+                    </div>
+                  )}
+                </RadioGroup>
               </div>
             </div>
           )}
