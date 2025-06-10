@@ -518,6 +518,48 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // Get all quote requests (for employee portal)
+  app.get('/api/quote-requests', requireAuth, async (req, res) => {
+    try {
+      const quoteRequests = await storage.getQuoteRequests();
+      res.status(200).json(quoteRequests);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving quote requests');
+    }
+  });
+
+  // Get specific quote request
+  app.get('/api/quote-requests/:id', requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quoteRequest = await storage.getQuoteRequest(id);
+      
+      if (!quoteRequest) {
+        return res.status(404).json({ message: 'Quote request not found' });
+      }
+      
+      res.status(200).json(quoteRequest);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving quote request');
+    }
+  });
+
+  // Update quote request status
+  app.patch('/api/quote-requests/:id', requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedQuoteRequest = await storage.updateQuoteRequest(id, req.body);
+      
+      if (!updatedQuoteRequest) {
+        return res.status(404).json({ message: 'Quote request not found' });
+      }
+      
+      res.status(200).json(updatedQuoteRequest);
+    } catch (error) {
+      handleError(res, error, 'Error updating quote request');
+    }
+  });
+
   // Contact form endpoint
   app.post('/api/contact', async (req, res) => {
     try {

@@ -140,6 +140,25 @@ export default function EmployeePortal() {
             </CardContent>
           </Card>
 
+          {/* Customer Inquiries Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <MessageSquare className="h-5 w-5 text-blue-600" />
+                <CardTitle>Customer Inquiries</CardTitle>
+              </div>
+              <CardDescription>Review and manage customer quote requests</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">View and respond to customer inquiries submitted through the website.</p>
+              <Button asChild className="w-full">
+                <Link href="/employee/inquiries">
+                  View Inquiries
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Quotes Card */}
           <Card>
             <CardHeader>

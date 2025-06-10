@@ -490,20 +490,20 @@ export default function CustomerInquiries() {
                   </div>
                 </div>
                 
-                {selectedInquiry.budget && (
+                {selectedInquiry.currentShipments && (
                   <div>
-                    <Label>Budget Range</Label>
+                    <Label>Current Shipments</Label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      ${selectedInquiry.budget}
+                      {selectedInquiry.currentShipments}
                     </div>
                   </div>
                 )}
                 
-                {selectedInquiry.timeline && (
+                {selectedInquiry.expectedShipments && (
                   <div>
-                    <Label>Project Timeline</Label>
+                    <Label>Expected Shipments</Label>
                     <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                      {selectedInquiry.timeline}
+                      {selectedInquiry.expectedShipments}
                     </div>
                   </div>
                 )}

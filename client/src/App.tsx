@@ -99,6 +99,11 @@ function Router() {
           component={UserManagement} 
           requiredRoles={["SuperAdmin", "Admin"]} 
         />
+        <ProtectedRoute 
+          path="/employee/inquiries" 
+          component={CustomerInquiries} 
+          requiredRoles={["SuperAdmin", "Admin", "User"]} 
+        />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
