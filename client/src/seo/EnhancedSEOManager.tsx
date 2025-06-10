@@ -132,6 +132,8 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
           }
         } else if (Array.isArray(pageSchemas)) {
           data.push(...pageSchemas);
+        } else if (pageSchemas) {
+          data.push(pageSchemas);
         }
       }
     }

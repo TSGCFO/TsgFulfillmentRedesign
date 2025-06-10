@@ -1,0 +1,145 @@
+name: Issue Automation
+
+on:
+  push:
+    branches: [ replit, render, code, codex ]
+  pull_request:
+    branches: [ replit, render, code, codex ]
+    types: [ opened, closed ]
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Make scripts executable
+      run: chmod +x .github/scripts/*.sh
+
+    - name: Get commit data
+      id: commit
+      run: |
+        MESSAGE=$(git log -1 --pretty=format:'%s')
+        HASH=$(git rev-parse --short HEAD)
+        AUTHOR=$(git log -1 --pretty=format:'%an')
+        DATE=$(git log -1 --pretty=format:'%ci')
+        FILES=$(git diff --name-only HEAD~1 HEAD | tr '\n' ',' | sed 's/,$//')
+        ADDED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo "0")
+        DELETED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo "0")
+        
+        echo "message=$MESSAGE" >> $GITHUB_OUTPUT
+        echo "hash=$HASH" >> $GITHUB_OUTPUT
+        echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+        echo "date=$DATE" >> $GITHUB_OUTPUT
+        echo "files=$FILES" >> $GITHUB_OUTPUT
+        echo "added=$ADDED" >> $GITHUB_OUTPUT
+        echo "deleted=$DELETED" >> $GITHUB_OUTPUT
+
+    - name: Analyze commit
+      id: analyze
+      run: |
+        MESSAGE="${{ steps.commit.outputs.message }}"
+        FILES="${{ steps.commit.outputs.files }}"
+        ADDED="${{ steps.commit.outputs.added }}"
+        DELETED="${{ steps.commit.outputs.deleted }}"
+        
+        # Determine if issue should be created
+        CREATE="false"
+        TYPE="maintenance"
+        PRIORITY="low"
+        TEMPLATE="default"
+        
+        # Check patterns
+        if [[ "$MESSAGE" =~ ^(feat|feature): ]]; then
+          CREATE="true"
+          TYPE="feature"
+          PRIORITY="medium"
+          TEMPLATE="default"
+        elif [[ "$MESSAGE" =~ ^(fix|bugfix): ]]; then
+          CREATE="true"
+          TYPE="bugfix"
+          PRIORITY="high"
+          TEMPLATE="default"
+        elif [[ "$MESSAGE" =~ (seo|SEO) ]] || [[ "$FILES" =~ (sitemap|robots|schema) ]]; then
+          CREATE="true"
+          TYPE="seo"
+          PRIORITY="medium"
+          TEMPLATE="seo-focused"
+        elif [[ "$MESSAGE" =~ (security|sec) ]]; then
+          CREATE="true"
+          TYPE="security"
+          PRIORITY="critical"
+          TEMPLATE="security-audit"
+        elif [[ "$MESSAGE" =~ (perf|performance) ]]; then
+          CREATE="true"
+          TYPE="performance"
+          PRIORITY="medium"
+          TEMPLATE="performance-review"
+        fi
+        
+        # Large changes
+        if [ "$ADDED" -gt 200 ] || [ "$DELETED" -gt 100 ]; then
+          CREATE="true"
+          TYPE="major-change"
+          PRIORITY="high"
+        fi
+        
+        echo "create=$CREATE" >> $GITHUB_OUTPUT
+        echo "type=$TYPE" >> $GITHUB_OUTPUT
+        echo "priority=$PRIORITY" >> $GITHUB_OUTPUT
+        echo "template=$TEMPLATE" >> $GITHUB_OUTPUT
+
+    - name: Create issue content
+      if: steps.analyze.outputs.create == 'true'
+      id: content
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { generateIssueContent } = require('./.github/templates/issue-templates.js');
+          
+          const data = {
+            hash: '${{ steps.commit.outputs.hash }}',
+            author: '${{ steps.commit.outputs.author }}',
+            date: '${{ steps.commit.outputs.date }}',
+            message: '${{ steps.commit.outputs.message }}',
+            changedFiles: '${{ steps.commit.outputs.files }}',
+            linesAdded: '${{ steps.commit.outputs.added }}',
+            linesDeleted: '${{ steps.commit.outputs.deleted }}',
+            priority: '${{ steps.analyze.outputs.priority }}'
+          };
+          
+          const template = '${{ steps.analyze.outputs.template }}';
+          const content = generateIssueContent(template, data);
+          
+          core.setOutput('title', content.title);
+          core.setOutput('body', content.body);
+          core.setOutput('labels', content.labels.join(','));
+
+    - name: Create GitHub issue
+      if: steps.analyze.outputs.create == 'true'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const title = `${{ steps.content.outputs.title }}`;
+          const body = `${{ steps.content.outputs.body }}`;
+          const labels = `${{ steps.content.outputs.labels }}`.split(',');
+          
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: labels,
+            assignees: ['${{ github.actor }}']
+          });
+          
+          console.log(`Created issue #${issue.data.number}: ${title}`);

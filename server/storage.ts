@@ -69,6 +69,7 @@ export interface IStorage {
   getClientAnalyticsSummary(clientId: number): Promise<any>;
   getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any>;
   getInventoryReport(clientId?: number): Promise<any>;
+  getComparisonData(clientId: number, periodAStart: Date, periodAEnd: Date, periodBStart: Date, periodBEnd: Date, metric: string): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
