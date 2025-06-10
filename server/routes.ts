@@ -942,13 +942,22 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // ===== EMPLOYEE PORTAL ROUTES =====
 
   // Employee Management
-  app.post("/api/employees", async (req, res) => {
+  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
-      const validatedData = insertEmployeeSchema.parse(req.body);
-      const employee = await storage.createEmployee(validatedData);
-      res.status(201).json({ message: "Employee created successfully", data: employee });
+      const employeeData = insertEmployeeSchema.parse(req.body);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json({ message: "Employee created successfully", data: safeEmployee });
     } catch (error) {
-      handleError(res, error, "Invalid employee data");
+      handleError(res, error, "Failed to create employee");
     }
   });
 
