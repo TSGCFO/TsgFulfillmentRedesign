@@ -202,9 +202,11 @@ export class MemStorage implements IStorage {
       const existingAdmin = await this.getUserByUsername('admin');
       if (!existingAdmin) {
         await this.createUser({
+          fullName: 'System Administrator',
           username: 'admin',
+          email: 'admin@tsgfulfillment.com',
           password: 'admin123',
-          role: 'admin'
+          role: 'SuperAdmin'
         });
       }
     } catch (error) {
@@ -231,7 +233,7 @@ export class MemStorage implements IStorage {
       id, 
       createdAt,
       lastLogin: null,
-      role: insertUser.role ?? 'user'
+      role: insertUser.role ?? 'User'
     };
     this.users.set(id, user);
     return user;

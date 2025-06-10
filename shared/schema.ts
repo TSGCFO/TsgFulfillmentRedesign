@@ -4,18 +4,33 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
+  fullName: text("full_name").notNull(),
   username: text("username").notNull().unique(),
+  email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  role: text("role").default("user").notNull(),
+  role: text("role", { enum: ["SuperAdmin", "Admin", "User"] }).default("User").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
   lastLogin: timestamp("last_login"),
+  isActive: boolean("is_active").default(true).notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
+  fullName: true,
   username: true,
+  email: true,
   password: true,
   role: true,
 });
+
+export const loginSchema = z.object({
+  username: z.string().min(1),
+  password: z.string().min(1),
+});
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type LoginRequest = z.infer<typeof loginSchema>;
 
 export const quoteRequests = pgTable("quote_requests", {
   id: serial("id").primaryKey(),
