@@ -164,13 +164,33 @@ export function setupAuth(app: Express) {
   app.put("/api/employees/:id", requireAuth, async (req, res) => {
     try {
       const employeeId = parseInt(req.params.id);
+      const isOwnProfile = req.user?.id === employeeId;
+      const userRole = req.user?.role;
       
-      // SuperAdmin has full access, Admin and Users can only update their own profile
-      if (req.user?.role !== "SuperAdmin" && req.user?.role !== "Admin" && req.user?.id !== employeeId) {
+      // Access control validation
+      if (userRole !== "SuperAdmin" && !isOwnProfile) {
         return res.status(403).json({ error: "Access denied" });
       }
 
       const updateData = { ...req.body };
+      
+      // Restrict fields that can be updated based on role and context
+      if (isOwnProfile && userRole !== "SuperAdmin") {
+        // Users can only update their own basic info, not role or security fields
+        const allowedFields = ["fullName", "email", "password"];
+        Object.keys(updateData).forEach(key => {
+          if (!allowedFields.includes(key)) {
+            delete updateData[key];
+          }
+        });
+      }
+      
+      // Prevent role escalation
+      if (updateData.role && isOwnProfile && userRole !== "SuperAdmin") {
+        return res.status(403).json({ error: "Cannot modify own role" });
+      }
+      
+      // Hash password if provided
       if (updateData.password) {
         updateData.password = await hashPassword(updateData.password);
       }

@@ -76,6 +76,66 @@ export interface IStorage {
   getQuoteRequest(id: number): Promise<QuoteRequest | undefined>;
   updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined>;
   
+  // Inventory methods
+  createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel>;
+  getInventoryLevels(): Promise<InventoryLevel[]>;
+  getInventoryLevel(id: number): Promise<InventoryLevel | undefined>;
+  updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined>;
+  
+  // Shipment methods
+  createShipment(shipment: InsertShipment): Promise<Shipment>;
+  getShipments(): Promise<Shipment[]>;
+  getShipment(id: number): Promise<Shipment | undefined>;
+  updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined>;
+  
+  // Order statistics methods
+  createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic>;
+  getOrderStatistics(): Promise<OrderStatistic[]>;
+  updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined>;
+  
+  // Client KPI methods
+  createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi>;
+  getClientKpis(): Promise<ClientKpi[]>;
+  updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined>;
+  
+  // Dashboard settings methods
+  saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting>;
+  getDashboardSettings(): Promise<DashboardSetting[]>;
+  updateDashboardSetting(id: number, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined>;
+  
+  // Analytics methods
+  getClientAnalyticsSummary(): Promise<any>;
+  getShippingPerformance(): Promise<any>;
+  getInventoryReport(): Promise<any>;
+  getReportData(reportType: string, dateRange: any): Promise<any>;
+  getComparisonData(metric: string, period: string): Promise<any>;
+  
+  // Inquiry assignment methods
+  getInquiryAssignments(): Promise<InquiryAssignment[]>;
+  getUnassignedQuoteRequests(): Promise<QuoteRequest[]>;
+  createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment>;
+  updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined>;
+  
+  // Quote methods
+  createQuote(quote: InsertQuote): Promise<Quote>;
+  getQuotes(): Promise<Quote[]>;
+  getQuote(id: number): Promise<Quote | undefined>;
+  updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined>;
+  
+  // Contract methods
+  createContract(contract: InsertContract): Promise<Contract>;
+  getContracts(): Promise<Contract[]>;
+  
+  // Vendor methods
+  createVendor(vendor: InsertVendor): Promise<Vendor>;
+  getVendors(): Promise<Vendor[]>;
+  updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined>;
+  
+  // Material methods
+  createMaterial(material: InsertMaterial): Promise<Material>;
+  getMaterials(): Promise<Material[]>;
+  updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined>;
+  
   // Session store for authentication
   sessionStore: any;
 }
@@ -168,14 +228,9 @@ export class MemStorage implements IStorage {
     const newQuoteRequest: QuoteRequest = {
       id: this.quoteRequestId++,
       ...quoteRequest,
-      message: quoteRequest.message || null,
-      services: quoteRequest.services || null,
-      currentShipments: quoteRequest.currentShipments || null,
-      expectedShipments: quoteRequest.expectedShipments || null,
       createdAt: new Date(),
-      status: "new",
-      assignedTo: null,
-      convertedToClient: false,
+      updatedAt: new Date(),
+      status: "pending"
     };
     this.quoteRequests.set(newQuoteRequest.id, newQuoteRequest);
     return newQuoteRequest;
@@ -197,6 +252,76 @@ export class MemStorage implements IStorage {
     this.quoteRequests.set(id, updated);
     return updated;
   }
+
+  // Stub implementations for additional storage methods
+  async createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel> {
+    throw new Error("Inventory management not implemented in memory storage");
+  }
+  async getInventoryLevels(): Promise<InventoryLevel[]> { return []; }
+  async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> { return undefined; }
+  async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> { return undefined; }
+  
+  async createShipment(shipment: InsertShipment): Promise<Shipment> {
+    throw new Error("Shipment management not implemented in memory storage");
+  }
+  async getShipments(): Promise<Shipment[]> { return []; }
+  async getShipment(id: number): Promise<Shipment | undefined> { return undefined; }
+  async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> { return undefined; }
+  
+  async createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic> {
+    throw new Error("Order statistics not implemented in memory storage");
+  }
+  async getOrderStatistics(): Promise<OrderStatistic[]> { return []; }
+  async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> { return undefined; }
+  
+  async createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi> {
+    throw new Error("Client KPIs not implemented in memory storage");
+  }
+  async getClientKpis(): Promise<ClientKpi[]> { return []; }
+  async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> { return undefined; }
+  
+  async saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting> {
+    throw new Error("Dashboard settings not implemented in memory storage");
+  }
+  async getDashboardSettings(): Promise<DashboardSetting[]> { return []; }
+  async updateDashboardSetting(id: number, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> { return undefined; }
+  
+  async getClientAnalyticsSummary(): Promise<any> { return {}; }
+  async getShippingPerformance(): Promise<any> { return {}; }
+  async getInventoryReport(): Promise<any> { return {}; }
+  async getReportData(reportType: string, dateRange: any): Promise<any> { return {}; }
+  async getComparisonData(metric: string, period: string): Promise<any> { return {}; }
+  
+  async getInquiryAssignments(): Promise<InquiryAssignment[]> { return []; }
+  async getUnassignedQuoteRequests(): Promise<QuoteRequest[]> { return Array.from(this.quoteRequests.values()); }
+  async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
+    throw new Error("Inquiry assignments not implemented in memory storage");
+  }
+  async updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined> { return undefined; }
+  
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    throw new Error("Quote management not implemented in memory storage");
+  }
+  async getQuotes(): Promise<Quote[]> { return []; }
+  async getQuote(id: number): Promise<Quote | undefined> { return undefined; }
+  async updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined> { return undefined; }
+  
+  async createContract(contract: InsertContract): Promise<Contract> {
+    throw new Error("Contract management not implemented in memory storage");
+  }
+  async getContracts(): Promise<Contract[]> { return []; }
+  
+  async createVendor(vendor: InsertVendor): Promise<Vendor> {
+    throw new Error("Vendor management not implemented in memory storage");
+  }
+  async getVendors(): Promise<Vendor[]> { return []; }
+  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> { return undefined; }
+  
+  async createMaterial(material: InsertMaterial): Promise<Material> {
+    throw new Error("Material management not implemented in memory storage");
+  }
+  async getMaterials(): Promise<Material[]> { return []; }
+  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> { return undefined; }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -257,6 +382,160 @@ export class DatabaseStorage implements IStorage {
 
   async updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined> {
     const result = await db.update(quoteRequests).set(data).where(eq(quoteRequests.id, id)).returning();
+    return result[0];
+  }
+
+  // Database implementations for additional storage methods
+  async createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel> {
+    const result = await db.insert(inventoryLevels).values(inventory).returning();
+    return result[0];
+  }
+  async getInventoryLevels(): Promise<InventoryLevel[]> {
+    return await db.select().from(inventoryLevels);
+  }
+  async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> {
+    const result = await db.select().from(inventoryLevels).where(eq(inventoryLevels.id, id)).limit(1);
+    return result[0];
+  }
+  async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> {
+    const result = await db.update(inventoryLevels).set(data).where(eq(inventoryLevels.id, id)).returning();
+    return result[0];
+  }
+  
+  async createShipment(shipment: InsertShipment): Promise<Shipment> {
+    const result = await db.insert(shipments).values(shipment).returning();
+    return result[0];
+  }
+  async getShipments(): Promise<Shipment[]> {
+    return await db.select().from(shipments);
+  }
+  async getShipment(id: number): Promise<Shipment | undefined> {
+    const result = await db.select().from(shipments).where(eq(shipments.id, id)).limit(1);
+    return result[0];
+  }
+  async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> {
+    const result = await db.update(shipments).set(data).where(eq(shipments.id, id)).returning();
+    return result[0];
+  }
+  
+  async createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic> {
+    const result = await db.insert(orderStatistics).values(stat).returning();
+    return result[0];
+  }
+  async getOrderStatistics(): Promise<OrderStatistic[]> {
+    return await db.select().from(orderStatistics);
+  }
+  async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> {
+    const result = await db.update(orderStatistics).set(data).where(eq(orderStatistics.id, id)).returning();
+    return result[0];
+  }
+  
+  async createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi> {
+    const result = await db.insert(clientKpis).values(kpi).returning();
+    return result[0];
+  }
+  async getClientKpis(): Promise<ClientKpi[]> {
+    return await db.select().from(clientKpis);
+  }
+  async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> {
+    const result = await db.update(clientKpis).set(data).where(eq(clientKpis.id, id)).returning();
+    return result[0];
+  }
+  
+  async saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting> {
+    const result = await db.insert(dashboardSettings).values(setting).returning();
+    return result[0];
+  }
+  async getDashboardSettings(): Promise<DashboardSetting[]> {
+    return await db.select().from(dashboardSettings);
+  }
+  async updateDashboardSetting(id: number, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> {
+    const result = await db.update(dashboardSettings).set(data).where(eq(dashboardSettings.userId, id)).returning();
+    return result[0];
+  }
+  
+  async getClientAnalyticsSummary(): Promise<any> {
+    // Implement analytics aggregation logic
+    return {};
+  }
+  async getShippingPerformance(): Promise<any> {
+    // Implement shipping performance analytics
+    return {};
+  }
+  async getInventoryReport(): Promise<any> {
+    // Implement inventory reporting
+    return {};
+  }
+  async getReportData(reportType: string, dateRange: any): Promise<any> {
+    // Implement report data generation
+    return {};
+  }
+  async getComparisonData(metric: string, period: string): Promise<any> {
+    // Implement comparison data generation
+    return {};
+  }
+  
+  async getInquiryAssignments(): Promise<InquiryAssignment[]> {
+    return await db.select().from(inquiryAssignments);
+  }
+  async getUnassignedQuoteRequests(): Promise<QuoteRequest[]> {
+    // Get quote requests that haven't been assigned
+    return await db.select().from(quoteRequests);
+  }
+  async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
+    const result = await db.insert(inquiryAssignments).values(assignment).returning();
+    return result[0];
+  }
+  async updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined> {
+    const result = await db.update(inquiryAssignments).set(data).where(eq(inquiryAssignments.id, id)).returning();
+    return result[0];
+  }
+  
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    const result = await db.insert(quotes).values(quote).returning();
+    return result[0];
+  }
+  async getQuotes(): Promise<Quote[]> {
+    return await db.select().from(quotes);
+  }
+  async getQuote(id: number): Promise<Quote | undefined> {
+    const result = await db.select().from(quotes).where(eq(quotes.id, id)).limit(1);
+    return result[0];
+  }
+  async updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined> {
+    const result = await db.update(quotes).set(data).where(eq(quotes.id, id)).returning();
+    return result[0];
+  }
+  
+  async createContract(contract: InsertContract): Promise<Contract> {
+    const result = await db.insert(contracts).values(contract).returning();
+    return result[0];
+  }
+  async getContracts(): Promise<Contract[]> {
+    return await db.select().from(contracts);
+  }
+  
+  async createVendor(vendor: InsertVendor): Promise<Vendor> {
+    const result = await db.insert(vendors).values(vendor).returning();
+    return result[0];
+  }
+  async getVendors(): Promise<Vendor[]> {
+    return await db.select().from(vendors);
+  }
+  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> {
+    const result = await db.update(vendors).set(data).where(eq(vendors.id, id)).returning();
+    return result[0];
+  }
+  
+  async createMaterial(material: InsertMaterial): Promise<Material> {
+    const result = await db.insert(materials).values(material).returning();
+    return result[0];
+  }
+  async getMaterials(): Promise<Material[]> {
+    return await db.select().from(materials);
+  }
+  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> {
+    const result = await db.update(materials).set(data).where(eq(materials.id, id)).returning();
     return result[0];
   }
 }
