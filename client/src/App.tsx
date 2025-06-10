@@ -25,6 +25,7 @@ const ImageManagement = lazy(() => import("@/pages/image-management"));
 const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
+const EmployeePortal = lazy(() => import("@/pages/EmployeePortal"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component

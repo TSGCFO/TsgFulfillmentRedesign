@@ -6,6 +6,17 @@ import {
   orderStatistics,
   clientKpis,
   dashboardSettings,
+  employees,
+  inquiryAssignments,
+  contracts,
+  quotes,
+  quoteLineItems,
+  vendors,
+  materials,
+  materialPrices,
+  materialOrders,
+  materialOrderItems,
+  materialUsage,
   type User, 
   type InsertUser, 
   type InsertQuoteRequest, 
@@ -19,7 +30,29 @@ import {
   type InsertClientKpi,
   type ClientKpi,
   type InsertDashboardSetting,
-  type DashboardSetting 
+  type DashboardSetting,
+  type Employee,
+  type InsertEmployee,
+  type InquiryAssignment,
+  type InsertInquiryAssignment,
+  type Contract,
+  type InsertContract,
+  type Quote,
+  type InsertQuote,
+  type QuoteLineItem,
+  type InsertQuoteLineItem,
+  type Vendor,
+  type InsertVendor,
+  type Material,
+  type InsertMaterial,
+  type MaterialPrice,
+  type InsertMaterialPrice,
+  type MaterialOrder,
+  type InsertMaterialOrder,
+  type MaterialOrderItem,
+  type InsertMaterialOrderItem,
+  type MaterialUsage,
+  type InsertMaterialUsage
 } from "@shared/schema";
 
 // Updated interface with all CRUD methods for analytics
@@ -69,6 +102,39 @@ export interface IStorage {
   getClientAnalyticsSummary(clientId: number): Promise<any>;
   getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any>;
   getInventoryReport(clientId?: number): Promise<any>;
+  
+  // Employee Portal methods
+  createEmployee(employee: InsertEmployee): Promise<Employee>;
+  getEmployees(): Promise<Employee[]>;
+  getEmployee(id: number): Promise<Employee | undefined>;
+  updateEmployee(id: number, employee: Partial<InsertEmployee>): Promise<Employee | undefined>;
+  getEmployeeByEmail(email: string): Promise<Employee | undefined>;
+  
+  createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment>;
+  getInquiryAssignments(filters?: { employeeId?: number; status?: string }): Promise<InquiryAssignment[]>;
+  getInquiryAssignment(id: number): Promise<InquiryAssignment | undefined>;
+  updateInquiryAssignment(id: number, assignment: Partial<InsertInquiryAssignment>): Promise<InquiryAssignment | undefined>;
+  getUnassignedQuoteRequests(): Promise<QuoteRequest[]>;
+  
+  createContract(contract: InsertContract): Promise<Contract>;
+  getContracts(filters?: { employeeId?: number; status?: string }): Promise<Contract[]>;
+  getContract(id: number): Promise<Contract | undefined>;
+  updateContract(id: number, contract: Partial<InsertContract>): Promise<Contract | undefined>;
+  
+  createQuote(quote: InsertQuote): Promise<Quote>;
+  getQuotes(filters?: { employeeId?: number; status?: string; clientName?: string }): Promise<Quote[]>;
+  getQuote(id: number): Promise<Quote | undefined>;
+  updateQuote(id: number, quote: Partial<InsertQuote>): Promise<Quote | undefined>;
+  
+  createMaterial(material: InsertMaterial): Promise<Material>;
+  getMaterials(filters?: { category?: string; isActive?: boolean }): Promise<Material[]>;
+  getMaterial(id: number): Promise<Material | undefined>;
+  updateMaterial(id: number, material: Partial<InsertMaterial>): Promise<Material | undefined>;
+  
+  createVendor(vendor: InsertVendor): Promise<Vendor>;
+  getVendors(filters?: { category?: string; isActive?: boolean }): Promise<Vendor[]>;
+  getVendor(id: number): Promise<Vendor | undefined>;
+  updateVendor(id: number, vendor: Partial<InsertVendor>): Promise<Vendor | undefined>;
 }
 
 export class MemStorage implements IStorage {
