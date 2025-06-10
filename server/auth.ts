@@ -186,37 +186,7 @@ export function setupAuth(app: Express) {
     res.json(req.user);
   });
 
-  // Employee management routes (admin only)
-  app.get("/api/employees", requireRole(["admin"]), async (req, res) => {
-    try {
-      const employees = await storage.getAllEmployees();
-      const sanitizedEmployees = employees.map(({ password, ...employee }) => employee);
-      res.json(sanitizedEmployees);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch employees" });
-    }
-  });
 
-  app.get("/api/employees/:id", requireAuth, async (req, res) => {
-    try {
-      const employeeId = parseInt(req.params.id);
-      const employee = await storage.getEmployee(employeeId);
-      
-      if (!employee) {
-        return res.status(404).json({ error: "Employee not found" });
-      }
-
-      // Users can only view their own profile unless they're admin
-      if (req.user?.role !== "admin" && req.user?.id !== employeeId) {
-        return res.status(403).json({ error: "Access denied" });
-      }
-
-      const { password, ...sanitizedEmployee } = employee;
-      res.json(sanitizedEmployee);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch employee" });
-    }
-  });
 
   app.put("/api/employees/:id", requireAuth, async (req, res) => {
     try {
