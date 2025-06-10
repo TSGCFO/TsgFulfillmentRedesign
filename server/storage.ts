@@ -145,6 +145,12 @@ export class MemStorage implements IStorage {
   private orderStatistics: Map<number, OrderStatistic>;
   private clientKpis: Map<number, ClientKpi>;
   private dashboardSettings: Map<string, DashboardSetting>;
+  private employees: Map<number, Employee>;
+  private inquiryAssignments: Map<number, InquiryAssignment>;
+  private contracts: Map<number, Contract>;
+  private quotes: Map<number, Quote>;
+  private materials: Map<number, Material>;
+  private vendors: Map<number, Vendor>;
   
   currentId: number;
   quoteRequestId: number;
@@ -152,6 +158,12 @@ export class MemStorage implements IStorage {
   shipmentId: number;
   orderStatisticId: number;
   clientKpiId: number;
+  employeeId: number;
+  inquiryAssignmentId: number;
+  contractId: number;
+  quoteId: number;
+  materialId: number;
+  vendorId: number;
 
   constructor() {
     this.users = new Map();
@@ -161,6 +173,12 @@ export class MemStorage implements IStorage {
     this.orderStatistics = new Map();
     this.clientKpis = new Map();
     this.dashboardSettings = new Map();
+    this.employees = new Map();
+    this.inquiryAssignments = new Map();
+    this.contracts = new Map();
+    this.quotes = new Map();
+    this.materials = new Map();
+    this.vendors = new Map();
     
     this.currentId = 1;
     this.quoteRequestId = 1;
@@ -168,6 +186,12 @@ export class MemStorage implements IStorage {
     this.shipmentId = 1;
     this.orderStatisticId = 1;
     this.clientKpiId = 1;
+    this.employeeId = 1;
+    this.inquiryAssignmentId = 1;
+    this.contractId = 1;
+    this.quoteId = 1;
+    this.materialId = 1;
+    this.vendorId = 1;
     
     // Initialize with sample admin user
     this.createUser({
@@ -785,6 +809,214 @@ export class MemStorage implements IStorage {
     };
     
     return data;
+  }
+
+  // Employee Portal Methods
+  async createEmployee(employee: InsertEmployee): Promise<Employee> {
+    const newEmployee = {
+      id: this.employeeId++,
+      ...employee,
+      createdAt: new Date(),
+      lastLogin: null
+    };
+    this.employees.set(newEmployee.id, newEmployee);
+    return newEmployee;
+  }
+
+  async getEmployees(): Promise<Employee[]> {
+    return Array.from(this.employees.values()).filter(emp => emp.isActive);
+  }
+
+  async getEmployee(id: number): Promise<Employee | undefined> {
+    return this.employees.get(id);
+  }
+
+  async updateEmployee(id: number, employee: Partial<InsertEmployee>): Promise<Employee | undefined> {
+    const existing = this.employees.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...employee };
+    this.employees.set(id, updated);
+    return updated;
+  }
+
+  async getEmployeeByEmail(email: string): Promise<Employee | undefined> {
+    return Array.from(this.employees.values()).find(emp => emp.email === email);
+  }
+
+  async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
+    const newAssignment = {
+      id: this.inquiryAssignmentId++,
+      ...assignment,
+      assignedAt: new Date(),
+      lastUpdated: new Date()
+    };
+    this.inquiryAssignments.set(newAssignment.id, newAssignment);
+    return newAssignment;
+  }
+
+  async getInquiryAssignments(filters?: { employeeId?: number; status?: string }): Promise<InquiryAssignment[]> {
+    let assignments = Array.from(this.inquiryAssignments.values());
+    if (filters?.employeeId) {
+      assignments = assignments.filter(a => a.employeeId === filters.employeeId);
+    }
+    if (filters?.status) {
+      assignments = assignments.filter(a => a.status === filters.status);
+    }
+    return assignments;
+  }
+
+  async getInquiryAssignment(id: number): Promise<InquiryAssignment | undefined> {
+    return this.inquiryAssignments.get(id);
+  }
+
+  async updateInquiryAssignment(id: number, assignment: Partial<InsertInquiryAssignment>): Promise<InquiryAssignment | undefined> {
+    const existing = this.inquiryAssignments.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...assignment, lastUpdated: new Date() };
+    this.inquiryAssignments.set(id, updated);
+    return updated;
+  }
+
+  async getUnassignedQuoteRequests(): Promise<QuoteRequest[]> {
+    const assignedIds = new Set(Array.from(this.inquiryAssignments.values()).map(a => a.quoteRequestId));
+    return Array.from(this.quoteRequests.values()).filter(q => !assignedIds.has(q.id));
+  }
+
+  async createContract(contract: InsertContract): Promise<Contract> {
+    const newContract = {
+      id: this.contractId++,
+      ...contract,
+      createdAt: new Date(),
+      lastStatusCheck: new Date()
+    };
+    this.contracts.set(newContract.id, newContract);
+    return newContract;
+  }
+
+  async getContracts(filters?: { employeeId?: number; status?: string }): Promise<Contract[]> {
+    let contracts = Array.from(this.contracts.values());
+    if (filters?.employeeId) {
+      contracts = contracts.filter(c => c.employeeId === filters.employeeId);
+    }
+    if (filters?.status) {
+      contracts = contracts.filter(c => c.status === filters.status);
+    }
+    return contracts;
+  }
+
+  async getContract(id: number): Promise<Contract | undefined> {
+    return this.contracts.get(id);
+  }
+
+  async updateContract(id: number, contract: Partial<InsertContract>): Promise<Contract | undefined> {
+    const existing = this.contracts.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...contract };
+    this.contracts.set(id, updated);
+    return updated;
+  }
+
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    const newQuote = {
+      id: this.quoteId++,
+      ...quote,
+      createdAt: new Date(),
+      lastUpdated: new Date()
+    };
+    this.quotes.set(newQuote.id, newQuote);
+    return newQuote;
+  }
+
+  async getQuotes(filters?: { employeeId?: number; status?: string; clientName?: string }): Promise<Quote[]> {
+    let quotes = Array.from(this.quotes.values());
+    if (filters?.employeeId) {
+      quotes = quotes.filter(q => q.employeeId === filters.employeeId);
+    }
+    if (filters?.status) {
+      quotes = quotes.filter(q => q.status === filters.status);
+    }
+    if (filters?.clientName) {
+      quotes = quotes.filter(q => q.clientName.toLowerCase().includes(filters.clientName!.toLowerCase()));
+    }
+    return quotes;
+  }
+
+  async getQuote(id: number): Promise<Quote | undefined> {
+    return this.quotes.get(id);
+  }
+
+  async updateQuote(id: number, quote: Partial<InsertQuote>): Promise<Quote | undefined> {
+    const existing = this.quotes.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...quote, lastUpdated: new Date() };
+    this.quotes.set(id, updated);
+    return updated;
+  }
+
+  async createMaterial(material: InsertMaterial): Promise<Material> {
+    const newMaterial = {
+      id: this.materialId++,
+      ...material,
+      createdAt: new Date()
+    };
+    this.materials.set(newMaterial.id, newMaterial);
+    return newMaterial;
+  }
+
+  async getMaterials(filters?: { category?: string; isActive?: boolean }): Promise<Material[]> {
+    let materials = Array.from(this.materials.values());
+    if (filters?.category) {
+      materials = materials.filter(m => m.category === filters.category);
+    }
+    if (filters?.isActive !== undefined) {
+      materials = materials.filter(m => m.isActive === filters.isActive);
+    }
+    return materials;
+  }
+
+  async getMaterial(id: number): Promise<Material | undefined> {
+    return this.materials.get(id);
+  }
+
+  async updateMaterial(id: number, material: Partial<InsertMaterial>): Promise<Material | undefined> {
+    const existing = this.materials.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...material };
+    this.materials.set(id, updated);
+    return updated;
+  }
+
+  async createVendor(vendor: InsertVendor): Promise<Vendor> {
+    const newVendor = {
+      id: this.vendorId++,
+      ...vendor,
+      createdAt: new Date()
+    };
+    this.vendors.set(newVendor.id, newVendor);
+    return newVendor;
+  }
+
+  async getVendors(filters?: { category?: string; isActive?: boolean }): Promise<Vendor[]> {
+    let vendors = Array.from(this.vendors.values());
+    if (filters?.category) {
+      vendors = vendors.filter(v => v.category === filters.category);
+    }
+    if (filters?.isActive !== undefined) {
+      vendors = vendors.filter(v => v.isActive === filters.isActive);
+    }
+    return vendors;
+  }
+
+  async getVendor(id: number): Promise<Vendor | undefined> {
+    return this.vendors.get(id);
+  }
+
+  async updateVendor(id: number, vendor: Partial<InsertVendor>): Promise<Vendor | undefined> {
+    const existing = this.vendors.get(id);
+    if (!existing) return undefined;
+    const updated = { ...existing, ...vendor };
+    this.vendors.set(id, updated);
+    return updated;
   }
 }
 

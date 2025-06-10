@@ -7,8 +7,20 @@ import {
   insertShipmentSchema,
   insertOrderStatisticsSchema,
   insertClientKpisSchema,
-  insertDashboardSettingsSchema
+  insertDashboardSettingsSchema,
+  insertEmployeeSchema,
+  insertInquiryAssignmentSchema,
+  insertContractSchema,
+  insertQuoteSchema,
+  insertQuoteLineItemSchema,
+  insertVendorSchema,
+  insertMaterialSchema,
+  insertMaterialPriceSchema,
+  insertMaterialOrderSchema,
+  insertMaterialOrderItemSchema,
+  insertMaterialUsageSchema
 } from "@shared/schema";
+import { supabaseStorageService } from "./services/supabase";
 
 // Error handler utility function
 const handleError = (res: Response, error: any, message: string = 'An error occurred') => {
@@ -922,6 +934,261 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
     });
   }
+
+  // ===== EMPLOYEE PORTAL ROUTES =====
+
+  // Employee Management
+  app.post("/api/employees", async (req, res) => {
+    try {
+      const validatedData = insertEmployeeSchema.parse(req.body);
+      const employee = await storage.createEmployee(validatedData);
+      res.status(201).json({ message: "Employee created successfully", data: employee });
+    } catch (error) {
+      handleError(res, error, "Invalid employee data");
+    }
+  });
+
+  app.get("/api/employees", async (req, res) => {
+    try {
+      const employees = await storage.getEmployees();
+      res.json({ data: employees });
+    } catch (error) {
+      handleError(res, error, "Error retrieving employees");
+    }
+  });
+
+  app.get("/api/employees/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const employee = await storage.getEmployee(id);
+      if (!employee) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+      res.json({ data: employee });
+    } catch (error) {
+      handleError(res, error, "Error retrieving employee");
+    }
+  });
+
+  app.patch("/api/employees/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const employee = await storage.updateEmployee(id, req.body);
+      if (!employee) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+      res.json({ message: "Employee updated successfully", data: employee });
+    } catch (error) {
+      handleError(res, error, "Error updating employee");
+    }
+  });
+
+  // Inquiry Management
+  app.get("/api/inquiries", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      
+      const assignments = await storage.getInquiryAssignments({ employeeId, status });
+      
+      // Get full quote request details for each assignment
+      const inquiriesWithDetails = await Promise.all(
+        assignments.map(async (assignment) => {
+          const quoteRequest = await storage.getQuoteRequest(assignment.quoteRequestId);
+          return {
+            ...assignment,
+            quoteRequest
+          };
+        })
+      );
+      
+      res.json({ data: inquiriesWithDetails });
+    } catch (error) {
+      handleError(res, error, "Error retrieving inquiries");
+    }
+  });
+
+  app.get("/api/inquiries/unassigned", async (req, res) => {
+    try {
+      const unassignedRequests = await storage.getUnassignedQuoteRequests();
+      res.json({ data: unassignedRequests });
+    } catch (error) {
+      handleError(res, error, "Error retrieving unassigned inquiries");
+    }
+  });
+
+  app.post("/api/inquiries/assign", async (req, res) => {
+    try {
+      const validatedData = insertInquiryAssignmentSchema.parse(req.body);
+      const assignment = await storage.createInquiryAssignment(validatedData);
+      res.status(201).json({ message: "Inquiry assigned successfully", data: assignment });
+    } catch (error) {
+      handleError(res, error, "Invalid assignment data");
+    }
+  });
+
+  app.patch("/api/inquiries/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const assignment = await storage.updateInquiryAssignment(id, req.body);
+      if (!assignment) {
+        return res.status(404).json({ message: "Assignment not found" });
+      }
+      res.json({ message: "Assignment updated successfully", data: assignment });
+    } catch (error) {
+      handleError(res, error, "Error updating assignment");
+    }
+  });
+
+  // Quote Management
+  app.post("/api/quotes", async (req, res) => {
+    try {
+      const validatedData = insertQuoteSchema.parse(req.body);
+      
+      // Generate quote number
+      const quoteNumber = `Q-${Date.now()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+      const quoteData = { ...validatedData, quoteNumber };
+      
+      const quote = await storage.createQuote(quoteData);
+      res.status(201).json({ message: "Quote created successfully", data: quote });
+    } catch (error) {
+      handleError(res, error, "Invalid quote data");
+    }
+  });
+
+  app.get("/api/quotes", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      const clientName = req.query.clientName as string;
+      
+      const quotes = await storage.getQuotes({ employeeId, status, clientName });
+      res.json({ data: quotes });
+    } catch (error) {
+      handleError(res, error, "Error retrieving quotes");
+    }
+  });
+
+  app.get("/api/quotes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quote = await storage.getQuote(id);
+      if (!quote) {
+        return res.status(404).json({ message: "Quote not found" });
+      }
+      res.json({ data: quote });
+    } catch (error) {
+      handleError(res, error, "Error retrieving quote");
+    }
+  });
+
+  app.patch("/api/quotes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quote = await storage.updateQuote(id, req.body);
+      if (!quote) {
+        return res.status(404).json({ message: "Quote not found" });
+      }
+      res.json({ message: "Quote updated successfully", data: quote });
+    } catch (error) {
+      handleError(res, error, "Error updating quote");
+    }
+  });
+
+  // Contract Management
+  app.post("/api/contracts", async (req, res) => {
+    try {
+      const validatedData = insertContractSchema.parse(req.body);
+      const contract = await storage.createContract(validatedData);
+      res.status(201).json({ message: "Contract created successfully", data: contract });
+    } catch (error) {
+      handleError(res, error, "Invalid contract data");
+    }
+  });
+
+  app.get("/api/contracts", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      
+      const contracts = await storage.getContracts({ employeeId, status });
+      res.json({ data: contracts });
+    } catch (error) {
+      handleError(res, error, "Error retrieving contracts");
+    }
+  });
+
+  // Vendor Management
+  app.post("/api/vendors", async (req, res) => {
+    try {
+      const validatedData = insertVendorSchema.parse(req.body);
+      const vendor = await storage.createVendor(validatedData);
+      res.status(201).json({ message: "Vendor created successfully", data: vendor });
+    } catch (error) {
+      handleError(res, error, "Invalid vendor data");
+    }
+  });
+
+  app.get("/api/vendors", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
+      
+      const vendors = await storage.getVendors({ category, isActive });
+      res.json({ data: vendors });
+    } catch (error) {
+      handleError(res, error, "Error retrieving vendors");
+    }
+  });
+
+  app.patch("/api/vendors/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const vendor = await storage.updateVendor(id, req.body);
+      if (!vendor) {
+        return res.status(404).json({ message: "Vendor not found" });
+      }
+      res.json({ message: "Vendor updated successfully", data: vendor });
+    } catch (error) {
+      handleError(res, error, "Error updating vendor");
+    }
+  });
+
+  // Material Management
+  app.post("/api/materials", async (req, res) => {
+    try {
+      const validatedData = insertMaterialSchema.parse(req.body);
+      const material = await storage.createMaterial(validatedData);
+      res.status(201).json({ message: "Material created successfully", data: material });
+    } catch (error) {
+      handleError(res, error, "Invalid material data");
+    }
+  });
+
+  app.get("/api/materials", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
+      
+      const materials = await storage.getMaterials({ category, isActive });
+      res.json({ data: materials });
+    } catch (error) {
+      handleError(res, error, "Error retrieving materials");
+    }
+  });
+
+  app.patch("/api/materials/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const material = await storage.updateMaterial(id, req.body);
+      if (!material) {
+        return res.status(404).json({ message: "Material not found" });
+      }
+      res.json({ message: "Material updated successfully", data: material });
+    } catch (error) {
+      handleError(res, error, "Error updating material");
+    }
+  });
 
   const httpServer = createServer(app);
 
