@@ -93,8 +93,20 @@ export function setupAuth(app: Express) {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ error: "Authentication required" });
     }
-    if (!["admin"].includes(req.user?.role)) {
+    // SuperAdmin has full access, Admin can manage but not SuperAdmins or themselves
+    const userRole = req.user?.role;
+    if (!["SuperAdmin", "Admin"].includes(userRole)) {
       return res.status(403).json({ error: "Admin access required" });
+    }
+    next();
+  }
+
+  function requireSuperAdmin(req: any, res: any, next: any) {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+    if (req.user?.role !== "SuperAdmin") {
+      return res.status(403).json({ error: "SuperAdmin access required" });
     }
     next();
   }

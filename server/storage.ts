@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db, pool } from "./db";
 import { 
   employees,
   quoteRequests,
@@ -204,7 +204,7 @@ export class DatabaseStorage implements IStorage {
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 
-      pool: db as any, 
+      pool: pool, 
       createTableIfMissing: true 
     });
   }
