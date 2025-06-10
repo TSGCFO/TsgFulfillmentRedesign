@@ -193,12 +193,23 @@ export class MemStorage implements IStorage {
     this.materialId = 1;
     this.vendorId = 1;
     
-    // Initialize with sample admin user
-    this.createUser({
-      username: 'admin',
-      password: 'admin123',
-      role: 'admin'
-    });
+    // Initialize with sample admin user (only if it doesn't exist)
+    setTimeout(() => this.initializeAdminUser(), 100);
+  }
+
+  private async initializeAdminUser() {
+    try {
+      const existingAdmin = await this.getUserByUsername('admin');
+      if (!existingAdmin) {
+        await this.createUser({
+          username: 'admin',
+          password: 'admin123',
+          role: 'admin'
+        });
+      }
+    } catch (error) {
+      // Admin user already exists, continue silently
+    }
   }
 
   // User methods
@@ -1066,11 +1077,22 @@ export class DatabaseStorage extends MemStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(insertUser)
-      .returning();
-    return user;
+    try {
+      const [user] = await db
+        .insert(users)
+        .values(insertUser)
+        .returning();
+      return user;
+    } catch (error: any) {
+      if (error.code === '23505' && error.constraint === 'users_username_unique') {
+        // User already exists, fetch and return existing user
+        const existingUser = await this.getUserByUsername(insertUser.username);
+        if (existingUser) {
+          return existingUser;
+        }
+      }
+      throw error;
+    }
   }
 
   async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {

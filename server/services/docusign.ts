@@ -261,6 +261,20 @@ class DocuSignService {
       throw error;
     }
   }
+
+  async testConnection(): Promise<{ authenticated: boolean; accountId: string; message: string }> {
+    try {
+      const token = await this.getAccessToken();
+      return {
+        authenticated: true,
+        accountId: this.accountId,
+        message: 'DocuSign connection successful'
+      };
+    } catch (error) {
+      console.error('DocuSign connection test failed:', error);
+      throw new Error(`DocuSign connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
 }
 
 export const docusignService = new DocuSignService();
