@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { createPrivateKey } from 'crypto';
 
 // Temporary interface until schema import is fixed
 interface Contract {
@@ -63,8 +64,43 @@ class DocuSignService {
     this.userId = process.env.DOCUSIGN_USER_ID!;
     this.accountId = process.env.DOCUSIGN_ACCOUNT_ID!;
     
-    // Handle private key format - convert \n string literals to actual newlines
-    this.privateKey = process.env.DOCUSIGN_PRIVATE_KEY!.replace(/\\n/g, '\n');
+    // Construct the proper PEM private key format
+    this.privateKey = `-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAhaizOXBpHZukfQM4Ll1jqIwC9uQbQgYPy3A6JN+qZBIWlAHW
+ekpg08yDdIgHjB3gGOKxaYFNUXqrNX/P7OPwamBGPgD7nIXoJMX6FmijXr4EZcqQ
+lmXikDW3fhpaVRtyqdnvKmbIN+2sEqzv7FfD1aWnCTrGM5b6EziQ3nxmaIk7X0e0
+xdHP/ZvhP3SIvUb+FwTVJrlwEqLc3qcwXUfIwdL4iSx3MIlQDJSUVyCHb1gq6pvV
+2SB/rKQ0W4uQ5XalthDo3Y2+mFSrdGgnYDL/6BybIlTOqJwBh+ezVBzxns4I1Xgx
+JfsgHtEY2eNdcvnB4x6fsxtjl721TXo9ednesQIDAQABAoIBABHF0XMpVejoedJf
+u7g6ldZjK7+9rDw2xyHjne+qSCN/Xj43Elh3jHGNZ8t2jR5eGJ7mgfXICkpz19FI
+2hKjaqQSgjSbd9mj2q8NHkidiF/AP6Bzc490I9DOO8SKZ4mamUApqQpH2YbKVU+0
+bEDOmM1PdisdhB53DHDC3EyhWRK8P3LiVPSotbKankLVxrtRpU+YTVHxAAv2W5a8
+uyegrKpglnteObvJAuFoiJK7eHpTEUDZi1vnHyW8SzJu3Rvc7SzJTRcWfpqKqp0U
+jAAYWyLWNYoX8QaDz3ib8vwzokAPVTROXmnNI9Ybn0OIZwadxhDJJODx7/BLZooM
+7Wht99kCgYEAx0BoNsEbWmP5bcvkwIAXVb2IETJD/mQuGoDjALAkeC6gxG1sjP3X
+PoYyO6lR2iVR79XGVs+vVZHK2aOW2OZns2uDNIJdNWYjJa7db8yN5d+kB5znYl15
+Fbwv9kMdKeGuHxE2CBs8K9ynUoCTgxflfQPnANoLZuJud4fKFSlxB0UCgYEAq7ni
+NtrCK4h/t6okStBhPbTYLCGDPJH2v3wPAssfGvYv18enYfNHkwwqnrvRjLO/l9bt
+5t560CikmLIqwViU6oPSyV0RM1A1RzUfhUA8LWaveDT+4FxTjdLBdZbg1WwleOJO
+6vq/uoMSRwrBNufErudvvThsZM+mb2Po9TQYKn0CgYBBhXV/o+rJw5xvNaBIiRaj
+VEsdVIk1a14Zyw5a2JF1j+fAEDek+YhBgEGeiuRmtuUF2Cd7vpnqqqGpBfmB4+pv
+/sfLiZ77A1ZFewZIUFzNHcjD1B3mo9RAiHzBH3rEnfjzMGazLbmQtuOy5qMbdc06
+WgEpr4oWUBmBZv7WDKWlfQKBgQCpkdHIrNcTOaQz7jQMFBwRXKQhX65BfziR+KSx
+83TxoKu5fRLRa/L/RwJG39uZ/lxwSPF+Ca5oIdn2VehWJ2xU7nqUD+xOKSOS/ufz
+ImzJwB4AqwQK8+AlqTkTLjsxQ6r05TNcYOI1//tqXzpPRyk2NJ5n0HFoUotcbuG4
+TwqV2QKBgQCAV6AAB80WFrpp/16F/NxXmlhUGCNremvfX93s7XyY0JY2fXjCemHJ
+HuYJUFxLvm+tP1QZgThuaGc7emGT/WOEFsYZOERkCd6oBpoog30IIloboHpsTQO/
+gqBN/se1wy4MC/7DoVlrUSmwU7G2ZXJifkalUoJ7ggN79EkyuYJu8g==
+-----END RSA PRIVATE KEY-----`;
+
+    // Validate the private key format
+    try {
+      createPrivateKey(this.privateKey);
+      console.log('Private key validation successful');
+    } catch (error) {
+      console.error('Private key validation failed:', error);
+      throw new Error('Invalid private key format');
+    }
     
     this.baseUrl = `https://demo.docusign.net/restapi/v2.1/accounts/${this.accountId}`;
 
@@ -90,7 +126,9 @@ class DocuSignService {
     });
 
     if (!response.ok) {
-      throw new Error(`DocuSign auth error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.log('DocuSign auth error response:', errorText);
+      throw new Error(`DocuSign auth error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
