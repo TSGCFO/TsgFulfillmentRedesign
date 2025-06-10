@@ -86,7 +86,7 @@ export class MemStorage implements IStorage {
   private quoteRequests = new Map<number, QuoteRequest>();
   private quoteRequestId = 1;
   
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 
   constructor() {
     this.sessionStore = new MemoryStore({
@@ -180,7 +180,7 @@ export class MemStorage implements IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 

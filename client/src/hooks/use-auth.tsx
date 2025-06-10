@@ -4,20 +4,20 @@ import {
   useMutation,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { insertUserSchema, User as SelectUser, InsertUser, loginSchema } from "@shared/schema";
+import { insertEmployeeSchema, Employee as SelectEmployee, InsertEmployee, loginSchema } from "@shared/schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
-  user: SelectUser | null;
+  user: SelectEmployee | null;
   isLoading: boolean;
   error: Error | null;
-  loginMutation: UseMutationResult<SelectUser, Error, LoginData>;
+  loginMutation: UseMutationResult<SelectEmployee, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<SelectUser, Error, InsertUser>;
+  registerMutation: UseMutationResult<SelectEmployee, Error, InsertEmployee>;
 };
 
-type LoginData = Pick<InsertUser, "username" | "password">;
+type LoginData = Pick<InsertEmployee, "username" | "password">;
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: user,
     error,
     isLoading,
-  } = useQuery<SelectUser | undefined, Error>({
+  } = useQuery<SelectEmployee | undefined, Error>({
     queryKey: ["/api/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
@@ -37,11 +37,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await apiRequest("POST", "/api/login", credentials);
       return await res.json();
     },
-    onSuccess: (user: SelectUser) => {
+    onSuccess: (user: SelectEmployee) => {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Login successful",
-        description: `Welcome back, ${user.fullName}!`,
+        description: `Welcome back, ${user.firstName} ${user.lastName}!`,
       });
     },
     onError: (error: Error) => {
@@ -54,15 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (credentials: InsertUser) => {
+    mutationFn: async (credentials: InsertEmployee) => {
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
-    onSuccess: (user: SelectUser) => {
+    onSuccess: (user: SelectEmployee) => {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Registration successful",
-        description: `Welcome to TSG Fulfillment, ${user.fullName}!`,
+        description: `Welcome to TSG Fulfillment, ${user.firstName} ${user.lastName}!`,
       });
     },
     onError: (error: Error) => {
