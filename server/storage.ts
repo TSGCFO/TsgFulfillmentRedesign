@@ -125,6 +125,7 @@ export class MemStorage implements IStorage {
     const newEmployee: Employee = {
       id: this.employeeId++,
       ...employee,
+      role: employee.role || "sales",
       createdAt: new Date(),
       updatedAt: new Date(),
       lastLogin: null,
@@ -152,6 +153,10 @@ export class MemStorage implements IStorage {
     const newQuoteRequest: QuoteRequest = {
       id: this.quoteRequestId++,
       ...quoteRequest,
+      message: quoteRequest.message || null,
+      services: quoteRequest.services || null,
+      currentShipments: quoteRequest.currentShipments || null,
+      expectedShipments: quoteRequest.expectedShipments || null,
       createdAt: new Date(),
       status: "new",
       assignedTo: null,

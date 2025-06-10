@@ -11,10 +11,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Shield, Users, Settings } from "lucide-react";
-import { loginSchema, insertUserSchema } from "@shared/schema";
+import { loginSchema, insertEmployeeSchema } from "@shared/schema";
 
 const loginFormSchema = loginSchema;
-const registerFormSchema = insertUserSchema;
+const registerFormSchema = insertEmployeeSchema;
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation, logoutMutation } = useAuth();
@@ -31,11 +31,12 @@ export default function AuthPage() {
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      fullName: "",
+      firstName: "",
+      lastName: "",
       username: "",
       email: "",
       password: "",
-      role: "User",
+      role: "sales",
     },
   });
 
@@ -65,14 +66,14 @@ export default function AuthPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-center space-y-2">
-              <h3 className="font-semibold text-lg">{user.fullName}</h3>
+              <h3 className="font-semibold text-lg">{user.firstName} {user.lastName}</h3>
               <p className="text-sm text-muted-foreground">@{user.username}</p>
               <p className="text-sm text-muted-foreground">{user.email}</p>
               <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                {user.role === "SuperAdmin" && <Settings className="w-3 h-3 mr-1" />}
-                {user.role === "Admin" && <Users className="w-3 h-3 mr-1" />}
-                {user.role === "User" && <Shield className="w-3 h-3 mr-1" />}
-                {user.role}
+                {user.role === "admin" && <Settings className="w-3 h-3 mr-1" />}
+                {user.role === "manager" && <Users className="w-3 h-3 mr-1" />}
+                {user.role === "sales" && <Shield className="w-3 h-3 mr-1" />}
+                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
               </div>
             </div>
             
@@ -166,12 +167,26 @@ export default function AuthPage() {
                 <form onSubmit={registerForm.handleSubmit(onRegister)} className="space-y-4">
                   <FormField
                     control={registerForm.control}
-                    name="fullName"
+                    name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Full Name</FormLabel>
+                        <FormLabel>First Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your full name" {...field} />
+                          <Input placeholder="Enter your first name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={registerForm.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your last name" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -233,9 +248,9 @@ export default function AuthPage() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="User">User</SelectItem>
-                            <SelectItem value="Admin">Admin</SelectItem>
-                            <SelectItem value="SuperAdmin">SuperAdmin</SelectItem>
+                            <SelectItem value="sales">Sales</SelectItem>
+                            <SelectItem value="manager">Manager</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
