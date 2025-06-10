@@ -83,6 +83,7 @@ function Router() {
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
         <Route path="/contact-form" component={ContactForm} />
         <Route path="/quote" component={QuoteRequest} />
+        <Route path="/employee" component={EmployeePortal} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
