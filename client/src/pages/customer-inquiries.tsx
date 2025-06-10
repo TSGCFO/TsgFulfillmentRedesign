@@ -46,6 +46,10 @@ export default function CustomerInquiries() {
     queryKey: ["/api/quote-requests"],
   });
 
+  const { data: employees = [] } = useQuery({
+    queryKey: ["/api/employees"],
+  });
+
   const updateInquiryMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: Partial<QuoteRequest> }) => {
       const res = await apiRequest("PATCH", `/api/quote-requests/${id}`, data);
@@ -71,9 +75,9 @@ export default function CustomerInquiries() {
   const filteredInquiries = inquiries
     .filter(inquiry => {
       if (filterStatus !== "all" && inquiry.status !== filterStatus) return false;
-      if (searchTerm && !inquiry.contactName.toLowerCase().includes(searchTerm.toLowerCase()) && 
+      if (searchTerm && !inquiry.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
           !inquiry.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !inquiry.companyName?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+          !inquiry.company?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       return true;
     })
     .sort((a, b) => {
@@ -149,6 +153,13 @@ export default function CustomerInquiries() {
     updateInquiryMutation.mutate({
       id: inquiry.id,
       data: { status: newStatus }
+    });
+  };
+
+  const handleAssignmentUpdate = (inquiry: QuoteRequest, employeeId: string) => {
+    updateInquiryMutation.mutate({
+      id: inquiry.id,
+      data: { assignedTo: employeeId === "unassigned" ? null : parseInt(employeeId) }
     });
   };
 
@@ -325,7 +336,7 @@ export default function CustomerInquiries() {
                     <TableRow key={inquiry.id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{inquiry.contactName}</div>
+                          <div className="font-medium">{inquiry.name}</div>
                           <div className="text-sm text-gray-500 flex items-center gap-1">
                             <Mail className="h-3 w-3" />
                             {inquiry.email}
@@ -339,10 +350,10 @@ export default function CustomerInquiries() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {inquiry.companyName ? (
+                        {inquiry.company ? (
                           <div className="flex items-center gap-1">
                             <Building className="h-4 w-4 text-gray-400" />
-                            {inquiry.companyName}
+                            {inquiry.company}
                           </div>
                         ) : (
                           <span className="text-gray-400">-</span>
@@ -351,7 +362,7 @@ export default function CustomerInquiries() {
                       <TableCell>
                         <div className="flex items-center gap-1">
                           <Package className="h-4 w-4 text-gray-400" />
-                          {inquiry.serviceType || "General Inquiry"}
+                          {inquiry.service || "General Inquiry"}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -428,7 +439,7 @@ export default function CustomerInquiries() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium">{selectedInquiry.contactName}</span>
+                        <span className="font-medium">{selectedInquiry.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4 text-gray-400" />
@@ -440,10 +451,10 @@ export default function CustomerInquiries() {
                           <span>{selectedInquiry.phone}</span>
                         </div>
                       )}
-                      {selectedInquiry.companyName && (
+                      {selectedInquiry.company && (
                         <div className="flex items-center gap-2">
                           <Building className="h-4 w-4 text-gray-400" />
-                          <span>{selectedInquiry.companyName}</span>
+                          <span>{selectedInquiry.company}</span>
                         </div>
                       )}
                     </div>
@@ -479,28 +490,35 @@ export default function CustomerInquiries() {
                 <div>
                   <Label>Service Type</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    {selectedInquiry.serviceType || "General Inquiry"}
+                    {selectedInquiry.service || "General Inquiry"}
                   </div>
                 </div>
                 
                 <div>
                   <Label>Message/Requirements</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md min-h-[100px] whitespace-pre-wrap">
-                    {selectedInquiry.description || "No additional message provided."}
+                    {selectedInquiry.message || "No additional message provided."}
                   </div>
                 </div>
                 
                 <div>
-                  <Label>Budget Range</Label>
+                  <Label>Current Shipments</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    ${selectedInquiry.budgetRange || "Not specified"}
+                    {selectedInquiry.currentShipments || "Not specified"}
                   </div>
                 </div>
                 
                 <div>
-                  <Label>Timeline</Label>
+                  <Label>Expected Shipments</Label>
                   <div className="mt-1 p-3 bg-gray-50 rounded-md">
-                    {selectedInquiry.timeline || "Not specified"}
+                    {selectedInquiry.expectedShipments || "Not specified"}
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Services Required</Label>
+                  <div className="mt-1 p-3 bg-gray-50 rounded-md">
+                    {selectedInquiry.services || "Not specified"}
                   </div>
                 </div>
               </TabsContent>
