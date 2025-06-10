@@ -62,7 +62,10 @@ class DocuSignService {
     this.integrationKey = process.env.DOCUSIGN_INTEGRATION_KEY!;
     this.userId = process.env.DOCUSIGN_USER_ID!;
     this.accountId = process.env.DOCUSIGN_ACCOUNT_ID!;
-    this.privateKey = process.env.DOCUSIGN_PRIVATE_KEY!;
+    
+    // Handle private key format - convert \n string literals to actual newlines
+    this.privateKey = process.env.DOCUSIGN_PRIVATE_KEY!.replace(/\\n/g, '\n');
+    
     this.baseUrl = `https://demo.docusign.net/restapi/v2.1/accounts/${this.accountId}`;
 
     if (!this.integrationKey || !this.userId || !this.accountId || !this.privateKey) {
