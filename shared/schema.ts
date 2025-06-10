@@ -37,21 +37,33 @@ export type LoginRequest = z.infer<typeof loginSchema>;
 
 export const quoteRequests = pgTable("quote_requests", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  companyName: text("company_name").notNull(),
+  contactName: text("contact_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
-  company: text("company").notNull(),
-  service: text("service").notNull(),
-  currentShipments: text("current_shipments"),
-  expectedShipments: text("expected_shipments"),
-  services: text("services"),
-  message: text("message"),
-  consent: boolean("consent").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  serviceType: text("service_type").notNull(),
+  description: text("description"),
+  budgetRange: text("budget_range"),
+  timeline: text("timeline"),
   status: text("status").default("new").notNull(),
-  assignedTo: integer("assigned_to").references(() => employees.id),
-  convertedToClient: boolean("converted_to_client").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+// Quote Request Schemas
+export const insertQuoteRequestSchema = createInsertSchema(quoteRequests).pick({
+  companyName: true,
+  contactName: true,
+  email: true,
+  phone: true,
+  serviceType: true,
+  description: true,
+  budgetRange: true,
+  timeline: true,
+});
+
+export type QuoteRequest = typeof quoteRequests.$inferSelect;
+export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
 
 // New Analytics Schemas
 export const inventoryLevels = pgTable("inventory_levels", {
@@ -115,13 +127,7 @@ export const dashboardSettings = pgTable("dashboard_settings", {
   pk: primaryKey({ columns: [table.userId, table.widgetId] }),
 }));
 
-export const insertQuoteRequestSchema = createInsertSchema(quoteRequests).omit({
-  id: true,
-  createdAt: true,
-  status: true,
-  assignedTo: true,
-  convertedToClient: true,
-});
+
 
 export const insertInventoryLevelSchema = createInsertSchema(inventoryLevels).omit({
   id: true,
@@ -321,9 +327,7 @@ export const insertMaterialUsageSchema = createInsertSchema(materialUsage).omit(
   usageDate: true
 });
 
-// Export types - Quote Request types
-export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
-export type QuoteRequest = typeof quoteRequests.$inferSelect;
+// Export types
 
 // Analytics types
 export type InsertInventoryLevel = z.infer<typeof insertInventoryLevelSchema>;

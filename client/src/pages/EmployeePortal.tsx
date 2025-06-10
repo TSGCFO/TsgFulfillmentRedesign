@@ -123,22 +123,7 @@ export default function EmployeePortal() {
             </CardContent>
           </Card>
 
-          {/* Inquiries Card */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <MessageSquare className="h-5 w-5 text-green-600" />
-                <CardTitle>Customer Inquiries</CardTitle>
-              </div>
-              <CardDescription>Manage customer inquiries and responses</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Handle incoming customer inquiries and follow-ups.</p>
-              <Button className="w-full">
-                View Inquiries
-              </Button>
-            </CardContent>
-          </Card>
+
 
           {/* Customer Inquiries Card */}
           <Card>
