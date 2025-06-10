@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { 
   Users, 
   MessageSquare, 
@@ -12,90 +9,92 @@ import {
   Calculator, 
   Package, 
   TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Building2,
-  Mail,
-  Phone
+  Settings,
+  LogOut,
+  Crown,
+  Shield,
+  User
 } from 'lucide-react';
+import { Link } from 'wouter';
 
-export interface Employee {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  isActive: boolean;
-  createdAt: string;
-  lastLogin?: string;
-}
+export default function EmployeePortal() {
+  const { user, logoutMutation } = useAuth();
 
-export interface QuoteRequest {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  service: string;
-  message: string;
-  createdAt: string;
-  status: string;
-}
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
 
-export function EmployeePortal() {
-  const [activeTab, setActiveTab] = useState("overview");
-  const [currentEmployee, setCurrentEmployee] = useState<Employee | null>(null);
-
-  // Mock authentication for demo - in production, implement proper auth
-  React.useEffect(() => {
-    // This would be replaced with actual authentication
-    setCurrentEmployee({
-      id: 1,
-      email: "demo@tsgfulfillment.com",
-      firstName: "Demo",
-      lastName: "User",
-      role: "admin",
-      isActive: true,
-      createdAt: new Date().toISOString()
-    });
-  }, []);
-
-  if (!currentEmployee) {
+  if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Employee Portal Login</CardTitle>
-            <CardDescription>Please sign in to access the employee portal</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <Input placeholder="Email" type="email" />
-              <Input placeholder="Password" type="password" />
-              <Button className="w-full">Sign In</Button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
+          <p className="text-gray-600 mb-4">Please log in to access the employee portal.</p>
+          <Button asChild>
+            <Link href="/auth">Go to Login</Link>
+          </Button>
+        </div>
       </div>
     );
   }
 
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "SuperAdmin":
+        return <Crown className="h-4 w-4" />;
+      case "Admin":
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <User className="h-4 w-4" />;
+    }
+  };
+
+  const getRoleBadgeVariant = (role: string) => {
+    switch (role) {
+      case "SuperAdmin":
+        return "destructive";
+      case "Admin":
+        return "default";
+      default:
+        return "secondary";
+    }
+  };
+
+  const canManageUsers = user.role === "SuperAdmin" || user.role === "Admin";
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Employee Portal</h1>
-              <p className="text-sm text-gray-500">Welcome back, {currentEmployee.firstName}</p>
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-white" />
+                </div>
+                <h1 className="text-xl font-semibold text-gray-900">TSG Fulfillment Employee Portal</h1>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant={currentEmployee.role === 'admin' ? 'default' : 'secondary'}>
-                {currentEmployee.role}
-              </Badge>
-              <Button variant="outline" size="sm">
+              <div className="flex items-center space-x-2">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
+                  <div className="flex items-center space-x-1">
+                    {getRoleIcon(user.role)}
+                    <Badge variant={getRoleBadgeVariant(user.role) as any}>
+                      {user.role}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                disabled={logoutMutation.isPending}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
             </div>
@@ -105,273 +104,166 @@ export function EmployeePortal() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="inquiries" className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              Inquiries
-            </TabsTrigger>
-            <TabsTrigger value="quotes" className="flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Quotes
-            </TabsTrigger>
-            <TabsTrigger value="contracts" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Contracts
-            </TabsTrigger>
-            <TabsTrigger value="materials" className="flex items-center gap-2">
-              <Package className="h-4 w-4" />
-              Materials
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6">
-            <DashboardOverview employeeId={currentEmployee.id} />
-          </TabsContent>
-
-          <TabsContent value="inquiries">
-            <InquiryManagement employeeId={currentEmployee.id} />
-          </TabsContent>
-
-          <TabsContent value="quotes">
-            <QuoteManagement employeeId={currentEmployee.id} />
-          </TabsContent>
-
-          <TabsContent value="contracts">
-            <ContractManagement employeeId={currentEmployee.id} />
-          </TabsContent>
-
-          <TabsContent value="materials">
-            <MaterialsInventory employeeId={currentEmployee.id} />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
-}
-
-function DashboardOverview({ employeeId }: { employeeId: number }) {
-  const { data: quoteRequests, isLoading } = useQuery({
-    queryKey: ['/api/quote-requests']
-  });
-
-  // Get employee portal data
-  const { data: employeeData } = useQuery({
-    queryKey: ['/api/employees']
-  });
-
-  const { data: quotesData } = useQuery({
-    queryKey: ['/api/quotes']
-  });
-
-  const { data: contractsData } = useQuery({
-    queryKey: ['/api/contracts']
-  });
-
-  const { data: materialsData } = useQuery({
-    queryKey: ['/api/materials']
-  });
-
-  const stats = {
-    totalInquiries: Array.isArray(quoteRequests) ? quoteRequests.length : 0,
-    activeQuotes: Array.isArray(quotesData) ? quotesData.length : 0,
-    signedContracts: Array.isArray(contractsData) ? contractsData.filter((c: any) => c.status === 'signed').length : 0,
-    lowStockItems: Array.isArray(materialsData) ? materialsData.filter((m: any) => m.currentStock <= m.minStock).length : 0,
-    recentActivity: [
-      { type: "inquiry", message: "New inquiry from ABC Corp", time: "2 hours ago" },
-      { type: "quote", message: "Quote Q-12345 accepted", time: "4 hours ago" },
-      { type: "contract", message: "Contract signed for XYZ Ltd", time: "1 day ago" },
-      { type: "material", message: "Low stock alert: Bubble wrap", time: "2 days ago" }
-    ]
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Inquiries</p>
-                <p className="text-3xl font-bold text-blue-600">{stats.totalInquiries}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          {/* Overview Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
+                <CardTitle>Dashboard Overview</CardTitle>
               </div>
-              <MessageSquare className="h-8 w-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
+              <CardDescription>View your dashboard and analytics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">Access comprehensive analytics and performance metrics.</p>
+              <Button className="w-full">
+                View Dashboard
+              </Button>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Quotes</p>
-                <p className="text-3xl font-bold text-yellow-600">{stats.activeQuotes}</p>
+          {/* Inquiries Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <MessageSquare className="h-5 w-5 text-green-600" />
+                <CardTitle>Customer Inquiries</CardTitle>
               </div>
-              <Calculator className="h-8 w-8 text-yellow-600" />
-            </div>
-          </CardContent>
-        </Card>
+              <CardDescription>Manage customer inquiries and responses</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">Handle incoming customer inquiries and follow-ups.</p>
+              <Button className="w-full">
+                View Inquiries
+              </Button>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Signed Contracts</p>
-                <p className="text-3xl font-bold text-green-600">{stats.signedContracts}</p>
+          {/* Quotes Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <Calculator className="h-5 w-5 text-purple-600" />
+                <CardTitle>Quote Management</CardTitle>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
+              <CardDescription>Create and manage customer quotes</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">Generate quotes and track their status.</p>
+              <Button className="w-full">
+                Manage Quotes
+              </Button>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Low Stock Items</p>
-                <p className="text-3xl font-bold text-red-600">{stats.lowStockItems}</p>
+          {/* Contracts Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <FileText className="h-5 w-5 text-orange-600" />
+                <CardTitle>Contract Management</CardTitle>
               </div>
-              <AlertTriangle className="h-8 w-8 text-red-600" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              <CardDescription>Handle DocuSign contracts and agreements</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">Manage contracts through DocuSign integration.</p>
+              <Button className="w-full">
+                View Contracts
+              </Button>
+            </CardContent>
+          </Card>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Latest updates across all modules</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {stats.recentActivity.map((activity: any, index: number) => (
-              <div key={index} className="flex items-center space-x-4 p-3 rounded-lg bg-gray-50">
-                <div className="flex-shrink-0">
-                  {activity.type === 'inquiry' && <MessageSquare className="h-5 w-5 text-blue-500" />}
-                  {activity.type === 'quote' && <Calculator className="h-5 w-5 text-yellow-500" />}
-                  {activity.type === 'contract' && <FileText className="h-5 w-5 text-green-500" />}
-                  {activity.type === 'material' && <Package className="h-5 w-5 text-red-500" />}
+          {/* Materials Card */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center space-x-2">
+                <Package className="h-5 w-5 text-red-600" />
+                <CardTitle>Materials & Inventory</CardTitle>
+              </div>
+              <CardDescription>Track materials and inventory levels</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">Monitor inventory and material management.</p>
+              <Button className="w-full">
+                View Inventory
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* User Management Card - Only for Admins and SuperAdmins */}
+          {canManageUsers && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <Users className="h-5 w-5 text-indigo-600" />
+                  <CardTitle>User Management</CardTitle>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{activity.message}</p>
-                  <p className="text-xs text-gray-500">{activity.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+                <CardDescription>Manage employee accounts and permissions</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">Create and manage employee accounts with role-based permissions.</p>
+                <Button asChild className="w-full">
+                  <Link href="/employee/users">
+                    Manage Users
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-      {/* Recent Quote Requests */}
-      {quoteRequests && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Quote Requests</CardTitle>
-            <CardDescription>Latest customer inquiries</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {quoteRequests.slice(0, 5).map((request: QuoteRequest) => (
-                <div key={request.id} className="flex items-start space-x-4 p-4 border rounded-lg">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-medium">{request.name}</h4>
-                      <Badge variant="outline">{request.status}</Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                      <div className="flex items-center gap-2">
-                        <Building2 className="h-4 w-4" />
-                        {request.company}
+        </div>
+
+        {/* Welcome Message */}
+        <div className="mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Welcome to TSG Fulfillment Employee Portal</CardTitle>
+              <CardDescription>Your centralized hub for business operations</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-2">Quick Access</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• View and respond to customer inquiries</li>
+                    <li>• Generate and manage quotes</li>
+                    <li>• Handle contract workflows with DocuSign</li>
+                    <li>• Monitor inventory and materials</li>
+                    {canManageUsers && <li>• Manage user accounts and permissions</li>}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold mb-2">Your Role: {user.role}</h4>
+                  <div className="text-sm text-gray-600 space-y-1">
+                    {user.role === "SuperAdmin" && (
+                      <div>
+                        <p>• Full system access and administration</p>
+                        <p>• Complete user management capabilities</p>
+                        <p>• Access to all portal features</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        {request.email}
+                    )}
+                    {user.role === "Admin" && (
+                      <div>
+                        <p>• User account management (Users only)</p>
+                        <p>• Read/Update access for Admin accounts</p>
+                        <p>• Access to most portal features</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        {request.phone}
+                    )}
+                    {user.role === "User" && (
+                      <div>
+                        <p>• Basic portal access</p>
+                        <p>• View and manage assigned tasks</p>
+                        <p>• Access to standard features</p>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        {new Date(request.createdAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mt-2">{request.service}</p>
+                    )}
                   </div>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
-
-// Placeholder components for other tabs
-function InquiryManagement({ employeeId }: { employeeId: number }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Inquiry Management</CardTitle>
-        <CardDescription>Manage customer inquiries and assignments</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-500">Inquiry management interface will be implemented here.</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function QuoteManagement({ employeeId }: { employeeId: number }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Quote Management</CardTitle>
-        <CardDescription>Create and manage customer quotes</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-500">Quote management interface will be implemented here.</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function ContractManagement({ employeeId }: { employeeId: number }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Contract Management</CardTitle>
-        <CardDescription>Manage contracts and DocuSign integration</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-500">Contract management interface will be implemented here.</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function MaterialsInventory({ employeeId }: { employeeId: number }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Materials Inventory</CardTitle>
-        <CardDescription>Track materials, supplies, and vendor management</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p className="text-gray-500">Materials inventory interface will be implemented here.</p>
-      </CardContent>
-    </Card>
-  );
-}
-
-export default EmployeePortal;
