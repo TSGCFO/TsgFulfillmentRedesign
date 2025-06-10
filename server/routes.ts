@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth } from "./auth";
+import { setupAuth, hashPassword } from "./auth";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
@@ -952,10 +952,12 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/employees", async (req, res) => {
+  app.get("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
-      const employees = await storage.getEmployees();
-      res.json({ data: employees });
+      const employees = await storage.getAllEmployees();
+      // Remove passwords from response
+      const safeEmployees = employees.map(({ password, ...employee }) => employee);
+      res.json(safeEmployees);
     } catch (error) {
       handleError(res, error, "Error retrieving employees");
     }
@@ -974,16 +976,86 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.patch("/api/employees/:id", async (req, res) => {
+  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const employeeData = insertEmployeeSchema.parse(req.body);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json(safeEmployee);
+    } catch (error) {
+      handleError(res, error, "Failed to create employee");
+    }
+  });
+
+  app.patch("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const employee = await storage.updateEmployee(id, req.body);
-      if (!employee) {
-        return res.status(404).json({ message: "Employee not found" });
+      const updateData = req.body;
+      
+      // Check if admin is trying to edit a SuperAdmin or themselves
+      if (req.user?.role === "Admin") {
+        const targetEmployee = await storage.getEmployee(id);
+        if (!targetEmployee) {
+          return res.status(404).json({ error: "Employee not found" });
+        }
+        
+        // Admin cannot edit SuperAdmins or themselves
+        if (targetEmployee.role === "SuperAdmin" || targetEmployee.id === req.user.id) {
+          return res.status(403).json({ error: "Insufficient permissions" });
+        }
       }
-      res.json({ message: "Employee updated successfully", data: employee });
+      
+      const employee = await storage.updateEmployee(id, updateData);
+      if (!employee) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.json(safeEmployee);
     } catch (error) {
-      handleError(res, error, "Error updating employee");
+      handleError(res, error, "Failed to update employee");
+    }
+  });
+
+  app.delete("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Check if admin is trying to delete a SuperAdmin or themselves
+      if (req.user?.role === "Admin") {
+        const targetEmployee = await storage.getEmployee(id);
+        if (!targetEmployee) {
+          return res.status(404).json({ error: "Employee not found" });
+        }
+        
+        // Admin cannot delete SuperAdmins or themselves
+        if (targetEmployee.role === "SuperAdmin" || targetEmployee.id === req.user.id) {
+          return res.status(403).json({ error: "Insufficient permissions" });
+        }
+      }
+      
+      // Prevent self-deletion
+      if (id === req.user?.id) {
+        return res.status(400).json({ error: "Cannot delete your own account" });
+      }
+      
+      const success = await storage.deleteEmployee(id);
+      if (!success) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      handleError(res, error, "Failed to delete employee");
     }
   });
 

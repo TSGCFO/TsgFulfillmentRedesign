@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Login successful",
-        description: `Welcome back, ${user.firstName} ${user.lastName}!`,
+        description: `Welcome back, ${user.fullName}!`,
       });
     },
     onError: (error: Error) => {
@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Registration successful",
-        description: `Welcome to TSG Fulfillment, ${user.firstName} ${user.lastName}!`,
+        description: `Welcome to TSG Fulfillment, ${user.fullName}!`,
       });
     },
     onError: (error: Error) => {
