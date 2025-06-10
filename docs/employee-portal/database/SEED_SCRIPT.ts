@@ -247,7 +247,36 @@ async function seedEmployeePortal() {
     // Note: This assumes quote_requests table already has some data
     // If not, you'll need to create some quote requests first
     
-    console.log("Employee portal data seeded successfully!");
+    // Check if we have any quote requests to create inquiries from
+    const existingQuoteRequests = await db.select().from(quoteRequests).limit(5);
+    
+    if (existingQuoteRequests.length > 0) {
+      const sampleInquiries = [];
+      const statuses = ['new', 'contacted', 'quoted', 'negotiating', 'won', 'lost'];
+      const priorities = ['low', 'medium', 'high'];
+      
+      for (let i = 0; i < Math.min(existingQuoteRequests.length, 3); i++) {
+        const quoteRequest = existingQuoteRequests[i];
+        const randomSalesPerson = salesTeam[Math.floor(Math.random() * salesTeam.length)];
+        
+        sampleInquiries.push({
+          quoteRequestId: quoteRequest.id,
+          assignedTo: i === 0 ? null : randomSalesPerson.id, // First one unassigned
+          status: statuses[Math.floor(Math.random() * statuses.length)],
+          priority: priorities[Math.floor(Math.random() * priorities.length)],
+          notes: `Sample inquiry for ${quoteRequest.companyName || 'Unknown Company'}`,
+          hubspotDealId: `demo-deal-${Date.now()}-${i}`,
+          syncStatus: 'synced'
+        });
+      }
+      
+      const createdInquiries = await db.insert(quoteInquiries).values(sampleInquiries).returning();
+      console.log(`Created ${createdInquiries.length} sample quote inquiries`);
+    } else {
+      console.log("No quote requests found - skipping quote inquiry seeding");
+    }
+    
+    console.log("\nEmployee portal data seeded successfully!");
     console.log("\nSummary:");
     console.log(`- Sales Team Members: ${salesTeam.length}`);
     console.log(`- Vendors: ${vendorList.length}`);
