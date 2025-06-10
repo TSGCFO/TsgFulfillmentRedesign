@@ -228,12 +228,14 @@ export class MemStorage implements IStorage {
     const newQuoteRequest: QuoteRequest = {
       id: this.quoteRequestId++,
       ...quoteRequest,
-      description: quoteRequest.description || null,
-      budgetRange: quoteRequest.budgetRange || null,
-      timeline: quoteRequest.timeline || null,
+      message: quoteRequest.message || null,
       createdAt: new Date(),
-      updatedAt: new Date(),
-      status: "pending"
+      status: "new",
+      assignedTo: null,
+      convertedToClient: false,
+      currentShipments: quoteRequest.currentShipments || null,
+      expectedShipments: quoteRequest.expectedShipments || null,
+      services: quoteRequest.services || null
     };
     this.quoteRequests.set(newQuoteRequest.id, newQuoteRequest);
     return newQuoteRequest;

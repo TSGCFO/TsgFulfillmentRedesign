@@ -37,29 +37,34 @@ export type LoginRequest = z.infer<typeof loginSchema>;
 
 export const quoteRequests = pgTable("quote_requests", {
   id: serial("id").primaryKey(),
-  companyName: text("company_name").notNull(),
-  contactName: text("contact_name").notNull(),
+  name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
-  serviceType: text("service_type").notNull(),
-  description: text("description"),
-  budgetRange: text("budget_range"),
-  timeline: text("timeline"),
-  status: text("status").default("new").notNull(),
+  company: text("company").notNull(),
+  service: text("service").notNull(),
+  message: text("message"),
+  consent: boolean("consent").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  status: text("status").default("new").notNull(),
+  assignedTo: integer("assigned_to").references(() => employees.id),
+  convertedToClient: boolean("converted_to_client").default(false),
+  currentShipments: text("current_shipments"),
+  expectedShipments: text("expected_shipments"),
+  services: text("services"),
 });
 
 // Quote Request Schemas
 export const insertQuoteRequestSchema = createInsertSchema(quoteRequests).pick({
-  companyName: true,
-  contactName: true,
+  name: true,
   email: true,
   phone: true,
-  serviceType: true,
-  description: true,
-  budgetRange: true,
-  timeline: true,
+  company: true,
+  service: true,
+  message: true,
+  consent: true,
+  currentShipments: true,
+  expectedShipments: true,
+  services: true,
 });
 
 export type QuoteRequest = typeof quoteRequests.$inferSelect;
