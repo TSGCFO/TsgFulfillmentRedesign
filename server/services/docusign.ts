@@ -1,4 +1,14 @@
-import { Contract } from '@/shared/schema';
+// Temporary interface until schema import is fixed
+interface Contract {
+  id: number;
+  title: string;
+  clientName: string;
+  value: number;
+  terms: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  status: string;
+}
 
 interface DocuSignEnvelope {
   envelopeId: string;

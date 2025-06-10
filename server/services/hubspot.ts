@@ -1,4 +1,14 @@
-import { QuoteRequest } from '@/shared/schema';
+// Temporary interface until schema import is fixed
+interface QuoteRequest {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  service: string;
+  message: string | null;
+  status: string;
+}
 
 interface HubSpotContact {
   id: string;

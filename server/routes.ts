@@ -1190,6 +1190,53 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // Test endpoints for third-party integrations
+  app.get('/api/test/docusign', async (req, res) => {
+    try {
+      const { docusignService } = await import('./services/docusign');
+      
+      // Test DocuSign authentication
+      const testResult = await docusignService.testConnection();
+      res.json({
+        service: 'DocuSign',
+        status: 'connected',
+        message: 'DocuSign API connection successful',
+        details: testResult
+      });
+    } catch (error) {
+      console.error('DocuSign test failed:', error);
+      res.status(400).json({
+        service: 'DocuSign',
+        status: 'error',
+        message: 'DocuSign API connection failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  app.get('/api/test/hubspot', async (req, res) => {
+    try {
+      const { hubspotService } = await import('./services/hubspot');
+      
+      // Test HubSpot connection
+      const contacts = await hubspotService.getContacts(1);
+      res.json({
+        service: 'HubSpot',
+        status: 'connected',
+        message: 'HubSpot API connection successful',
+        contactCount: contacts.length
+      });
+    } catch (error) {
+      console.error('HubSpot test failed:', error);
+      res.status(400).json({
+        service: 'HubSpot',
+        status: 'error',
+        message: 'HubSpot API connection failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
