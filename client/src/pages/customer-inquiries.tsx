@@ -31,21 +31,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-// Define the actual QuoteRequest type based on database schema
-type QuoteRequest = {
-  id: number;
-  companyName: string;
-  contactName: string;
-  email: string;
-  phone: string;
-  serviceType: string;
-  description: string;
-  budgetRange: string;
-  timeline: string;
-  status: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import type { QuoteRequest } from "@shared/schema";
 
 export default function CustomerInquiries() {
   const { user } = useAuth();
