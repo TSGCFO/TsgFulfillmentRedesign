@@ -1010,10 +1010,17 @@ export class MemStorage implements IStorage {
   }
 
   async createVendor(vendor: InsertVendor): Promise<Vendor> {
-    const newVendor = {
+    const newVendor: Vendor = {
       id: this.vendorId++,
       ...vendor,
-      createdAt: new Date()
+      createdAt: new Date(),
+      email: vendor.email ?? null,
+      phone: vendor.phone ?? null,
+      isActive: vendor.isActive ?? true,
+      notes: vendor.notes ?? null,
+      contactPerson: vendor.contactPerson ?? null,
+      address: vendor.address ?? null,
+      paymentTerms: vendor.paymentTerms ?? null
     };
     this.vendors.set(newVendor.id, newVendor);
     return newVendor;
