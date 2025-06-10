@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
@@ -352,6 +353,9 @@ Host: https://tsgfulfillment.com
 
 
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
+  // Setup authentication system with role-based access control
+  setupAuth(app);
+
   app.get('/health', (req, res) => {
     res.status(200).json({ 
       status: 'healthy',

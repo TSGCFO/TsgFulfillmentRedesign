@@ -229,16 +229,26 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentId++;
-    const createdAt = new Date();
+    const now = new Date();
     const user: User = { 
       ...insertUser, 
       id, 
-      createdAt,
+      createdAt: now,
+      updatedAt: now,
       lastLogin: null,
+      isActive: true,
       role: insertUser.role ?? 'User'
     };
     this.users.set(id, user);
     return user;
+  }
+  
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    return this.users.delete(id);
   }
   
   async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
