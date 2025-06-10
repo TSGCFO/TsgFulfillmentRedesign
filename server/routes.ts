@@ -1197,12 +1197,24 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       
       // Test DocuSign authentication
       const testResult = await docusignService.testConnection();
-      res.json({
-        service: 'DocuSign',
-        status: 'connected',
-        message: 'DocuSign API connection successful',
-        details: testResult
-      });
+      
+      if (testResult.authenticated) {
+        res.json({
+          service: 'DocuSign',
+          status: 'connected',
+          message: 'DocuSign API connection successful',
+          details: testResult
+        });
+      } else {
+        // Handle consent required case
+        res.status(200).json({
+          service: 'DocuSign',
+          status: 'consent_required',
+          message: testResult.message,
+          consentUrl: testResult.consentUrl,
+          details: testResult
+        });
+      }
     } catch (error) {
       console.error('DocuSign test failed:', error);
       res.status(400).json({

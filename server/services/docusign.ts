@@ -302,7 +302,7 @@ gqBN/se1wy4MC/7DoVlrUSmwU7G2ZXJifkalUoJ7ggN79EkyuYJu8g==
     }
   }
 
-  async testConnection(): Promise<{ authenticated: boolean; accountId: string; message: string }> {
+  async testConnection(): Promise<{ authenticated: boolean; accountId: string; message: string; consentUrl?: string }> {
     try {
       const token = await this.getAccessToken();
       return {
@@ -312,7 +312,21 @@ gqBN/se1wy4MC/7DoVlrUSmwU7G2ZXJifkalUoJ7ggN79EkyuYJu8g==
       };
     } catch (error) {
       console.error('DocuSign connection test failed:', error);
-      throw new Error(`DocuSign connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Check if it's a consent error
+      if (error instanceof Error && error.message.includes('consent_required')) {
+        const consentUrl = `https://account-d.docusign.com/oauth/auth?response_type=code&scope=signature%20impersonation&client_id=${this.integrationKey}&redirect_uri=https://www.tsgfulfillment.com/employee&state=docusign_consent`;
+        
+        return {
+          authenticated: false,
+          accountId: this.accountId,
+          message: 'DocuSign requires user consent. Please visit the consent URL to authorize the application.',
+          consentUrl: consentUrl
+        };
+      }
+      
+      // For other errors, re-throw
+      throw error;
     }
   }
 }
