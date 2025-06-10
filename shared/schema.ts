@@ -152,3 +152,200 @@ export type ClientKpi = typeof clientKpis.$inferSelect;
 
 export type InsertDashboardSetting = z.infer<typeof insertDashboardSettingsSchema>;
 export type DashboardSetting = typeof dashboardSettings.$inferSelect;
+
+// Employee Portal Tables
+export const employees = pgTable("employees", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  employeeId: text("employee_id").notNull().unique(),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull().unique(),
+  department: text("department").notNull(),
+  position: text("position").notNull(),
+  hireDate: date("hire_date").notNull(),
+  isActive: boolean("is_active").default(true),
+  permissions: jsonb("permissions").default({}),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const quotes = pgTable("quotes", {
+  id: serial("id").primaryKey(),
+  quoteRequestId: integer("quote_request_id").references(() => quoteRequests.id),
+  quoteNumber: text("quote_number").notNull().unique(),
+  clientName: text("client_name").notNull(),
+  clientEmail: text("client_email").notNull(),
+  clientCompany: text("client_company").notNull(),
+  servicesQuoted: jsonb("services_quoted").notNull(),
+  pricingData: jsonb("pricing_data").notNull(),
+  totalAmount: real("total_amount"),
+  status: text("status").default("draft").notNull(),
+  validUntil: date("valid_until"),
+  createdBy: integer("created_by").references(() => employees.id),
+  assignedTo: integer("assigned_to").references(() => employees.id),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  hubspotDealId: text("hubspot_deal_id"),
+  notes: text("notes"),
+});
+
+export const contracts = pgTable("contracts", {
+  id: serial("id").primaryKey(),
+  quoteId: integer("quote_id").references(() => quotes.id),
+  contractNumber: text("contract_number").notNull().unique(),
+  clientName: text("client_name").notNull(),
+  contractType: text("contract_type").notNull(),
+  status: text("status").default("pending").notNull(),
+  docusignEnvelopeId: text("docusign_envelope_id"),
+  supabaseFilePath: text("supabase_file_path"),
+  signedDate: timestamp("signed_date"),
+  expiresDate: date("expires_date"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const vendors = pgTable("vendors", {
+  id: serial("id").primaryKey(),
+  vendorName: text("vendor_name").notNull(),
+  vendorCode: text("vendor_code").notNull().unique(),
+  contactPerson: text("contact_person"),
+  email: text("email"),
+  phone: text("phone"),
+  address: text("address"),
+  paymentTerms: text("payment_terms"),
+  deliveryTerms: text("delivery_terms"),
+  isActive: boolean("is_active").default(true),
+  rating: integer("rating").default(5),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const materials = pgTable("materials", {
+  id: serial("id").primaryKey(),
+  materialCode: text("material_code").notNull().unique(),
+  materialName: text("material_name").notNull(),
+  category: text("category").notNull(),
+  description: text("description"),
+  unitOfMeasure: text("unit_of_measure").notNull(),
+  currentStock: integer("current_stock").default(0),
+  minimumStock: integer("minimum_stock").default(0),
+  maximumStock: integer("maximum_stock"),
+  reorderPoint: integer("reorder_point").default(0),
+  standardCost: real("standard_cost"),
+  lastPurchaseCost: real("last_purchase_cost"),
+  preferredVendorId: integer("preferred_vendor_id").references(() => vendors.id),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const purchaseOrders = pgTable("purchase_orders", {
+  id: serial("id").primaryKey(),
+  poNumber: text("po_number").notNull().unique(),
+  vendorId: integer("vendor_id").references(() => vendors.id).notNull(),
+  orderDate: date("order_date").notNull(),
+  expectedDeliveryDate: date("expected_delivery_date"),
+  actualDeliveryDate: date("actual_delivery_date"),
+  status: text("status").default("pending").notNull(),
+  totalAmount: real("total_amount"),
+  createdBy: integer("created_by").references(() => employees.id),
+  approvedBy: integer("approved_by").references(() => employees.id),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const purchaseOrderItems = pgTable("purchase_order_items", {
+  id: serial("id").primaryKey(),
+  purchaseOrderId: integer("purchase_order_id").references(() => purchaseOrders.id),
+  materialId: integer("material_id").references(() => materials.id),
+  quantity: integer("quantity").notNull(),
+  unitCost: real("unit_cost").notNull(),
+  totalCost: real("total_cost").notNull(),
+  receivedQuantity: integer("received_quantity").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const hubspotSyncLog = pgTable("hubspot_sync_log", {
+  id: serial("id").primaryKey(),
+  recordType: text("record_type").notNull(),
+  recordId: integer("record_id").notNull(),
+  hubspotId: text("hubspot_id"),
+  syncAction: text("sync_action").notNull(),
+  syncStatus: text("sync_status").notNull(),
+  errorMessage: text("error_message"),
+  syncedAt: timestamp("synced_at").defaultNow().notNull(),
+});
+
+// Insert schemas for new tables
+export const insertEmployeeSchema = createInsertSchema(employees).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertQuoteSchema = createInsertSchema(quotes).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertContractSchema = createInsertSchema(contracts).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertVendorSchema = createInsertSchema(vendors).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertMaterialSchema = createInsertSchema(materials).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPurchaseOrderSchema = createInsertSchema(purchaseOrders).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertPurchaseOrderItemSchema = createInsertSchema(purchaseOrderItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertHubspotSyncLogSchema = createInsertSchema(hubspotSyncLog).omit({
+  id: true,
+  syncedAt: true,
+});
+
+// Export types for Employee Portal
+export type Employee = typeof employees.$inferSelect;
+export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
+
+export type Quote = typeof quotes.$inferSelect;
+export type InsertQuote = z.infer<typeof insertQuoteSchema>;
+
+export type Contract = typeof contracts.$inferSelect;
+export type InsertContract = z.infer<typeof insertContractSchema>;
+
+export type Vendor = typeof vendors.$inferSelect;
+export type InsertVendor = z.infer<typeof insertVendorSchema>;
+
+export type Material = typeof materials.$inferSelect;
+export type InsertMaterial = z.infer<typeof insertMaterialSchema>;
+
+export type PurchaseOrder = typeof purchaseOrders.$inferSelect;
+export type InsertPurchaseOrder = z.infer<typeof insertPurchaseOrderSchema>;
+
+export type PurchaseOrderItem = typeof purchaseOrderItems.$inferSelect;
+export type InsertPurchaseOrderItem = z.infer<typeof insertPurchaseOrderItemSchema>;
+
+export type HubspotSyncLog = typeof hubspotSyncLog.$inferSelect;
+export type InsertHubspotSyncLog = z.infer<typeof insertHubspotSyncLogSchema>;

@@ -31,6 +31,10 @@
 - Form labels: Clear, accessible, include helper text
 - Success messages: Positive reinforcement, next steps
 
+## Project Development Guidelines
+
+- Must always create tests for all new features
+
 ## MCP (Model Context Protocol) Configuration
 
 This project supports Claude Code as an MCP server for enhanced development capabilities.
@@ -52,7 +56,6 @@ This project supports Claude Code as an MCP server for enhanced development capa
 - MCP server runs with appropriate access controls
 - Production mode uses read-only access by default
 - Sensitive directories are restricted (.env, node_modules, .git)
-=======
 
 ## MCP Configuration
 

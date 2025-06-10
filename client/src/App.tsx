@@ -27,6 +27,11 @@ const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
+// Employee Portal Components
+const EmployeeLogin = lazy(() => import("@/pages/employee/Login"));
+const EmployeeDashboard = lazy(() => import("@/pages/employee/Dashboard"));
+const EmployeeQuoteRequests = lazy(() => import("@/pages/employee/QuoteRequests"));
+
 // Loading fallback component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center">
@@ -82,6 +87,13 @@ function Router() {
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
         <Route path="/contact-form" component={ContactForm} />
         <Route path="/quote" component={QuoteRequest} />
+        
+        {/* Employee Portal Routes */}
+        <Route path="/employee/login" component={EmployeeLogin} />
+        <Route path="/employee/dashboard" component={EmployeeDashboard} />
+        <Route path="/employee/quote-requests" component={EmployeeQuoteRequests} />
+        <Route path="/employee" component={EmployeeLogin} />
+        
         <Route component={NotFound} />
       </Switch>
     </Suspense>
