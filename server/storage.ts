@@ -62,17 +62,9 @@ const MemoryStore = createMemoryStore(session);
 
 // Updated interface with all CRUD methods for analytics
 export interface IStorage {
-  // User authentication methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  getAllUsers(): Promise<User[]>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, userData: Partial<User>): Promise<User | undefined>;
-  deleteUser(id: number): Promise<boolean>;
-  
-  // Employee portal methods
+  // Employee authentication & portal methods
   getEmployee(id: number): Promise<Employee | undefined>;
-  getEmployeeByEmail(email: string): Promise<Employee | undefined>;
+  getEmployeeByUsername(username: string): Promise<Employee | undefined>;
   getAllEmployees(): Promise<Employee[]>;
   createEmployee(employee: InsertEmployee): Promise<Employee>;
   updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined>;
@@ -106,14 +98,29 @@ export class MemStorage implements IStorage {
   }
 
   private async initializeSampleData() {
-    // Create sample admin employee
+    // Create sample employees with new role structure
     await this.createEmployee({
-      firstName: "Admin",
-      lastName: "User",
+      fullName: "Super Administrator",
+      username: "superadmin",
+      email: "superadmin@tsgfulfillment.com",
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "superadmin123"
+      role: "SuperAdmin"
+    });
+    
+    await this.createEmployee({
+      fullName: "Admin User",
       username: "admin",
       email: "admin@tsgfulfillment.com",
       password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "admin123"
-      role: "admin"
+      role: "Admin"
+    });
+    
+    await this.createEmployee({
+      fullName: "Regular User",
+      username: "user",
+      email: "user@tsgfulfillment.com",
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "user123"
+      role: "User"
     });
   }
 
@@ -133,7 +140,7 @@ export class MemStorage implements IStorage {
     const newEmployee: Employee = {
       id: this.employeeId++,
       ...employee,
-      role: employee.role || "sales",
+      role: employee.role || "User",
       createdAt: new Date(),
       updatedAt: new Date(),
       lastLogin: null,

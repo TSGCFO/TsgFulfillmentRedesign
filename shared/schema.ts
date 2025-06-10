@@ -2,8 +2,8 @@ import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb, real, 
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Users Authentication Table
-export const users = pgTable("users", {
+// Unified Employee Authentication & Portal Table
+export const employees = pgTable("employees", {
   id: serial("id").primaryKey(),
   fullName: text("full_name").notNull(),
   username: text("username").notNull().unique(),
@@ -11,27 +11,14 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   role: text("role", { enum: ["SuperAdmin", "Admin", "User"] }).default("User").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  lastLogin: timestamp("last_login")
-});
-
-// Employee Portal Tables (separate from authentication)
-export const employees = pgTable("employees", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
-  role: text("role", { enum: ["admin", "sales", "manager"] }).default("sales").notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
   hubspotUserId: text("hubspot_user_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   lastLogin: timestamp("last_login")
 });
 
-// User Authentication Schemas
-export const insertUserSchema = createInsertSchema(users).pick({
+// Employee Authentication Schemas
+export const insertEmployeeSchema = createInsertSchema(employees).pick({
   fullName: true,
   username: true,
   email: true,
@@ -44,16 +31,6 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-// Employee Portal Schemas
-export const insertEmployeeSchema = createInsertSchema(employees).pick({
-  firstName: true,
-  lastName: true,
-  email: true,
-  role: true,
-});
-
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Employee = typeof employees.$inferSelect;
 export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
