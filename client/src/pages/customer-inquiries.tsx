@@ -31,7 +31,21 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { QuoteRequest } from "@shared/schema";
+// Define the actual QuoteRequest type based on database schema
+type QuoteRequest = {
+  id: number;
+  companyName: string;
+  contactName: string;
+  email: string;
+  phone: string;
+  serviceType: string;
+  description: string;
+  budgetRange: string;
+  timeline: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export default function CustomerInquiries() {
   const { user } = useAuth();
@@ -71,9 +85,9 @@ export default function CustomerInquiries() {
   const filteredInquiries = inquiries
     .filter(inquiry => {
       if (filterStatus !== "all" && inquiry.status !== filterStatus) return false;
-      if (searchTerm && !inquiry.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
+      if (searchTerm && !inquiry.contactName.toLowerCase().includes(searchTerm.toLowerCase()) && 
           !inquiry.email.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !inquiry.company?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+          !inquiry.companyName?.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       return true;
     })
     .sort((a, b) => {
@@ -325,7 +339,7 @@ export default function CustomerInquiries() {
                     <TableRow key={inquiry.id}>
                       <TableCell>
                         <div>
-                          <div className="font-medium">{inquiry.name}</div>
+                          <div className="font-medium">{inquiry.contactName}</div>
                           <div className="text-sm text-gray-500 flex items-center gap-1">
                             <Mail className="h-3 w-3" />
                             {inquiry.email}
@@ -339,10 +353,10 @@ export default function CustomerInquiries() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {inquiry.company ? (
+                        {inquiry.companyName ? (
                           <div className="flex items-center gap-1">
                             <Building className="h-4 w-4 text-gray-400" />
-                            {inquiry.company}
+                            {inquiry.companyName}
                           </div>
                         ) : (
                           <span className="text-gray-400">-</span>
@@ -351,7 +365,7 @@ export default function CustomerInquiries() {
                       <TableCell>
                         <div className="flex items-center gap-1">
                           <Package className="h-4 w-4 text-gray-400" />
-                          {inquiry.service || "General Inquiry"}
+                          {inquiry.serviceType || "General Inquiry"}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -428,7 +442,7 @@ export default function CustomerInquiries() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-gray-400" />
-                        <span className="font-medium">{selectedInquiry.name}</span>
+                        <span className="font-medium">{selectedInquiry.contactName}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Mail className="h-4 w-4 text-gray-400" />
@@ -440,10 +454,10 @@ export default function CustomerInquiries() {
                           <span>{selectedInquiry.phone}</span>
                         </div>
                       )}
-                      {selectedInquiry.company && (
+                      {selectedInquiry.companyName && (
                         <div className="flex items-center gap-2">
                           <Building className="h-4 w-4 text-gray-400" />
-                          <span>{selectedInquiry.company}</span>
+                          <span>{selectedInquiry.companyName}</span>
                         </div>
                       )}
                     </div>
