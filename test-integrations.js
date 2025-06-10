@@ -5,7 +5,9 @@
  * Tests real functionality of DocuSign and HubSpot integrations
  */
 
-const fs = require('fs');
+import fs from 'fs';
+import { createPrivateKey } from 'crypto';
+import jwt from 'jsonwebtoken';
 
 async function testHubSpotIntegration() {
   console.log('\n=== TESTING HUBSPOT INTEGRATION ===');
@@ -141,7 +143,6 @@ async function testDocuSignIntegration() {
   try {
     // Test private key format
     console.log('\nTest 1: Validating private key format...');
-    const { createPrivateKey } = require('crypto');
     
     let privateKey = DOCUSIGN_PRIVATE_KEY;
     if (!privateKey.includes('-----BEGIN')) {
@@ -158,7 +159,6 @@ async function testDocuSignIntegration() {
     
     // Test JWT creation
     console.log('\nTest 2: Creating JWT token...');
-    const jwt = require('jsonwebtoken');
     
     const payload = {
       iss: DOCUSIGN_INTEGRATION_KEY,
@@ -252,6 +252,4 @@ async function main() {
   process.exit(hubspotWorking && docusignWorking ? 0 : 1);
 }
 
-if (require.main === module) {
-  main().catch(console.error);
-}
+main().catch(console.error);

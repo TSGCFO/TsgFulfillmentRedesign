@@ -90,12 +90,12 @@ export interface IStorage {
   
   // Order statistics methods
   createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic>;
-  getOrderStatistics(startDate?: Date, endDate?: Date, clientId?: number): Promise<OrderStatistic[]>;
+  getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]>;
   updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined>;
   
   // Client KPI methods
   createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi>;
-  getClientKpis(startDate?: Date, endDate?: Date, clientId?: number): Promise<ClientKpi[]>;
+  getClientKpis(clientId?: number, startDate?: Date, endDate?: Date): Promise<ClientKpi[]>;
   updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined>;
   
   // Dashboard settings methods
@@ -425,7 +425,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db.insert(orderStatistics).values(stat).returning();
     return result[0];
   }
-  async getOrderStatistics(startDate?: Date, endDate?: Date, clientId?: number): Promise<OrderStatistic[]> {
+  async getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]> {
     return await db.select().from(orderStatistics);
   }
   async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> {
