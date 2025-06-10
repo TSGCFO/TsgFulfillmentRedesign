@@ -126,8 +126,26 @@ export default function UserManagement() {
   const canEditUser = (targetUser: Employee) => {
     if (user?.role === "SuperAdmin") return true;
     if (user?.role === "Admin") {
-      // Admin cannot edit SuperAdmins or themselves
+      // Admin can edit Users and other Admins, but not SuperAdmins or themselves
       return targetUser.role !== "SuperAdmin" && targetUser.id !== user.id;
+    }
+    return false;
+  };
+
+  const canDeleteUser = (targetUser: Employee) => {
+    if (user?.role === "SuperAdmin") return true;
+    if (user?.role === "Admin") {
+      // Admin can only delete Users, not other Admins or SuperAdmins
+      return targetUser.role === "User" && targetUser.id !== user.id;
+    }
+    return false;
+  };
+
+  const canCreateRole = (role: string) => {
+    if (user?.role === "SuperAdmin") return true;
+    if (user?.role === "Admin") {
+      // Admin can only create Users, not other Admins or SuperAdmins
+      return role === "User";
     }
     return false;
   };
@@ -321,7 +339,7 @@ export default function UserManagement() {
                             <Edit className="h-4 w-4" />
                           </Button>
                         )}
-                        {canEditUser(employee) && employee.id !== user?.id && (
+                        {canDeleteUser(employee) && (
                           <Button
                             variant="outline"
                             size="sm"
