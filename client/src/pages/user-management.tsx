@@ -168,9 +168,16 @@ export default function UserManagement() {
     }
   };
 
-  const handleDeleteUser = (userId: number) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      deleteUserMutation.mutate(userId);
+  const [userToDelete, setUserToDelete] = useState<Employee | null>(null);
+
+  const handleDeleteUser = (user: Employee) => {
+    setUserToDelete(user);
+  };
+
+  const confirmDeleteUser = () => {
+    if (userToDelete) {
+      deleteUserMutation.mutate(userToDelete.id);
+      setUserToDelete(null);
     }
   };
 
@@ -359,7 +366,7 @@ export default function UserManagement() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleDeleteUser(employee.id)}
+                            onClick={() => handleDeleteUser(employee)}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

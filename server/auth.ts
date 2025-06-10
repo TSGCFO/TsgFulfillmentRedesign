@@ -89,8 +89,13 @@ export function requireSuperAdmin(req: any, res: any, next: any) {
 }
 
 export function setupAuth(app: Express) {
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret) {
+    throw new Error('SESSION_SECRET environment variable is required for secure session management');
+  }
+  
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || "default-secret-key-for-development",
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore,
@@ -119,47 +124,7 @@ export function setupAuth(app: Express) {
     done(null, employee);
   });
 
-  // Role-based middleware
-  function requireAuth(req: any, res: any, next: any) {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-    next();
-  }
-
-  function requireRole(roles: string[]) {
-    return (req: any, res: any, next: any) => {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ error: "Authentication required" });
-      }
-      if (!roles.includes(req.user?.role)) {
-        return res.status(403).json({ error: "Insufficient permissions" });
-      }
-      next();
-    };
-  }
-
-  function canManageUsers(req: any, res: any, next: any) {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-    // SuperAdmin has full access, Admin can manage but not SuperAdmins or themselves
-    const userRole = req.user?.role;
-    if (!["SuperAdmin", "Admin"].includes(userRole)) {
-      return res.status(403).json({ error: "Admin access required" });
-    }
-    next();
-  }
-
-  function requireSuperAdmin(req: any, res: any, next: any) {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ error: "Authentication required" });
-    }
-    if (req.user?.role !== "SuperAdmin") {
-      return res.status(403).json({ error: "SuperAdmin access required" });
-    }
-    next();
-  }
+  // Use exported middleware functions instead of duplicates
 
   app.post("/api/register", async (req, res, next) => {
     const existingEmployee = await storage.getEmployeeByUsername(req.body.username);
