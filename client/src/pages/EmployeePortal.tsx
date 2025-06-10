@@ -177,10 +177,10 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
   });
 
   const stats = {
-    totalInquiries: quoteRequests?.data?.length || 0,
-    activeQuotes: quotesData?.data?.length || 0,
-    signedContracts: contractsData?.data?.filter((c: any) => c.status === 'signed').length || 0,
-    lowStockItems: materialsData?.data?.filter((m: any) => m.currentStock <= m.minStock).length || 0,
+    totalInquiries: Array.isArray(quoteRequests) ? quoteRequests.length : 0,
+    activeQuotes: Array.isArray(quotesData) ? quotesData.length : 0,
+    signedContracts: Array.isArray(contractsData) ? contractsData.filter((c: any) => c.status === 'signed').length : 0,
+    lowStockItems: Array.isArray(materialsData) ? materialsData.filter((m: any) => m.currentStock <= m.minStock).length : 0,
     recentActivity: [
       { type: "inquiry", message: "New inquiry from ABC Corp", time: "2 hours ago" },
       { type: "quote", message: "Quote Q-12345 accepted", time: "4 hours ago" },
@@ -222,7 +222,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Signed Contracts</p>
-                <p className="text-3xl font-bold text-green-600">{mockStats.signedContracts}</p>
+                <p className="text-3xl font-bold text-green-600">{stats.signedContracts}</p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
@@ -234,7 +234,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Low Stock Items</p>
-                <p className="text-3xl font-bold text-red-600">{mockStats.lowStockItems}</p>
+                <p className="text-3xl font-bold text-red-600">{stats.lowStockItems}</p>
               </div>
               <AlertTriangle className="h-8 w-8 text-red-600" />
             </div>
@@ -250,7 +250,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockStats.recentActivity.map((activity, index) => (
+            {stats.recentActivity.map((activity: any, index: number) => (
               <div key={index} className="flex items-center space-x-4 p-3 rounded-lg bg-gray-50">
                 <div className="flex-shrink-0">
                   {activity.type === 'inquiry' && <MessageSquare className="h-5 w-5 text-blue-500" />}
@@ -269,7 +269,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
       </Card>
 
       {/* Recent Quote Requests */}
-      {quoteRequests?.data && (
+      {quoteRequests && (
         <Card>
           <CardHeader>
             <CardTitle>Recent Quote Requests</CardTitle>
@@ -277,7 +277,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {quoteRequests.data.slice(0, 5).map((request: QuoteRequest) => (
+              {quoteRequests.slice(0, 5).map((request: QuoteRequest) => (
                 <div key={request.id} className="flex items-start space-x-4 p-4 border rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
