@@ -124,25 +124,25 @@ export default function UserManagement() {
   };
 
   const canEditUser = (targetUser: Employee) => {
-    if (user?.role === "SuperAdmin") return true;
+    if (user?.role === "SuperAdmin") return true; // SuperAdmin has unlimited access
     if (user?.role === "Admin") {
-      // Admin can edit Users and other Admins, but not SuperAdmins or themselves
-      return targetUser.role !== "SuperAdmin" && targetUser.id !== user.id;
+      // Admin can edit Users and other Admins, but not SuperAdmins
+      return targetUser.role !== "SuperAdmin";
     }
     return false;
   };
 
   const canDeleteUser = (targetUser: Employee) => {
-    if (user?.role === "SuperAdmin") return true;
+    if (user?.role === "SuperAdmin") return true; // SuperAdmin can delete anyone
     if (user?.role === "Admin") {
       // Admin can only delete Users, not other Admins or SuperAdmins
-      return targetUser.role === "User" && targetUser.id !== user.id;
+      return targetUser.role === "User";
     }
     return false;
   };
 
   const canCreateRole = (role: string) => {
-    if (user?.role === "SuperAdmin") return true;
+    if (user?.role === "SuperAdmin") return true; // SuperAdmin can create any role
     if (user?.role === "Admin") {
       // Admin can only create Users, not other Admins or SuperAdmins
       return role === "User";

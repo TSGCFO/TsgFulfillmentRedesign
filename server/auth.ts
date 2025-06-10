@@ -51,6 +51,10 @@ export function requireRole(roles: string[]) {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ error: "Authentication required" });
     }
+    // SuperAdmin bypasses all role restrictions
+    if (req.user?.role === "SuperAdmin") {
+      return next();
+    }
     if (!roles.includes(req.user?.role)) {
       return res.status(403).json({ error: "Insufficient permissions" });
     }
@@ -62,9 +66,13 @@ export function canManageUsers(req: any, res: any, next: any) {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "Authentication required" });
   }
-  // SuperAdmin has full access, Admin can manage but not SuperAdmins or themselves
+  // SuperAdmin has unrestricted access to all user management
+  if (req.user?.role === "SuperAdmin") {
+    return next();
+  }
+  // Admin can manage Users but not SuperAdmins
   const userRole = req.user?.role;
-  if (!["SuperAdmin", "Admin"].includes(userRole)) {
+  if (!["Admin"].includes(userRole)) {
     return res.status(403).json({ error: "Admin access required" });
   }
   next();
@@ -192,8 +200,8 @@ export function setupAuth(app: Express) {
     try {
       const employeeId = parseInt(req.params.id);
       
-      // Users can only update their own profile unless they're admin
-      if (req.user?.role !== "admin" && req.user?.id !== employeeId) {
+      // SuperAdmin has full access, Admin and Users can only update their own profile
+      if (req.user?.role !== "SuperAdmin" && req.user?.role !== "Admin" && req.user?.id !== employeeId) {
         return res.status(403).json({ error: "Access denied" });
       }
 
