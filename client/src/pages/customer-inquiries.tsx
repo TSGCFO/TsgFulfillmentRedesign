@@ -46,7 +46,7 @@ export default function CustomerInquiries() {
     queryKey: ["/api/quote-requests"],
   });
 
-  const { data: employees = [] } = useQuery({
+  const { data: employees = [] } = useQuery<any[]>({
     queryKey: ["/api/employees"],
   });
 
@@ -326,7 +326,7 @@ export default function CustomerInquiries() {
                     <TableHead>Company</TableHead>
                     <TableHead>Service Type</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Urgency</TableHead>
+                    <TableHead>Assigned To</TableHead>
                     <TableHead>Submitted</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -369,9 +369,23 @@ export default function CustomerInquiries() {
                         {getStatusBadge(inquiry.status)}
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium capitalize text-gray-600">
-                          Medium
-                        </span>
+                        <Select
+                          value={inquiry.assignedTo ? inquiry.assignedTo.toString() : "unassigned"}
+                          onValueChange={(value) => handleAssignmentUpdate(inquiry, value)}
+                          disabled={updateInquiryMutation.isPending}
+                        >
+                          <SelectTrigger className="w-[150px]">
+                            <SelectValue placeholder="Assign to..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="unassigned">Unassigned</SelectItem>
+                            {(employees as any[]).map((employee: any) => (
+                              <SelectItem key={employee.id} value={employee.id.toString()}>
+                                {employee.fullName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1 text-sm text-gray-500">
@@ -524,22 +538,45 @@ export default function CustomerInquiries() {
               </TabsContent>
               
               <TabsContent value="actions" className="space-y-4">
-                <div>
-                  <Label>Update Status</Label>
-                  <Select
-                    value={selectedInquiry.status}
-                    onValueChange={(value) => handleStatusUpdate(selectedInquiry, value)}
-                  >
-                    <SelectTrigger className="w-full mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending Review</SelectItem>
-                      <SelectItem value="in_progress">In Progress</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Update Status</Label>
+                    <Select
+                      value={selectedInquiry.status}
+                      onValueChange={(value) => handleStatusUpdate(selectedInquiry, value)}
+                    >
+                      <SelectTrigger className="w-full mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending">Pending Review</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label>Assign Employee</Label>
+                    <Select
+                      value={selectedInquiry.assignedTo ? selectedInquiry.assignedTo.toString() : "unassigned"}
+                      onValueChange={(value) => handleAssignmentUpdate(selectedInquiry, value)}
+                      disabled={updateInquiryMutation.isPending}
+                    >
+                      <SelectTrigger className="w-full mt-1">
+                        <SelectValue placeholder="Assign to..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                        {(employees as any[]).map((employee: any) => (
+                          <SelectItem key={employee.id} value={employee.id.toString()}>
+                            {employee.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
