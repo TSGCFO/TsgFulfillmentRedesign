@@ -69,7 +69,7 @@ export interface IStorage {
   getClientAnalyticsSummary(clientId: number): Promise<any>;
   getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any>;
   getInventoryReport(clientId?: number): Promise<any>;
-  getComparisonData(clientId: number, periodAStart: Date, periodAEnd: Date, periodBStart: Date, periodBEnd: Date, metric: string): Promise<any>;
+  getComparisonData(clientId: number, metric: string, periodAStart: Date, periodAEnd: Date, periodBStart: Date, periodBEnd: Date, granularity: string): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
@@ -581,11 +581,12 @@ export class MemStorage implements IStorage {
   
   async getComparisonData(
     clientId: number,
+    metric: string,
     periodAStart: Date,
     periodAEnd: Date,
     periodBStart: Date,
     periodBEnd: Date,
-    metric: string
+    granularity: string
   ): Promise<any> {
     // This method generates comparison data between two time periods
     
