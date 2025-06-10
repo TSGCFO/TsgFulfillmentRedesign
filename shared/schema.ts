@@ -28,8 +28,6 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof insertUserSchema>;
 export type LoginRequest = z.infer<typeof loginSchema>;
 
 export const quoteRequests = pgTable("quote_requests", {
@@ -344,9 +342,7 @@ export const insertMaterialUsageSchema = createInsertSchema(materialUsage).omit(
   usageDate: true
 });
 
-// Export types
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+// Export types - User types already defined above
 
 export type InsertQuoteRequest = z.infer<typeof insertQuoteRequestSchema>;
 export type QuoteRequest = typeof quoteRequests.$inferSelect;

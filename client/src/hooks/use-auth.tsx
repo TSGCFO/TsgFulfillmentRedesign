@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Registration successful",
-        description: `User ${user.username} created successfully!`,
+        description: `Welcome to TSG Fulfillment, ${user.fullName}!`,
       });
     },
     onError: (error: Error) => {
@@ -81,8 +81,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: () => {
       queryClient.setQueryData(["/api/user"], null);
       toast({
-        title: "Logged out",
-        description: "You have been logged out successfully.",
+        title: "Logged out successfully",
+        description: "You have been securely logged out.",
       });
     },
     onError: (error: Error) => {
