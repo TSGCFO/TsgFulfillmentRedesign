@@ -302,6 +302,32 @@ gqBN/se1wy4MC/7DoVlrUSmwU7G2ZXJifkalUoJ7ggN79EkyuYJu8g==
     }
   }
 
+  async exchangeCodeForToken(code: string): Promise<{ access_token: string; refresh_token?: string }> {
+    const response = await fetch('https://account-d.docusign.com/oauth/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        'grant_type': 'authorization_code',
+        'code': code,
+        'client_id': this.integrationKey,
+        'redirect_uri': 'https://www.tsgfulfillment.com/auth/docusign/callback',
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log('DocuSign token exchange error:', errorText);
+      throw new Error(`DocuSign token exchange error: ${response.status} ${response.statusText} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    this.accessToken = data.access_token;
+    
+    return data;
+  }
+
   async testConnection(): Promise<{ authenticated: boolean; accountId: string; message: string; consentUrl?: string }> {
     try {
       const token = await this.getAccessToken();

@@ -1199,18 +1199,23 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
         return res.status(400).json({ error: 'Authorization code missing' });
       }
       
-      // Here you would exchange the code for an access token
-      // For now, we'll just confirm the callback was received
+      // Exchange authorization code for access token
+      const { docusignService } = await import('./services/docusign');
+      const tokenData = await docusignService.exchangeCodeForToken(code as string);
+      
       res.json({
         success: true,
-        message: 'DocuSign authorization callback received',
-        code: code,
+        message: 'DocuSign authorization completed successfully! Your integration is now fully operational.',
+        access_token_received: !!tokenData.access_token,
         state: state,
-        next_steps: 'The authorization code can now be exchanged for an access token'
+        next_steps: 'You can now send contracts for signature, track status, and download completed documents.'
       });
     } catch (error) {
       console.error('DocuSign callback error:', error);
-      res.status(500).json({ error: 'Callback processing failed' });
+      res.status(500).json({ 
+        error: 'Token exchange failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
