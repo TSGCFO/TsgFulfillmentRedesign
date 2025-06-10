@@ -159,12 +159,28 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
     queryKey: ['/api/quote-requests']
   });
 
-  // Mock data for demonstration
-  const mockStats = {
+  // Get employee portal data
+  const { data: employeeData } = useQuery({
+    queryKey: ['/api/employees']
+  });
+
+  const { data: quotesData } = useQuery({
+    queryKey: ['/api/quotes']
+  });
+
+  const { data: contractsData } = useQuery({
+    queryKey: ['/api/contracts']
+  });
+
+  const { data: materialsData } = useQuery({
+    queryKey: ['/api/materials']
+  });
+
+  const stats = {
     totalInquiries: quoteRequests?.data?.length || 0,
-    activeQuotes: 8,
-    signedContracts: 12,
-    lowStockItems: 3,
+    activeQuotes: quotesData?.data?.length || 0,
+    signedContracts: contractsData?.data?.filter((c: any) => c.status === 'signed').length || 0,
+    lowStockItems: materialsData?.data?.filter((m: any) => m.currentStock <= m.minStock).length || 0,
     recentActivity: [
       { type: "inquiry", message: "New inquiry from ABC Corp", time: "2 hours ago" },
       { type: "quote", message: "Quote Q-12345 accepted", time: "4 hours ago" },
@@ -182,7 +198,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Inquiries</p>
-                <p className="text-3xl font-bold text-blue-600">{mockStats.totalInquiries}</p>
+                <p className="text-3xl font-bold text-blue-600">{stats.totalInquiries}</p>
               </div>
               <MessageSquare className="h-8 w-8 text-blue-600" />
             </div>
@@ -194,7 +210,7 @@ function DashboardOverview({ employeeId }: { employeeId: number }) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Active Quotes</p>
-                <p className="text-3xl font-bold text-yellow-600">{mockStats.activeQuotes}</p>
+                <p className="text-3xl font-bold text-yellow-600">{stats.activeQuotes}</p>
               </div>
               <Calculator className="h-8 w-8 text-yellow-600" />
             </div>
