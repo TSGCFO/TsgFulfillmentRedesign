@@ -219,7 +219,8 @@ export class MemStorage implements IStorage {
       ...insertUser, 
       id, 
       createdAt,
-      lastLogin: null 
+      lastLogin: null,
+      role: insertUser.role ?? 'user'
     };
     this.users.set(id, user);
     return user;
@@ -813,11 +814,13 @@ export class MemStorage implements IStorage {
 
   // Employee Portal Methods
   async createEmployee(employee: InsertEmployee): Promise<Employee> {
-    const newEmployee = {
+    const newEmployee: Employee = {
       id: this.employeeId++,
       ...employee,
       createdAt: new Date(),
-      lastLogin: null
+      lastLogin: null,
+      isActive: employee.isActive ?? true,
+      hubspotUserId: employee.hubspotUserId ?? null
     };
     this.employees.set(newEmployee.id, newEmployee);
     return newEmployee;
@@ -844,11 +847,16 @@ export class MemStorage implements IStorage {
   }
 
   async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
-    const newAssignment = {
+    const newAssignment: InquiryAssignment = {
       id: this.inquiryAssignmentId++,
       ...assignment,
       assignedAt: new Date(),
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      status: assignment.status ?? 'pending',
+      priority: assignment.priority ?? 'medium',
+      employeeId: assignment.employeeId ?? null,
+      notes: assignment.notes ?? null,
+      hubspotDealId: assignment.hubspotDealId ?? null
     };
     this.inquiryAssignments.set(newAssignment.id, newAssignment);
     return newAssignment;
@@ -883,11 +891,15 @@ export class MemStorage implements IStorage {
   }
 
   async createContract(contract: InsertContract): Promise<Contract> {
-    const newContract = {
+    const newContract: Contract = {
       id: this.contractId++,
       ...contract,
       createdAt: new Date(),
-      lastStatusCheck: new Date()
+      lastStatusCheck: new Date(),
+      status: contract.status ?? 'draft',
+      contractValue: contract.contractValue ?? null,
+      signedDate: contract.signedDate ?? null,
+      supabaseStoragePath: contract.supabaseStoragePath ?? null
     };
     this.contracts.set(newContract.id, newContract);
     return newContract;
@@ -917,11 +929,15 @@ export class MemStorage implements IStorage {
   }
 
   async createQuote(quote: InsertQuote): Promise<Quote> {
-    const newQuote = {
+    const newQuote: Quote = {
       id: this.quoteId++,
       ...quote,
       createdAt: new Date(),
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
+      status: quote.status ?? 'draft',
+      notes: quote.notes ?? null,
+      validUntil: quote.validUntil ?? null,
+      hubspotQuoteId: quote.hubspotQuoteId ?? null
     };
     this.quotes.set(newQuote.id, newQuote);
     return newQuote;
@@ -954,10 +970,17 @@ export class MemStorage implements IStorage {
   }
 
   async createMaterial(material: InsertMaterial): Promise<Material> {
-    const newMaterial = {
+    const newMaterial: Material = {
       id: this.materialId++,
       ...material,
-      createdAt: new Date()
+      createdAt: new Date(),
+      isActive: material.isActive ?? true,
+      sku: material.sku ?? null,
+      description: material.description ?? null,
+      currentStock: material.currentStock ?? 0,
+      minStock: material.minStock ?? 0,
+      maxStock: material.maxStock ?? null,
+      reorderPoint: material.reorderPoint ?? null
     };
     this.materials.set(newMaterial.id, newMaterial);
     return newMaterial;
