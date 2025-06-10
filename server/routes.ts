@@ -1,6 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import employeePortalRouter from "./routes/employee-portal";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
@@ -349,6 +350,8 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     });
   });
 
+  // Mount Employee Portal routes
+  app.use('/api/employee-portal', employeePortalRouter);
 
   // SEO ROUTES - Enhanced with Dynamic Sitemap Generation
   app.get('/sitemap.xml', (req, res) => {
