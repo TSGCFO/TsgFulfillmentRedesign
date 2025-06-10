@@ -150,11 +150,31 @@ async function testDocuSignIntegration() {
     }
     
     try {
+      // Try different key format options
       createPrivateKey(privateKey);
       console.log('✅ Private key format is valid');
     } catch (keyError) {
-      console.log(`❌ Invalid private key format: ${keyError.message}`);
-      return false;
+      console.log(`❌ PKCS#1 format failed: ${keyError.message}`);
+      
+      // Try PKCS#8 format
+      try {
+        const pkcs8Key = privateKey.replace('-----BEGIN RSA PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----')
+                                   .replace('-----END RSA PRIVATE KEY-----', '-----END PRIVATE KEY-----');
+        createPrivateKey(pkcs8Key);
+        console.log('✅ Private key valid in PKCS#8 format');
+        privateKey = pkcs8Key;
+      } catch (pkcs8Error) {
+        console.log(`❌ PKCS#8 format also failed: ${pkcs8Error.message}`);
+        
+        // Try with format specification
+        try {
+          createPrivateKey({ key: privateKey, format: 'pem', type: 'pkcs1' });
+          console.log('✅ Private key valid with explicit PKCS#1 format');
+        } catch (explicitError) {
+          console.log(`❌ All private key formats failed: ${explicitError.message}`);
+          return false;
+        }
+      }
     }
     
     // Test JWT creation
