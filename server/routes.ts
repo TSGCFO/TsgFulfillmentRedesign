@@ -1407,22 +1407,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
 
   // ===== FEATURE FLAGS API =====
   // Get feature flags for current user
-  app.get('/api/feature-flags', async (req, res) => {
-    try {
-      const { featureFlagService } = await import('./feature-flags');
-      
-      const context = req.user ? {
-        userId: req.user.id,
-        userRole: req.user.role,
-        username: req.user.username
-      } : undefined;
 
-      const flags = await featureFlagService.getFlagsForContext(context || {});
-      res.json(flags);
-    } catch (error) {
-      handleError(res, error, 'Error retrieving feature flags');
-    }
-  });
 
   // Public endpoint to get feature flags for current user
   app.get('/api/feature-flags', async (req, res) => {
