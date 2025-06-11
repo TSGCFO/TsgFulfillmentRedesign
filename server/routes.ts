@@ -1050,6 +1050,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+
   app.post(
     "/api/employees",
     featureGuard('employee_user_management'),
@@ -1073,6 +1074,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       handleError(res, error, "Failed to create employee");
     }
   });
+
 
   app.patch(
     "/api/employees/:id",
