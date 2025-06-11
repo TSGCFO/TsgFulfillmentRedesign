@@ -917,7 +917,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
       const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
       
-      const shippingPerformance = await storage.getShippingPerformance(clientId, startDate, endDate);
+      const shippingPerformance = await storage.getShippingPerformance(startDate, endDate, clientId);
       res.status(200).json({ data: shippingPerformance });
     } catch (error) {
       handleError(res, error, 'Error retrieving shipping performance');
@@ -948,7 +948,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
         return res.status(400).json({ error: 'Missing required parameters' });
       }
       
-      const reportData = await storage.getReportData(clientId, reportType, startDate, endDate);
+      const reportData = await storage.getReportData(reportType, { startDate, endDate }, clientId);
       res.status(200).json({ data: reportData });
     } catch (error) {
       handleError(res, error, 'Error retrieving report data');
@@ -966,12 +966,12 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       
       const clientIdNum = parseInt(clientId as string);
       const comparisonData = await storage.getComparisonData(
-        clientIdNum,
+        metric as string,
+        'custom',
         new Date(periodAStart as string),
         new Date(periodAEnd as string),
         new Date(periodBStart as string),
-        new Date(periodBEnd as string),
-        metric as string
+        new Date(periodBEnd as string)
       );
       
       res.status(200).json({ data: comparisonData });
