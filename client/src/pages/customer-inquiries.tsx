@@ -31,7 +31,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { QuoteRequest } from "@shared/schema";
+import type { QuoteRequest, Employee } from "@shared/schema";
 
 export default function CustomerInquiries() {
   const { user } = useAuth();
@@ -46,7 +46,7 @@ export default function CustomerInquiries() {
     queryKey: ["/api/quote-requests"],
   });
 
-  const { data: employees = [] } = useQuery<any[]>({
+  const { data: employees = [] } = useQuery<Employee[]>({
     queryKey: ["/api/employees"],
   });
 
@@ -379,7 +379,7 @@ export default function CustomerInquiries() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="unassigned">Unassigned</SelectItem>
-                            {(employees as any[]).map((employee: any) => (
+                            {employees.map((employee: Employee) => (
                               <SelectItem key={employee.id} value={employee.id.toString()}>
                                 {employee.fullName}
                               </SelectItem>
@@ -569,7 +569,7 @@ export default function CustomerInquiries() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="unassigned">Unassigned</SelectItem>
-                        {(employees as any[]).map((employee: any) => (
+                        {employees.map((employee: Employee) => (
                           <SelectItem key={employee.id} value={employee.id.toString()}>
                             {employee.fullName}
                           </SelectItem>
