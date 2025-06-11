@@ -1405,6 +1405,73 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // ===== FEATURE FLAGS API =====
+  // Get feature flags for current user
+  app.get('/api/feature-flags', async (req, res) => {
+    try {
+      const { featureFlagService } = await import('./feature-flags');
+      
+      const context = req.user ? {
+        userId: req.user.id,
+        userRole: req.user.role,
+        username: req.user.username
+      } : undefined;
+
+      const flags = await featureFlagService.getFlagsForContext(context || {});
+      res.json(flags);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving feature flags');
+    }
+  });
+
+  // Admin endpoint to manage feature flags (SuperAdmin only)
+  app.post('/api/admin/feature-flags/:flagName/enable', requireSuperAdmin, async (req, res) => {
+    try {
+      const { featureFlagService } = await import('./feature-flags');
+      const { flagName } = req.params;
+      const { rolloutPercentage, roles, users } = req.body;
+
+      await featureFlagService.enableFlag(flagName, {
+        rolloutPercentage,
+        roles,
+        users
+      });
+
+      res.json({ 
+        message: `Feature flag '${flagName}' enabled successfully`,
+        flag: flagName 
+      });
+    } catch (error) {
+      handleError(res, error, 'Error enabling feature flag');
+    }
+  });
+
+  app.post('/api/admin/feature-flags/:flagName/disable', requireSuperAdmin, async (req, res) => {
+    try {
+      const { featureFlagService } = await import('./feature-flags');
+      const { flagName } = req.params;
+
+      await featureFlagService.disableFlag(flagName);
+
+      res.json({ 
+        message: `Feature flag '${flagName}' disabled successfully`,
+        flag: flagName 
+      });
+    } catch (error) {
+      handleError(res, error, 'Error disabling feature flag');
+    }
+  });
+
+  app.get('/api/admin/feature-flags', requireSuperAdmin, async (req, res) => {
+    try {
+      const { featureFlagService } = await import('./feature-flags');
+      const flags = await featureFlagService.getAllFlags();
+      res.json({ data: flags });
+    } catch (error) {
+      handleError(res, error, 'Error retrieving all feature flags');
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
