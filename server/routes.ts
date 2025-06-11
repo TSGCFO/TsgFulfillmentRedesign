@@ -1027,24 +1027,6 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
-    try {
-      const employeeData = insertEmployeeSchema.parse(req.body);
-      
-      // Hash password before storing
-      const hashedPassword = await hashPassword(employeeData.password);
-      const employee = await storage.createEmployee({
-        ...employeeData,
-        password: hashedPassword
-      });
-      
-      // Remove password from response
-      const { password, ...safeEmployee } = employee;
-      res.status(201).json(safeEmployee);
-    } catch (error) {
-      handleError(res, error, "Failed to create employee");
-    }
-  });
 
   app.patch("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
     try {
