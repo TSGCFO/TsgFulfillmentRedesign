@@ -1424,6 +1424,19 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // Public endpoint to get feature flags for current user
+  app.get('/api/feature-flags', async (req, res) => {
+    try {
+      const { featureFlagService } = await import('./feature-flags');
+      const user = req.user as any;
+      
+      const flags = featureFlagService.getFlagsForUser(user);
+      res.json(flags);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving feature flags');
+    }
+  });
+
   // Admin endpoint to manage feature flags (SuperAdmin only)
   app.post('/api/admin/feature-flags/:flagName/enable', requireSuperAdmin, async (req, res) => {
     try {
