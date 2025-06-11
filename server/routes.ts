@@ -1114,9 +1114,8 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get("/api/inquiries", async (req, res) => {
     try {
       const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
-      const status = req.query.status as string;
       
-      const assignments = await storage.getInquiryAssignments({ employeeId, status });
+      const assignments = await storage.getInquiryAssignments(employeeId);
       
       // Get full quote request details for each assignment
       const inquiriesWithDetails = await Promise.all(
