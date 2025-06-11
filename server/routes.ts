@@ -22,6 +22,7 @@ import {
   insertMaterialUsageSchema
 } from "@shared/schema";
 import { supabaseStorageService } from "./services/supabase";
+import { featureFlagService } from "./feature-flags";
 
 // Error handler utility function
 const handleError = (res: Response, error: any, message: string = 'An error occurred') => {
@@ -33,6 +34,15 @@ const handleError = (res: Response, error: any, message: string = 'An error occu
 };
 
 const analyticsEnabled = process.env.ANALYTICS_ENABLED === 'true';
+
+function featureGuard(flag: string) {
+  return (req: Request, res: Response, next: any) => {
+    if (!featureFlagService.isEnabled(flag, req.user as any)) {
+      return res.status(403).json({ error: 'Feature disabled' });
+    }
+    next();
+  };
+}
 
 // SEO Utility Functions
 function generateSitemap(): string {
@@ -984,7 +994,12 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // ===== EMPLOYEE PORTAL ROUTES =====
 
   // Employee Management
-  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+  app.post(
+    "/api/employees",
+    featureGuard('employee_user_management'),
+    requireAuth,
+    canManageUsers,
+    async (req, res) => {
     try {
       const employeeData = insertEmployeeSchema.parse(req.body);
       
@@ -1003,7 +1018,12 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+  app.get(
+    "/api/employees",
+    featureGuard('employee_user_management'),
+    requireAuth,
+    canManageUsers,
+    async (req, res) => {
     try {
       const employees = await storage.getAllEmployees();
       // Remove passwords from response
@@ -1014,7 +1034,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/employees/:id", async (req, res) => {
+  app.get(
+    "/api/employees/:id",
+    featureGuard('employee_user_management'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const employee = await storage.getEmployee(id);
@@ -1028,7 +1051,37 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
 
-  app.patch("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
+  app.post(
+    "/api/employees",
+    featureGuard('employee_user_management'),
+    requireAuth,
+    canManageUsers,
+    async (req, res) => {
+    try {
+      const employeeData = insertEmployeeSchema.parse(req.body);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json(safeEmployee);
+    } catch (error) {
+      handleError(res, error, "Failed to create employee");
+    }
+  });
+
+
+  app.patch(
+    "/api/employees/:id",
+    featureGuard('employee_user_management'),
+    requireAuth,
+    canManageUsers,
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const updateData = req.body;
@@ -1059,7 +1112,12 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.delete("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
+  app.delete(
+    "/api/employees/:id",
+    featureGuard('employee_user_management'),
+    requireAuth,
+    canManageUsers,
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       
@@ -1093,7 +1151,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
   // Inquiry Management
-  app.get("/api/inquiries", async (req, res) => {
+  app.get(
+    "/api/inquiries",
+    featureGuard('employee_customer_inquiries'),
+    async (req, res) => {
     try {
       const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
       
@@ -1116,7 +1177,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/inquiries/unassigned", async (req, res) => {
+  app.get(
+    "/api/inquiries/unassigned",
+    featureGuard('employee_customer_inquiries'),
+    async (req, res) => {
     try {
       const unassignedRequests = await storage.getUnassignedQuoteRequests();
       res.json({ data: unassignedRequests });
@@ -1125,7 +1189,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.post("/api/inquiries/assign", async (req, res) => {
+  app.post(
+    "/api/inquiries/assign",
+    featureGuard('employee_customer_inquiries'),
+    async (req, res) => {
     try {
       const validatedData = insertInquiryAssignmentSchema.parse(req.body);
       const assignment = await storage.createInquiryAssignment(validatedData);
@@ -1135,7 +1202,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.patch("/api/inquiries/:id", async (req, res) => {
+  app.patch(
+    "/api/inquiries/:id",
+    featureGuard('employee_customer_inquiries'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const assignment = await storage.updateInquiryAssignment(id, req.body);
@@ -1149,7 +1219,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
   // Quote Management
-  app.post("/api/quotes", async (req, res) => {
+  app.post(
+    "/api/quotes",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const validatedData = insertQuoteSchema.parse(req.body);
       
@@ -1164,7 +1237,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/quotes", async (req, res) => {
+  app.get(
+    "/api/quotes",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
       const status = req.query.status as string;
@@ -1177,7 +1253,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/quotes/:id", async (req, res) => {
+  app.get(
+    "/api/quotes/:id",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const quote = await storage.getQuote(id);
@@ -1190,7 +1269,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.patch("/api/quotes/:id", async (req, res) => {
+  app.patch(
+    "/api/quotes/:id",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const quote = await storage.updateQuote(id, req.body);
@@ -1204,7 +1286,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
   // Contract Management
-  app.post("/api/contracts", async (req, res) => {
+  app.post(
+    "/api/contracts",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const validatedData = insertContractSchema.parse(req.body);
       const contract = await storage.createContract(validatedData);
@@ -1214,7 +1299,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/contracts", async (req, res) => {
+  app.get(
+    "/api/contracts",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
       const status = req.query.status as string;
@@ -1227,7 +1315,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
   // Vendor Management
-  app.post("/api/vendors", async (req, res) => {
+  app.post(
+    "/api/vendors",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const validatedData = insertVendorSchema.parse(req.body);
       const vendor = await storage.createVendor(validatedData);
@@ -1237,7 +1328,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/vendors", async (req, res) => {
+  app.get(
+    "/api/vendors",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const category = req.query.category as string;
       const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
@@ -1249,7 +1343,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.patch("/api/vendors/:id", async (req, res) => {
+  app.patch(
+    "/api/vendors/:id",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const vendor = await storage.updateVendor(id, req.body);
@@ -1263,7 +1360,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   });
 
   // Material Management
-  app.post("/api/materials", async (req, res) => {
+  app.post(
+    "/api/materials",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const validatedData = insertMaterialSchema.parse(req.body);
       const material = await storage.createMaterial(validatedData);
@@ -1273,7 +1373,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.get("/api/materials", async (req, res) => {
+  app.get(
+    "/api/materials",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const category = req.query.category as string;
       const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
@@ -1285,7 +1388,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
-  app.patch("/api/materials/:id", async (req, res) => {
+  app.patch(
+    "/api/materials/:id",
+    featureGuard('employee_portal'),
+    async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const material = await storage.updateMaterial(id, req.body);
