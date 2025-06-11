@@ -97,29 +97,26 @@ function Router() {
         </FeatureFlag>
         
         {/* Employee Portal routes - controlled by feature flags */}
-        <FeatureFlag flag="employee_portal">
-          <ProtectedRoute 
-            path="/employee" 
-            component={EmployeePortal} 
-            requiredRoles={["SuperAdmin", "Admin", "User"]} 
-          />
-        </FeatureFlag>
+        <ProtectedRoute 
+          path="/employee" 
+          component={EmployeePortal} 
+          requiredRoles={["SuperAdmin", "Admin", "User"]} 
+          featureFlag="employee_portal"
+        />
         
-        <FeatureFlag flag="employee_user_management">
-          <ProtectedRoute 
-            path="/employee/users" 
-            component={UserManagement} 
-            requiredRoles={["SuperAdmin", "Admin"]} 
-          />
-        </FeatureFlag>
+        <ProtectedRoute 
+          path="/employee/users" 
+          component={UserManagement} 
+          requiredRoles={["SuperAdmin", "Admin"]} 
+          featureFlag="employee_user_management"
+        />
         
-        <FeatureFlag flag="employee_customer_inquiries">
-          <ProtectedRoute 
-            path="/employee/inquiries" 
-            component={CustomerInquiries} 
-            requiredRoles={["SuperAdmin", "Admin", "User"]} 
-          />
-        </FeatureFlag>
+        <ProtectedRoute 
+          path="/employee/inquiries" 
+          component={CustomerInquiries} 
+          requiredRoles={["SuperAdmin", "Admin", "User"]} 
+          featureFlag="employee_customer_inquiries"
+        />
         
         {/* Feature Flag Administration - SuperAdmin only */}
         <ProtectedRoute 

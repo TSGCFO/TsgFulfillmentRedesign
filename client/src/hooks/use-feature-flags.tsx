@@ -136,8 +136,22 @@ export function FeatureFlag({
   children: ReactNode; 
   fallback?: ReactNode;
 }) {
-  const isEnabled = useFeatureFlag(flag);
-  return isEnabled ? <>{children}</> : <>{fallback}</>;
+  const { isEnabled, isLoading } = useFeatureFlags();
+  
+  // Show loading state while flags are being fetched
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="w-16 h-16 bg-primary/20 rounded-lg mb-4"></div>
+          <div className="h-4 w-32 bg-primary/20 rounded mb-3"></div>
+          <div className="h-3 w-24 bg-primary/10 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+  
+  return isEnabled(flag) ? <>{children}</> : <>{fallback}</>;
 }
 
 /**
