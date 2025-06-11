@@ -20,37 +20,56 @@ interface FeatureFlagsContextType {
 const FeatureFlagsContext = createContext<FeatureFlagsContextType | null>(null);
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [flags, setFlags] = useState<Record<string, boolean>>({});
 
   const {
     data: fetchedFlags,
     error,
-    isLoading,
+    isLoading: flagsLoading,
     refetch
   } = useQuery<Record<string, boolean>, Error>({
     queryKey: ["/api/feature-flags", user?.id],
     queryFn: getQueryFn({ on401: "returnNull" }),
-    enabled: !!user, // Only fetch when user is authenticated
+    enabled: true, // Always fetch, server will handle unauthenticated users
     refetchOnWindowFocus: false,
     staleTime: 30 * 1000, // 30 seconds
   });
 
-  // Update local flags when data changes
+  // Initialize flags with environment variables for unauthenticated users
   useEffect(() => {
-    if (fetchedFlags) {
+    if (!user && !authLoading) {
+      const envFlags = {
+        employee_portal: getClientSideEnvFlag('employee_portal'),
+        employee_auth: getClientSideEnvFlag('employee_auth'),
+        employee_user_management: getClientSideEnvFlag('employee_user_management'),
+        employee_customer_inquiries: getClientSideEnvFlag('employee_customer_inquiries'),
+      };
+      setFlags(envFlags);
+    }
+  }, [user, authLoading]);
+
+  // Update local flags when server data changes
+  useEffect(() => {
+    if (fetchedFlags && user) {
       setFlags(fetchedFlags);
     }
-  }, [fetchedFlags]);
+  }, [fetchedFlags, user]);
 
   // Helper function to check if a flag is enabled
   const isEnabled = (flagName: string): boolean => {
-    // For unauthenticated users, check environment-based flags
-    if (!user) {
+    // If still loading auth, default to environment flags
+    if (authLoading) {
       return getClientSideEnvFlag(flagName);
     }
     
-    return flags[flagName] || false;
+    // For authenticated users, use server flags
+    if (user) {
+      return flags[flagName] || false;
+    }
+    
+    // For unauthenticated users, use environment flags
+    return getClientSideEnvFlag(flagName);
   };
 
   const refresh = () => {
@@ -61,7 +80,7 @@ export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
     <FeatureFlagsContext.Provider
       value={{
         flags,
-        isLoading,
+        isLoading: flagsLoading || authLoading,
         error,
         isEnabled,
         refresh,

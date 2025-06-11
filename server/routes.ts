@@ -1414,10 +1414,18 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       const { featureFlagService } = await import('./feature-flags');
       const user = req.user as any;
       
+      // Always return flags, even for unauthenticated users
       const flags = featureFlagService.getFlagsForUser(user);
       res.json(flags);
     } catch (error) {
-      handleError(res, error, 'Error retrieving feature flags');
+      console.error('Feature flags error:', error);
+      // Return default flags if there's an error
+      res.json({
+        employee_portal: process.env.EMPLOYEE_PORTAL_ENABLED === 'true',
+        employee_auth: process.env.EMPLOYEE_AUTH_ENABLED === 'true',
+        employee_user_management: process.env.EMPLOYEE_USER_MANAGEMENT_ENABLED === 'true',
+        employee_customer_inquiries: process.env.EMPLOYEE_CUSTOMER_INQUIRIES_ENABLED === 'true',
+      });
     }
   });
 
