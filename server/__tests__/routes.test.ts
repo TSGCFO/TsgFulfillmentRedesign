@@ -228,4 +228,14 @@ describe('API routes', () => {
     // Should still work or return appropriate error
     expect([200, 400, 415]).toContain(res.status);
   });
+
+  it('returns 403 when employee_portal flag is disabled', async () => {
+    const res = await fetch(`http://localhost:${port}/api/quotes`);
+    expect(res.status).toBe(403);
+  });
+
+  it('returns 403 when employee_customer_inquiries flag is disabled', async () => {
+    const res = await fetch(`http://localhost:${port}/api/inquiries`);
+    expect(res.status).toBe(403);
+  });
 });
