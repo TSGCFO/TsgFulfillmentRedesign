@@ -8,7 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { insertEmployeeSchema } from "@shared/schema";
 import { z } from "zod";
 import { Loader2, Shield } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { useEffect } from "react";
 
 const loginFormSchema = insertEmployeeSchema.pick({
   username: true,
@@ -17,6 +18,18 @@ const loginFormSchema = insertEmployeeSchema.pick({
 
 export default function AuthPage() {
   const { user, loginMutation, logoutMutation } = useAuth();
+  const [location, setLocation] = useLocation();
+  
+  // Get redirect parameter from URL
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const redirectTo = urlParams.get('redirect') || '/employee';
+
+  // Redirect authenticated users to their intended destination
+  useEffect(() => {
+    if (user && !loginMutation.isPending) {
+      setLocation(redirectTo);
+    }
+  }, [user, redirectTo, setLocation, loginMutation.isPending]);
 
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),

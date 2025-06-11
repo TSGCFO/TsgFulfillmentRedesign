@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Debug</title>
+</head>
+<body>
+    <script>
+        // Test authentication flow
+        fetch('/api/user')
+            .then(res => {
+                console.log('User status:', res.status);
+                if (res.status === 401) {
+                    console.log('User not authenticated');
+                    return null;
+                } else {
+                    return res.json();
+                }
+            })
+            .then(user => {
+                console.log('Current user:', user);
+            });
+            
+        fetch('/api/feature-flags')
+            .then(res => res.json())
+            .then(flags => {
+                console.log('Feature flags:', flags);
+            });
+    </script>
+</body>
+</html>
