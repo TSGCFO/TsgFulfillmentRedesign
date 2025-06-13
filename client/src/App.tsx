@@ -8,6 +8,11 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/lib/protected-route";
+import { FeatureFlagProvider } from "@/hooks/use-feature-flags";
+import { FeatureBoundary } from "@/components/FeatureWrapper";
+import { FeatureFlag } from "../../shared/feature-flags";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -25,7 +30,16 @@ const ImageManagement = lazy(() => import("@/pages/image-management"));
 const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
+const EmployeePortal = lazy(() => import("@/pages/EmployeePortal"));
+const UserManagement = lazy(() => import("@/pages/user-management"));
+const CustomerInquiries = lazy(() => import("@/pages/customer-inquiries"));
+const AuthPage = lazy(() => import("@/pages/auth-page"));
 const NotFound = lazy(() => import("@/pages/not-found"));
+const FeatureFlagDemo = lazy(() => import("@/pages/FeatureFlagDemo"));
+
+// Import feature flag components
+import { FeatureWrapper, FeatureToggle } from "@/components/FeatureWrapper";
+import { useFeatureFlag } from "@/hooks/use-feature-flags";
 
 // Loading fallback component
 const PageLoader = () => (
@@ -43,6 +57,10 @@ function Router() {
   
   // Track page views when routes change
   useAnalytics();
+  
+  // Example feature flag usage in routing
+  const isNewDashboardEnabled = useFeatureFlag(FeatureFlag.NEW_DASHBOARD);
+  const isEnhancedSearchEnabled = useFeatureFlag(FeatureFlag.ENHANCED_SEARCH);
   
   // Handle 301 redirects and set canonical URLs
   useEffect(() => {
@@ -64,24 +82,76 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
+        {/* Feature Flag Example: Conditional Home Page */}
         <Route path="/" component={Home} />
         <Route path="/old-home" component={OWDStyleHome} />
+        
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
         <Route path="/about" component={About} />
         <Route path="/locations" component={Locations} />
+        
+        {/* Feature Flag Example: Analytics routes with enhanced features */}
         {analyticsEnabled && (
           <>
             <Route path="/analytics" component={Analytics} />
             <Route path="/analytics/reports" component={ReportGenerator} />
             <Route path="/analytics/comparison" component={PerformanceComparison} />
-            <Route path="/analytics/dashboard" component={CustomDashboard} />
+            
+            {/* Feature Flag Example: New Dashboard */}
+            <FeatureWrapper
+              feature={FeatureFlag.NEW_DASHBOARD}
+              fallback={<Route path="/analytics/dashboard" component={CustomDashboard} />}
+            >
+              <Route path="/analytics/dashboard" component={CustomDashboard} />
+            </FeatureWrapper>
           </>
         )}
+        
         <Route path="/admin/images" component={ImageManagement} />
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
-        <Route path="/contact-form" component={ContactForm} />
+        
+        {/* Feature Flag Example: Enhanced vs Basic Contact Form */}
+        <FeatureToggle
+          feature={FeatureFlag.ENHANCED_SEARCH}
+          enabled={<Route path="/contact-form" component={ContactForm} />}
+          disabled={<Route path="/contact-form" component={ContactForm} />}
+        />
+        
         <Route path="/quote" component={QuoteRequest} />
+        <Route path="/auth" component={AuthPage} />
+        
+        {/* Feature Flag Demo Page */}
+        <Route path="/feature-flags-demo" component={FeatureFlagDemo} />
+        
+        {/* Feature Flag Example: Enhanced Employee Portal */}
+        <FeatureWrapper
+          feature={FeatureFlag.NEW_DASHBOARD}
+          fallback={
+            <ProtectedRoute
+              path="/employee"
+              component={EmployeePortal}
+              requiredRoles={["SuperAdmin", "Admin", "User"]}
+            />
+          }
+        >
+          <ProtectedRoute
+            path="/employee"
+            component={EmployeePortal}
+            requiredRoles={["SuperAdmin", "Admin", "User"]}
+          />
+        </FeatureWrapper>
+        
+        <ProtectedRoute
+          path="/employee/users"
+          component={UserManagement}
+          requiredRoles={["SuperAdmin", "Admin"]}
+        />
+        <ProtectedRoute
+          path="/employee/inquiries"
+          component={CustomerInquiries}
+          requiredRoles={["SuperAdmin", "Admin", "User"]}
+        />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -111,11 +181,28 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <Router />
-        <Toaster />
-        <CookieConsent />
-      </HelmetProvider>
+      <AuthProvider>
+        <FeatureFlagProvider
+          debug={import.meta.env.DEV}
+          refreshInterval={5 * 60 * 1000} // 5 minutes
+          maxRetries={3}
+          fallbackFlags={{
+            [FeatureFlag.NEW_DASHBOARD]: false,
+            [FeatureFlag.ENHANCED_SEARCH]: false,
+            [FeatureFlag.DOCUMENT_SIGNING]: false,
+            [FeatureFlag.HUBSPOT_V2]: false,
+            [FeatureFlag.PERFORMANCE_CACHING]: false
+          }}
+        >
+          <HelmetProvider>
+            <FeatureBoundary>
+              <Router />
+            </FeatureBoundary>
+            <Toaster />
+            <CookieConsent />
+          </HelmetProvider>
+        </FeatureFlagProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

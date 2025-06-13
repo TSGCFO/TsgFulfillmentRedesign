@@ -194,7 +194,7 @@ ${commitInfo.message.includes('SEO') || commitInfo.message.includes('performance
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: issue.data.number,
-            body: `🏷️ **Priority Level:** ${priority.toUpperCase()}\n\n${priority === 'high' ? '⚠️ This issue requires immediate attention!' : priority === 'medium' ? '📝 Please address with appropriate urgency.' : 'ℹ️ This is a low priority item.'}`
+            body: `🏷️ **Priority Level:** ${priority.toUpperCase()}\n\n${priority === 'high' ? '⚠️ This issue requires immediate attention!' : priority === 'medium' ? '📝 Please address within 24-48 hours.' : '📋 Address when convenient during regular maintenance.'}`
           });
 
     - name: Notify on Slack (Optional)
@@ -211,6 +211,7 @@ ${commitInfo.message.includes('SEO') || commitInfo.message.includes('performance
       uses: actions/github-script@v7
       with:
         github-token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+
         script: |
           await github.rest.issues.createComment({
             owner: context.repo.owner,
