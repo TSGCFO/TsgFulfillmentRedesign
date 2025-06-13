@@ -10,8 +10,18 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:feature-flags": "vitest run shared/__tests__/feature-flag*.test.ts server/__tests__/feature-flags*.test.ts client/src/__tests__/feature-flags*.test.tsx",
+    "test:feature-flags:unit": "vitest run shared/__tests__/feature-flag*.test.ts",
+    "test:feature-flags:integration": "vitest run server/__tests__/feature-flags*.test.ts",
+    "test:feature-flags:frontend": "vitest run client/src/__tests__/feature-flags*.test.tsx",
+    "test:feature-flags:registry": "vitest run shared/__tests__/feature-flag-registry.test.ts",
+    "test:feature-flags:manager": "vitest run shared/__tests__/feature-flag-manager.test.ts",
     "e2e": "npx playwright install --with-deps && playwright test",
-    "e2e:install": "npx playwright install --with-deps"
+    "e2e:feature-flags": "npx playwright test e2e/feature-flags.e2e.ts",
+    "e2e:install": "npx playwright install --with-deps",
+    "validate:feature-flags": "tsx shared/feature-flag-test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
