@@ -78,7 +78,7 @@ jobs:
       if: steps.should-create.outputs.create == 'true'
       uses: actions/github-script@v7
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
         script: |
           const commitInfo = {
             message: `${{ steps.commit-info.outputs.commit_message }}`,
@@ -210,7 +210,8 @@ ${commitInfo.message.includes('SEO') || commitInfo.message.includes('performance
       if: github.event_name == 'pull_request' && github.event.action == 'opened'
       uses: actions/github-script@v7
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+
         script: |
           await github.rest.issues.createComment({
             owner: context.repo.owner,

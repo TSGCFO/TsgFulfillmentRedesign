@@ -1,0 +1,89 @@
+name: Auto Issue Creation
+
+on:
+  push:
+    branches: [ replit, render, code, codex ]
+  pull_request:
+    branches: [ replit, render, code, codex ]
+    types: [ opened, closed ]
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Make scripts executable
+      run: chmod +x .github/scripts/*.sh
+
+    - name: Get commit information
+      id: commit-info
+      run: |
+        COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        COMMIT_AUTHOR=$(git log -1 --pretty=format:'%an')
+        COMMIT_DATE=$(git log -1 --pretty=format:'%ci')
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | tr '\n' ',' | sed 's/,$//')
+        LINES_ADDED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo "0")
+        LINES_DELETED=$(git diff --shortstat HEAD~1 HEAD | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo "0")
+        
+        echo "commit_message=$COMMIT_MESSAGE" >> $GITHUB_OUTPUT
+        echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+        echo "commit_author=$COMMIT_AUTHOR" >> $GITHUB_OUTPUT
+        echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+        echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+        echo "lines_added=$LINES_ADDED" >> $GITHUB_OUTPUT
+        echo "lines_deleted=$LINES_DELETED" >> $GITHUB_OUTPUT
+
+    - name: Analyze commit
+      id: analyze
+      run: |
+        .github/scripts/analyze-commit.sh \
+          "${{ steps.commit-info.outputs.commit_message }}" \
+          "${{ steps.commit-info.outputs.changed_files }}" \
+          "${{ steps.commit-info.outputs.lines_added }}" \
+          "${{ steps.commit-info.outputs.lines_deleted }}"
+
+    - name: Generate issue content
+      id: content
+      if: steps.analyze.outputs.should_create == 'true'
+      run: |
+        .github/scripts/generate-issue-content.sh \
+          "${{ steps.analyze.outputs.template }}" \
+          "${{ steps.commit-info.outputs.commit_hash }}" \
+          "${{ steps.commit-info.outputs.commit_author }}" \
+          "${{ steps.commit-info.outputs.commit_date }}" \
+          "${{ steps.commit-info.outputs.commit_message }}" \
+          "${{ steps.commit-info.outputs.changed_files }}" \
+          "${{ steps.commit-info.outputs.lines_added }}" \
+          "${{ steps.commit-info.outputs.lines_deleted }}" \
+          "${{ steps.analyze.outputs.priority }}"
+
+    - name: Create GitHub Issue
+      if: steps.analyze.outputs.should_create == 'true'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const title = `${{ steps.content.outputs.title }}`;
+          const body = fs.readFileSync('/tmp/issue_body.txt', 'utf8');
+          const labels = `${{ steps.content.outputs.labels }}`.split(',');
+          
+          const issue = await github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: labels,
+            assignees: ['${{ github.actor }}']
+          });
+          
+          console.log(`Created issue #${issue.data.number}: ${title}`);

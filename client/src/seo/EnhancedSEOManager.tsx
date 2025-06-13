@@ -120,12 +120,20 @@ export const EnhancedSEOManager: React.FC<EnhancedSEOProps> = ({
         if (typeof pageSchemas === 'function') {
           // Handle dynamic schemas
           if (industry && serviceType) {
-            data.push(...(pageSchemas as any)(industry, [serviceType]));
+            const dynamicSchemas = (pageSchemas as any)(industry, [serviceType]);
+            if (Array.isArray(dynamicSchemas)) {
+              data.push(...dynamicSchemas);
+            }
           } else {
-            data.push(...(pageSchemas as any)());
+            const defaultSchemas = (pageSchemas as any)();
+            if (Array.isArray(defaultSchemas)) {
+              data.push(...defaultSchemas);
+            }
           }
-        } else {
+        } else if (Array.isArray(pageSchemas)) {
           data.push(...pageSchemas);
+        } else if (pageSchemas) {
+          data.push(pageSchemas);
         }
       }
     }
