@@ -112,6 +112,13 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 
 ## Recent Changes
 
+- June 14, 2025: Critical security vulnerability patched
+  - **SECURITY FIX**: Removed hardcoded JWT tokens and API keys from deployment documentation
+  - Replaced exposed Supabase credentials with placeholder instructions in all deployment files
+  - Updated render.yaml to use secure environment variable configuration
+  - Enhanced .gitignore to prevent future accidental commits of sensitive documentation
+  - Added security warnings to all deployment guides
+
 - June 14, 2025: Security hardening and 404 fixes
   - Enhanced .gitignore to protect sensitive data (API keys, database URLs, secrets)
   - Fixed Google Search Console 404 indexing issues

@@ -83,5 +83,11 @@ private-scripts/
 .deployment
 render-config.json
 
+# Documentation Files with Embedded Secrets (Security Risk)
+# Never commit documentation with actual API keys or database URLs
+*-with-secrets.md
+deployment-secrets.md
+production-config.md
+
 # Unesccerry
 claude-code-action/

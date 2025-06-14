@@ -33,12 +33,14 @@ Add these in your Render Web Service settings:
 ```
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0dtgaidbo4c739abnv0-a.ohio-postgres.render.com/tsg_fulfillment?sslmode=require
+DATABASE_URL=[Your Render PostgreSQL connection URL]
 SESSION_SECRET=[Generate 64-character random string]
-SUPABASE_URL=https://ahnneaclpkspcdtoqzkp.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MzgzNDcsImV4cCI6MjA2MDMxNDM0N30.3xfgsXV391EQynu_1PaSldkDiMf12-ygoRKsdQo5SnQ
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDczODM0NywiZXhwIjoyMDYwMzE0MzQ3fQ.8chAkrs9jswOSCsTgSnSoClm3EUy_qjnhqbQDzuA8KU
+SUPABASE_URL=[Your Supabase project URL]
+SUPABASE_ANON_KEY=[Your Supabase anonymous key]
+SUPABASE_SERVICE_KEY=[Your Supabase service role key]
 ```
+
+**⚠️ Security Note**: Never commit actual API keys or database URLs to your repository. Get these values from your Render dashboard and Supabase project settings.
 
 ### Step 3: Deploy
 1. Push your code to GitHub
