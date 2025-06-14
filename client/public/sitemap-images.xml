@@ -12,15 +12,7 @@
     </image:image>
   </url>
 
-  <!-- Services Images -->
-  <url>
-    <loc>https://tsgfulfillment.com/services</loc>
-    <image:image>
-      <image:loc>https://tsgfulfillment.com/images/services-warehouse.jpg</image:loc>
-      <image:title>Fulfillment Services - Warehousing and Order Processing</image:title>
-      <image:caption>Comprehensive fulfillment services including warehousing, kitting, and order processing</image:caption>
-    </image:image>
-  </url>
+
 
   <!-- About Images -->
   <url>
@@ -34,7 +26,7 @@
 
   <!-- Contact Images -->
   <url>
-    <loc>https://tsgfulfillment.com/contact</loc>
+    <loc>https://tsgfulfillment.com/contact-form</loc>
     <image:image>
       <image:loc>https://tsgfulfillment.com/images/contact-location.jpg</image:loc>
       <image:title>Contact TSG Fulfillment - Get in Touch</image:title>
@@ -74,6 +66,15 @@
 
   <!-- Service-specific Images -->
   <url>
+    <loc>https://tsgfulfillment.com/services/fulfillment</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/fulfillment-service.jpg</image:loc>
+      <image:title>Order Fulfillment Services - Fast and Accurate Processing</image:title>
+      <image:caption>Efficient order processing and fulfillment services for e-commerce businesses</image:caption>
+    </image:image>
+  </url>
+
+  <url>
     <loc>https://tsgfulfillment.com/services/warehousing</loc>
     <image:image>
       <image:loc>https://tsgfulfillment.com/images/warehousing-service.jpg</image:loc>
@@ -83,16 +84,16 @@
   </url>
 
   <url>
-    <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
+    <loc>https://tsgfulfillment.com/services/value-added-services</loc>
     <image:image>
-      <image:loc>https://tsgfulfillment.com/images/order-fulfillment-service.jpg</image:loc>
-      <image:title>Order Fulfillment Services - Fast and Accurate Processing</image:title>
-      <image:caption>Efficient order processing and fulfillment services for e-commerce businesses</image:caption>
+      <image:loc>https://tsgfulfillment.com/images/value-added-service.jpg</image:loc>
+      <image:title>Value-Added Services - Custom Solutions</image:title>
+      <image:caption>Specialized value-added services including custom packaging and quality control</image:caption>
     </image:image>
   </url>
 
   <url>
-    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <loc>https://tsgfulfillment.com/services/kitting-services</loc>
     <image:image>
       <image:loc>https://tsgfulfillment.com/images/kitting-service.jpg</image:loc>
       <image:title>Kitting Services - Product Assembly and Packaging</image:title>
@@ -110,11 +111,47 @@
   </url>
 
   <url>
-    <loc>https://tsgfulfillment.com/services/value-added</loc>
+    <loc>https://tsgfulfillment.com/services/hand-assembly</loc>
     <image:image>
-      <image:loc>https://tsgfulfillment.com/images/value-added-service.jpg</image:loc>
-      <image:title>Value-Added Services - Custom Solutions</image:title>
-      <image:caption>Specialized value-added services including custom packaging and quality control</image:caption>
+      <image:loc>https://tsgfulfillment.com/images/hand-assembly-service.jpg</image:loc>
+      <image:title>Hand Assembly Services - Meticulous Product Assembly</image:title>
+      <image:caption>Skilled hand assembly services for products requiring special care and attention</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/reverse-logistics</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/reverse-logistics-service.jpg</image:loc>
+      <image:title>Reverse Logistics - Returns Management</image:title>
+      <image:caption>Comprehensive returns management and reverse logistics solutions</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/inventory-management</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/inventory-management-service.jpg</image:loc>
+      <image:title>Inventory Management - Real-time Tracking</image:title>
+      <image:caption>Advanced inventory management with real-time tracking and reporting</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/freight-forwarding-service.jpg</image:loc>
+      <image:title>Freight Forwarding - International Shipping</image:title>
+      <image:caption>Professional freight forwarding and international shipping coordination</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/healthcare-services</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/healthcare-services.jpg</image:loc>
+      <image:title>Healthcare Marketing Services - Compliant Fulfillment</image:title>
+      <image:caption>Specialized fulfillment services for healthcare and pharmaceutical industries</image:caption>
     </image:image>
   </url>
 
