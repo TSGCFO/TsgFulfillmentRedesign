@@ -90,5 +90,11 @@ deployment-secrets.md
 production-config.md
 
 
+# Session & Authentication Files
+*.cookies.txt
+*_cookies.txt
+cookies*.txt
+session-*.txt
+
 # Unesccerry
 claude-code-action/
