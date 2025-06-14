@@ -196,13 +196,18 @@ function generateServicesSitemap(): string {
     const baseUrl = 'https://tsgfulfillment.com';
     const lastmod = new Date().toISOString();
     
+    // These slugs must match exactly with the serviceDetails array in ServiceDetail.tsx
     const services = [
-      { slug: 'order-fulfillment', name: 'Order Fulfillment', priority: '0.8' },
+      { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.8' },
+      { slug: 'fulfillment', name: 'Order Fulfillment', priority: '0.8' },
       { slug: 'warehousing', name: 'Warehousing Services', priority: '0.8' },
-      { slug: 'kitting-services', name: 'Kitting & Assembly', priority: '0.7' },
-      { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.7' },
-      { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.6' },
-      { slug: 'returns-processing', name: 'Returns Processing', priority: '0.6' }
+      { slug: 'transportation', name: 'Transportation & Logistics', priority: '0.7' },
+      { slug: 'kitting-services', name: 'Kitting Services', priority: '0.7' },
+      { slug: 'hand-assembly', name: 'Hand Assembly', priority: '0.7' },
+      { slug: 'reverse-logistics', name: 'Reverse Logistics', priority: '0.6' },
+      { slug: 'inventory-management', name: 'Inventory Management', priority: '0.6' },
+      { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.6' },
+      { slug: 'healthcare-services', name: 'Healthcare Services', priority: '0.6' }
     ];
 
     const industries = [
@@ -285,22 +290,38 @@ function generateImageSitemap(): string {
   const baseUrl = 'https://tsgfulfillment.com';
   const lastmod = new Date().toISOString();
   
-  const imageCategories = [
+  // Instead of creating individual URLs for images, we'll attach images to existing pages
+  const pagesWithImages = [
     {
-      category: 'facility',
-      images: ['warehouse-exterior.jpg', 'warehouse-interior.jpg', 'loading-docks.jpg', 'office-space.jpg']
+      url: '/',
+      images: [
+        { src: '/images/hero-fulfillment-center.jpg', caption: 'TSG Fulfillment modern warehouse facility', title: 'Professional Fulfillment Center' },
+        { src: '/images/facility/warehouse-exterior.jpg', caption: 'Modern warehouse exterior', title: 'Warehouse Exterior' },
+        { src: '/images/facility/warehouse-interior.jpg', caption: 'Organized warehouse interior', title: 'Warehouse Interior' }
+      ]
     },
     {
-      category: 'operations',
-      images: ['order-processing.jpg', 'picking-operations.jpg', 'packing-stations.jpg', 'shipping-area.jpg']
+      url: '/about',
+      images: [
+        { src: '/images/team-photo.jpg', caption: 'TSG Fulfillment professional team', title: 'Our Expert Team' },
+        { src: '/images/facility/office-space.jpg', caption: 'Modern office space', title: 'Office Space' }
+      ]
     },
     {
-      category: 'services',
-      images: ['fulfillment-services.jpg', 'warehousing-solutions.jpg', 'kitting-assembly.jpg', 'freight-logistics.jpg']
+      url: '/services',
+      images: [
+        { src: '/images/services/fulfillment-services.jpg', caption: 'Comprehensive fulfillment services', title: 'Fulfillment Services' },
+        { src: '/images/operations/order-processing.jpg', caption: 'Efficient order processing', title: 'Order Processing' },
+        { src: '/images/operations/picking-operations.jpg', caption: 'Professional picking operations', title: 'Picking Operations' },
+        { src: '/images/operations/packing-stations.jpg', caption: 'Modern packing stations', title: 'Packing Stations' }
+      ]
     },
     {
-      category: 'technology',
-      images: ['wms-system.jpg', 'barcode-scanning.jpg', 'automated-systems.jpg', 'tracking-dashboard.jpg']
+      url: '/locations',
+      images: [
+        { src: '/images/facility/loading-docks.jpg', caption: 'Efficient loading docks', title: 'Loading Docks' },
+        { src: '/images/operations/shipping-area.jpg', caption: 'Organized shipping area', title: 'Shipping Area' }
+      ]
     }
   ];
   
@@ -308,14 +329,29 @@ function generateImageSitemap(): string {
   const urlsetOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
   const urlsetClose = '</urlset>';
   
-  const imageUrls = imageCategories.map(category => 
-    category.images.map(image => {
-      const title = image.replace('.jpg', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      return `  <url>\n    <loc>${baseUrl}/images/${category.category}/${image}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/${category.category}/${image}</image:loc>\n      <image:caption>Professional ${category.category} photography</image:caption>\n      <image:title>${title}</image:title>\n    </image:image>\n  </url>\n`;
-    }).join('')
-  ).join('');
+  const pageUrls = pagesWithImages.map(page => {
+    let xml = `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>`;
+    
+    // Add images to the page
+    page.images.forEach(image => {
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}${image.src}</image:loc>
+      <image:caption>${image.caption}</image:caption>
+      <image:title>${image.title}</image:title>
+    </image:image>`;
+    });
+    
+    xml += `
+  </url>`;
+    return xml;
+  }).join('\n');
 
-  return xmlHeader + urlsetOpen + imageUrls + urlsetClose;
+  return xmlHeader + urlsetOpen + pageUrls + '\n' + urlsetClose;
 }
 
 function generateEnhancedRobotsTxt(): string {
@@ -331,8 +367,12 @@ Disallow: /*?*ref=*
 Disallow: /*?*fbclid=*
 Disallow: /*?*gclid=*
 
-# Allow important resources
+# Allow important resources but don't crawl individual images as pages
 Allow: /images/
+Disallow: /images/*.jpg$
+Disallow: /images/*.png$
+Disallow: /images/*.gif$
+Disallow: /images/*.webp$
 Allow: /css/
 Allow: /js/
 Allow: /fonts/
@@ -446,6 +486,32 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       console.error('Error generating robots.txt:', error);
       res.status(500).send('Error generating robots.txt');
     }
+  });
+
+  // Handle image URLs that were incorrectly crawled as pages
+  const imageRedirects = [
+    '/images/facility/loading-docks.jpg',
+    '/images/facility/office-space.jpg', 
+    '/images/facility/warehouse-exterior.jpg',
+    '/images/facility/warehouse-interior.jpg',
+    '/images/operations/order-processing.jpg',
+    '/images/operations/packing-stations.jpg',
+    '/images/operations/picking-operations.jpg',
+    '/images/operations/shipping-area.jpg',
+    '/images/services/freight-logistics.jpg',
+    '/images/services/fulfillment-services.jpg',
+    '/images/services/kitting-assembly.jpg',
+    '/images/services/warehousing-solutions.jpg',
+    '/images/technology/automated-systems.jpg',
+    '/images/technology/barcode-scanning.jpg',
+    '/images/technology/tracking-dashboard.jpg',
+    '/images/technology/wms-system.jpg'
+  ];
+
+  imageRedirects.forEach(imagePath => {
+    app.get(imagePath, (req, res) => {
+      res.redirect(301, '/');
+    });
   });
 
 
