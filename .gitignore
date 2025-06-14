@@ -1,6 +1,94 @@
+# Dependencies
 node_modules
 !dist
 !.DS_Store
 #server/public
 #vite.config.ts.*
 *.tar.gz
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.development
+.env.production
+.env.*.local
+
+# Database & API Keys
+DATABASE_URL
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration Files with Secrets
+config/production.json
+config/staging.json
+config/local.json
+secrets.json
+credentials.json
+
+# Authentication & Tokens
+*.pem
+*.key
+*.cert
+*.crt
+jwt-secret.txt
+auth-config.json
+
+# Third-party Service Keys
+supabase-key.txt
+docusign-config.json
+hubspot-config.json
+stripe-config.json
+
+# Logs with Potential Sensitive Data
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime & Cache Files
+.cache/
+.temp/
+.tmp/
+*.tmp
+*.temp
+
+# IDE & Editor Files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup Files
+*.backup
+*.bak
+backup/
+backups/
+
+# Development Scripts with Secrets
+test-integrations.js
+local-test-*.js
+dev-scripts/
+private-scripts/
+
+# Deployment & CI/CD Secrets
+deploy-config.json
+.deployment
+render-config.json
+
+# User Uploaded Content (if contains PII)
+uploads/
+user-data/
+customer-files/
