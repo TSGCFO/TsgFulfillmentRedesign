@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/hero-banner.jpg</image:loc>
+      <image:title>TSG Fulfillment Services - Professional Logistics Solutions</image:title>
+      <image:caption>Modern fulfillment center providing comprehensive logistics and warehousing services</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Services Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/services</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/services-warehouse.jpg</image:loc>
+      <image:title>Fulfillment Services - Warehousing and Order Processing</image:title>
+      <image:caption>Comprehensive fulfillment services including warehousing, kitting, and order processing</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/about</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/about-team.jpg</image:loc>
+      <image:title>About TSG Fulfillment - Our Story and Team</image:title>
+      <image:caption>Learn about TSG Fulfillment's mission, values, and expert team</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Contact Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/contact</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/contact-location.jpg</image:loc>
+      <image:title>Contact TSG Fulfillment - Get in Touch</image:title>
+      <image:caption>Contact information and location details for TSG Fulfillment Services</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Location Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/locations</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/vaughan-facility.jpg</image:loc>
+      <image:title>TSG Fulfillment Location - Vaughan Ontario Facility</image:title>
+      <image:caption>Our modern fulfillment center located in Vaughan, Ontario</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Quote Request Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/quote</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/quote-request.jpg</image:loc>
+      <image:title>Request a Quote - Custom Fulfillment Solutions</image:title>
+      <image:caption>Get a personalized quote for fulfillment and logistics services</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Analytics Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/analytics</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/analytics-dashboard.jpg</image:loc>
+      <image:title>Analytics Dashboard - Performance Insights</image:title>
+      <image:caption>Advanced analytics and reporting for fulfillment operations</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Service-specific Images -->
+  <url>
+    <loc>https://tsgfulfillment.com/services/warehousing</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/warehousing-service.jpg</image:loc>
+      <image:title>Warehousing Services - Secure Storage Solutions</image:title>
+      <image:caption>Professional warehousing and storage services with advanced inventory management</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/order-fulfillment-service.jpg</image:loc>
+      <image:title>Order Fulfillment Services - Fast and Accurate Processing</image:title>
+      <image:caption>Efficient order processing and fulfillment services for e-commerce businesses</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/kitting-service.jpg</image:loc>
+      <image:title>Kitting Services - Product Assembly and Packaging</image:title>
+      <image:caption>Professional kitting and assembly services for product bundling and customization</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/transportation</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/transportation-service.jpg</image:loc>
+      <image:title>Transportation Services - Reliable Shipping Solutions</image:title>
+      <image:caption>Comprehensive transportation and logistics services for efficient product delivery</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/value-added</loc>
+    <image:image>
+      <image:loc>https://tsgfulfillment.com/images/value-added-service.jpg</image:loc>
+      <image:title>Value-Added Services - Custom Solutions</image:title>
+      <image:caption>Specialized value-added services including custom packaging and quality control</image:caption>
+    </image:image>
+  </url>
+
+</urlset>
