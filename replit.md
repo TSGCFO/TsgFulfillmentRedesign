@@ -110,6 +110,15 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 - **Integrations**: Toggleable third-party service connections
 - **UI Features**: Progressive enhancement with feature flags
 
+## Recent Changes
+
+- June 14, 2025: Fixed Google Search Console 404 indexing issues
+  - Updated sitemap generation to match actual service slugs
+  - Added 301 redirects for incorrectly crawled image URLs
+  - Fixed robots.txt to prevent image files from being indexed as pages
+  - Corrected service URL mapping in sitemap (order-fulfillment → fulfillment)
+  - Added server-side redirects for legacy URLs
+
 ## Changelog
 
 - June 14, 2025. Initial setup
