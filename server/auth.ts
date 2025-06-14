@@ -1,0 +1,232 @@
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Express } from "express";
+import session from "express-session";
+import { scrypt, randomBytes, timingSafeEqual } from "crypto";
+import { promisify } from "util";
+import { storage } from "./storage";
+import { Employee as SelectEmployee } from "@shared/schema";
+
+declare global {
+  namespace Express {
+    interface User extends SelectEmployee {}
+  }
+}
+
+const scryptAsync = promisify(scrypt);
+
+export async function hashPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
+}
+
+async function comparePasswords(supplied: string, stored: string) {
+  // Handle bcrypt passwords (from migrated users table)
+  if (stored.startsWith("$2b$") || stored.startsWith("$2a$")) {
+    const bcrypt = await import("bcrypt");
+    return bcrypt.compare(supplied, stored);
+  }
+  
+  // Handle scrypt passwords (new format)
+  const [hashed, salt] = stored.split(".");
+  if (!hashed || !salt) {
+    return false;
+  }
+  const hashedBuf = Buffer.from(hashed, "hex");
+  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+  return timingSafeEqual(hashedBuf, suppliedBuf);
+}
+
+// Export middleware functions first
+export function requireAuth(req: any, res: any, next: any) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  next();
+}
+
+export function requireRole(roles: string[]) {
+  return (req: any, res: any, next: any) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+    // SuperAdmin bypasses all role restrictions
+    if (req.user?.role === "SuperAdmin") {
+      return next();
+    }
+    if (!roles.includes(req.user?.role)) {
+      return res.status(403).json({ error: "Insufficient permissions" });
+    }
+    next();
+  };
+}
+
+export function canManageUsers(req: any, res: any, next: any) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  // SuperAdmin has unrestricted access to all user management
+  if (req.user?.role === "SuperAdmin") {
+    return next();
+  }
+  // Admin can manage Users but not SuperAdmins
+  const userRole = req.user?.role;
+  if (!["Admin"].includes(userRole)) {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+}
+
+export function requireSuperAdmin(req: any, res: any, next: any) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  if (req.user?.role !== "SuperAdmin") {
+    return res.status(403).json({ error: "SuperAdmin access required" });
+  }
+  next();
+}
+
+export function setupAuth(app: Express) {
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret) {
+    throw new Error('SESSION_SECRET environment variable is required for secure session management');
+  }
+  
+  const sessionSettings: session.SessionOptions = {
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false,
+    store: storage.sessionStore,
+  };
+
+  app.set("trust proxy", 1);
+  app.use(session(sessionSettings));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      const employee = await storage.getEmployeeByUsername(username);
+      if (!employee || !(await comparePasswords(password, employee.password))) {
+        return done(null, false);
+      } else {
+        await storage.updateEmployee(employee.id, { lastLogin: new Date() });
+        return done(null, employee);
+      }
+    }),
+  );
+
+  passport.serializeUser((user, done) => done(null, user.id));
+  passport.deserializeUser(async (id: number, done) => {
+    const employee = await storage.getEmployee(id);
+    done(null, employee);
+  });
+
+  // Use exported middleware functions instead of duplicates
+
+  app.post("/api/register", async (req, res, next) => {
+    const existingEmployee = await storage.getEmployeeByUsername(req.body.username);
+    if (existingEmployee) {
+      return res.status(400).send("Username already exists");
+    }
+
+    const employee = await storage.createEmployee({
+      ...req.body,
+      password: await hashPassword(req.body.password),
+    });
+
+    req.login(employee, (err) => {
+      if (err) return next(err);
+      res.status(201).json(employee);
+    });
+  });
+
+  app.post("/api/login", passport.authenticate("local"), (req, res) => {
+    res.status(200).json(req.user);
+  });
+
+  app.post("/api/logout", (req, res, next) => {
+    req.logout((err) => {
+      if (err) return next(err);
+      res.sendStatus(200);
+    });
+  });
+
+  app.get("/api/user", (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    res.json(req.user);
+  });
+
+
+
+  app.put("/api/employees/:id", requireAuth, async (req, res) => {
+    try {
+      const employeeId = parseInt(req.params.id);
+      const isOwnProfile = req.user?.id === employeeId;
+      const userRole = req.user?.role;
+      
+      // Access control validation
+      if (userRole !== "SuperAdmin" && !isOwnProfile) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const updateData = { ...req.body };
+      
+      // Restrict fields that can be updated based on role and context
+      if (isOwnProfile && userRole !== "SuperAdmin") {
+        // Users can only update their own basic info, not role or security fields
+        const allowedFields = ["fullName", "email", "password"];
+        Object.keys(updateData).forEach(key => {
+          if (!allowedFields.includes(key)) {
+            delete updateData[key];
+          }
+        });
+      }
+      
+      // Prevent role escalation
+      if (updateData.role && isOwnProfile && userRole !== "SuperAdmin") {
+        return res.status(403).json({ error: "Cannot modify own role" });
+      }
+      
+      // Hash password if provided
+      if (updateData.password) {
+        updateData.password = await hashPassword(updateData.password);
+      }
+
+      const updatedEmployee = await storage.updateEmployee(employeeId, updateData);
+      if (!updatedEmployee) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+
+      const { password, ...sanitizedEmployee } = updatedEmployee;
+      res.json(sanitizedEmployee);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update employee" });
+    }
+  });
+
+  app.delete("/api/employees/:id", canManageUsers, async (req, res) => {
+    try {
+      const employeeId = parseInt(req.params.id);
+      
+      // Prevent deleting own account
+      if (req.user?.id === employeeId) {
+        return res.status(400).json({ error: "Cannot delete own account" });
+      }
+
+      const deleted = await storage.deleteEmployee(employeeId);
+      if (!deleted) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+
+      res.json({ message: "Employee deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete employee" });
+    }
+  });
+
+  // Export middleware functions for use in routes
+  return { requireAuth, requireRole, canManageUsers };
+}

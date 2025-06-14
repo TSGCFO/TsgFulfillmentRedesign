@@ -8,6 +8,8 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/lib/protected-route";
 
 // Lazy load page components
 const Home = lazy(() => import("@/pages/Home"));
@@ -25,6 +27,10 @@ const ImageManagement = lazy(() => import("@/pages/image-management"));
 const QuoteButtonTest = lazy(() => import("@/pages/QuoteButtonTest"));
 const ContactForm = lazy(() => import("@/pages/ContactForm"));
 const QuoteRequest = lazy(() => import("@/pages/QuoteRequest"));
+const EmployeePortal = lazy(() => import("@/pages/EmployeePortal"));
+const UserManagement = lazy(() => import("@/pages/user-management"));
+const CustomerInquiries = lazy(() => import("@/pages/customer-inquiries"));
+const AuthPage = lazy(() => import("@/pages/auth-page"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 // Loading fallback component
@@ -82,6 +88,22 @@ function Router() {
         <Route path="/test/quote-buttons" component={QuoteButtonTest} />
         <Route path="/contact-form" component={ContactForm} />
         <Route path="/quote" component={QuoteRequest} />
+        <Route path="/auth" component={AuthPage} />
+        <ProtectedRoute 
+          path="/employee" 
+          component={EmployeePortal} 
+          requiredRoles={["SuperAdmin", "Admin", "User"]} 
+        />
+        <ProtectedRoute 
+          path="/employee/users" 
+          component={UserManagement} 
+          requiredRoles={["SuperAdmin", "Admin"]} 
+        />
+        <ProtectedRoute 
+          path="/employee/inquiries" 
+          component={CustomerInquiries} 
+          requiredRoles={["SuperAdmin", "Admin", "User"]} 
+        />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
@@ -111,11 +133,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <Router />
-        <Toaster />
-        <CookieConsent />
-      </HelmetProvider>
+      <AuthProvider>
+        <HelmetProvider>
+          <Router />
+          <Toaster />
+          <CookieConsent />
+        </HelmetProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

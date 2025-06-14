@@ -5,24 +5,46 @@
 
 // Map of old URLs to new URLs for permanent redirects
 export const redirectMap: Record<string, string> = {
-  // Old URL pattern to new URL pattern
-  '/warehouse.php': '/services/warehousing-services',
+  // Legacy PHP URLs to current service pages
+  '/warehouse.php': '/services/warehousing',
   '/kitting.php': '/services/kitting-services',
   '/reverse.php': '/services/reverse-logistics',
   '/inventory.php': '/services/inventory-management',
   '/freight.php': '/services/freight-forwarding',
   '/hand-assembly.php': '/services/hand-assembly',
-  '/custom-packaging.php': '/services/custom-packaging',
+  '/custom-packaging.php': '/services/value-added-services',
   '/health-care-marketing.php': '/services/healthcare-services',
+  '/fulfillment.php': '/services/fulfillment',
+  '/services.php': '/#services',
   
-  // Other potential legacy URLs
-  '/about': '/about-us',
+  // Fix incorrect service URLs that cause 404s
+  '/services/order-fulfillment': '/services/fulfillment',
+  '/services/warehousing-services': '/services/warehousing', 
+  
+  // Other legacy URLs
+  '/about': '/',
   '/contact.php': '/contact-form',
   '/contact': '/contact-form',
-  '/fulfillment.php': '/services/order-fulfillment',
-  '/services.php': '/services',
-  '/testimonials.php': '/testimonials',
-  '/why-us.php': '/about-us',
+  '/testimonials.php': '/',
+  '/why-us.php': '/',
+  
+  // Image URLs should not be treated as pages - redirect to homepage
+  '/images/facility/loading-docks.jpg': '/',
+  '/images/facility/office-space.jpg': '/',
+  '/images/facility/warehouse-exterior.jpg': '/',
+  '/images/facility/warehouse-interior.jpg': '/',
+  '/images/operations/order-processing.jpg': '/',
+  '/images/operations/packing-stations.jpg': '/',
+  '/images/operations/picking-operations.jpg': '/',
+  '/images/operations/shipping-area.jpg': '/',
+  '/images/services/freight-logistics.jpg': '/',
+  '/images/services/fulfillment-services.jpg': '/',
+  '/images/services/kitting-assembly.jpg': '/',
+  '/images/services/warehousing-solutions.jpg': '/',
+  '/images/technology/automated-systems.jpg': '/',
+  '/images/technology/barcode-scanning.jpg': '/',
+  '/images/technology/tracking-dashboard.jpg': '/',
+  '/images/technology/wms-system.jpg': '/',
 };
 
 /**
