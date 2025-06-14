@@ -9,22 +9,17 @@ node_modules
 # Environment Variables & Secrets
 .env
 .env.local
-.env.development
-.env.production
+# .env.development
+# .env.production
 .env.*.local
 
 # Database & API Keys
 DATABASE_URL
-*.db
+# *.db
 *.sqlite
 *.sqlite3
 
 # Configuration Files with Secrets
-config/production.json
-config/staging.json
-config/local.json
-secrets.json
-credentials.json
 
 # Authentication & Tokens
 *.pem
@@ -36,8 +31,8 @@ auth-config.json
 
 # Third-party Service Keys
 supabase-key.txt
-docusign-config.json
-hubspot-config.json
+# docusign-config.json
+# hubspot-config.json
 stripe-config.json
 
 # Logs with Potential Sensitive Data
@@ -84,11 +79,9 @@ dev-scripts/
 private-scripts/
 
 # Deployment & CI/CD Secrets
-deploy-config.json
+# deploy-config.json
 .deployment
 render-config.json
 
-# User Uploaded Content (if contains PII)
-uploads/
-user-data/
-customer-files/
+# Unesccerry
+claude-code-action/
