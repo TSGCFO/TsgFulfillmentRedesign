@@ -49,10 +49,10 @@ DATABASE_URL=postgresql://rpm_auto_user:x0nth4SNq4DqSzyRtI839S9IE5WE5TG6@dpg-d0d
 # Session Configuration
 SESSION_SECRET=[Generate a secure random string - use a password generator]
 
-# Supabase Configuration (from your current setup)
-SUPABASE_URL=https://ahnneaclpkspcdtoqzkp.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3MzgzNDcsImV4cCI6MjA2MDMxNDM0N30.3xfgsXV391EQynu_1PaSldkDiMf12-ygoRKsdQo5SnQ
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobm5lYWNscGtzcGNkdG9xemtwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDczODM0NywiZXhwIjoyMDYwMzE0MzQ3fQ.8chAkrs9jswOSCsTgSnSoClm3EUy_qjnhqbQDzuA8KU
+# Supabase Configuration
+SUPABASE_URL=[Your Supabase project URL]
+SUPABASE_ANON_KEY=[Your Supabase anonymous key from project settings]
+SUPABASE_SERVICE_KEY=[Your Supabase service role key from project settings]
 ```
 
 **Important**: For SESSION_SECRET, generate a random 64-character string using a password generator.

@@ -1,14 +1,27 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth, hashPassword, requireAuth, canManageUsers, requireRole, requireSuperAdmin } from "./auth";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
   insertShipmentSchema,
   insertOrderStatisticsSchema,
   insertClientKpisSchema,
-  insertDashboardSettingsSchema
+  insertDashboardSettingsSchema,
+  insertEmployeeSchema,
+  insertInquiryAssignmentSchema,
+  insertContractSchema,
+  insertQuoteSchema,
+  insertQuoteLineItemSchema,
+  insertVendorSchema,
+  insertMaterialSchema,
+  insertMaterialPriceSchema,
+  insertMaterialOrderSchema,
+  insertMaterialOrderItemSchema,
+  insertMaterialUsageSchema
 } from "@shared/schema";
+import { supabaseStorageService } from "./services/supabase";
 
 // Error handler utility function
 const handleError = (res: Response, error: any, message: string = 'An error occurred') => {
@@ -183,13 +196,18 @@ function generateServicesSitemap(): string {
     const baseUrl = 'https://tsgfulfillment.com';
     const lastmod = new Date().toISOString();
     
+    // These slugs must match exactly with the serviceDetails array in ServiceDetail.tsx
     const services = [
-      { slug: 'order-fulfillment', name: 'Order Fulfillment', priority: '0.8' },
+      { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.8' },
+      { slug: 'fulfillment', name: 'Order Fulfillment', priority: '0.8' },
       { slug: 'warehousing', name: 'Warehousing Services', priority: '0.8' },
-      { slug: 'kitting-services', name: 'Kitting & Assembly', priority: '0.7' },
-      { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.7' },
-      { slug: 'value-added-services', name: 'Value-Added Services', priority: '0.6' },
-      { slug: 'returns-processing', name: 'Returns Processing', priority: '0.6' }
+      { slug: 'transportation', name: 'Transportation & Logistics', priority: '0.7' },
+      { slug: 'kitting-services', name: 'Kitting Services', priority: '0.7' },
+      { slug: 'hand-assembly', name: 'Hand Assembly', priority: '0.7' },
+      { slug: 'reverse-logistics', name: 'Reverse Logistics', priority: '0.6' },
+      { slug: 'inventory-management', name: 'Inventory Management', priority: '0.6' },
+      { slug: 'freight-forwarding', name: 'Freight Forwarding', priority: '0.6' },
+      { slug: 'healthcare-services', name: 'Healthcare Services', priority: '0.6' }
     ];
 
     const industries = [
@@ -272,22 +290,38 @@ function generateImageSitemap(): string {
   const baseUrl = 'https://tsgfulfillment.com';
   const lastmod = new Date().toISOString();
   
-  const imageCategories = [
+  // Instead of creating individual URLs for images, we'll attach images to existing pages
+  const pagesWithImages = [
     {
-      category: 'facility',
-      images: ['warehouse-exterior.jpg', 'warehouse-interior.jpg', 'loading-docks.jpg', 'office-space.jpg']
+      url: '/',
+      images: [
+        { src: '/images/hero-fulfillment-center.jpg', caption: 'TSG Fulfillment modern warehouse facility', title: 'Professional Fulfillment Center' },
+        { src: '/images/facility/warehouse-exterior.jpg', caption: 'Modern warehouse exterior', title: 'Warehouse Exterior' },
+        { src: '/images/facility/warehouse-interior.jpg', caption: 'Organized warehouse interior', title: 'Warehouse Interior' }
+      ]
     },
     {
-      category: 'operations',
-      images: ['order-processing.jpg', 'picking-operations.jpg', 'packing-stations.jpg', 'shipping-area.jpg']
+      url: '/about',
+      images: [
+        { src: '/images/team-photo.jpg', caption: 'TSG Fulfillment professional team', title: 'Our Expert Team' },
+        { src: '/images/facility/office-space.jpg', caption: 'Modern office space', title: 'Office Space' }
+      ]
     },
     {
-      category: 'services',
-      images: ['fulfillment-services.jpg', 'warehousing-solutions.jpg', 'kitting-assembly.jpg', 'freight-logistics.jpg']
+      url: '/services',
+      images: [
+        { src: '/images/services/fulfillment-services.jpg', caption: 'Comprehensive fulfillment services', title: 'Fulfillment Services' },
+        { src: '/images/operations/order-processing.jpg', caption: 'Efficient order processing', title: 'Order Processing' },
+        { src: '/images/operations/picking-operations.jpg', caption: 'Professional picking operations', title: 'Picking Operations' },
+        { src: '/images/operations/packing-stations.jpg', caption: 'Modern packing stations', title: 'Packing Stations' }
+      ]
     },
     {
-      category: 'technology',
-      images: ['wms-system.jpg', 'barcode-scanning.jpg', 'automated-systems.jpg', 'tracking-dashboard.jpg']
+      url: '/locations',
+      images: [
+        { src: '/images/facility/loading-docks.jpg', caption: 'Efficient loading docks', title: 'Loading Docks' },
+        { src: '/images/operations/shipping-area.jpg', caption: 'Organized shipping area', title: 'Shipping Area' }
+      ]
     }
   ];
   
@@ -295,14 +329,29 @@ function generateImageSitemap(): string {
   const urlsetOpen = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
   const urlsetClose = '</urlset>';
   
-  const imageUrls = imageCategories.map(category => 
-    category.images.map(image => {
-      const title = image.replace('.jpg', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-      return `  <url>\n    <loc>${baseUrl}/images/${category.category}/${image}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n    <image:image>\n      <image:loc>${baseUrl}/images/${category.category}/${image}</image:loc>\n      <image:caption>Professional ${category.category} photography</image:caption>\n      <image:title>${title}</image:title>\n    </image:image>\n  </url>\n`;
-    }).join('')
-  ).join('');
+  const pageUrls = pagesWithImages.map(page => {
+    let xml = `  <url>
+    <loc>${baseUrl}${page.url}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>`;
+    
+    // Add images to the page
+    page.images.forEach(image => {
+      xml += `
+    <image:image>
+      <image:loc>${baseUrl}${image.src}</image:loc>
+      <image:caption>${image.caption}</image:caption>
+      <image:title>${image.title}</image:title>
+    </image:image>`;
+    });
+    
+    xml += `
+  </url>`;
+    return xml;
+  }).join('\n');
 
-  return xmlHeader + urlsetOpen + imageUrls + urlsetClose;
+  return xmlHeader + urlsetOpen + pageUrls + '\n' + urlsetClose;
 }
 
 function generateEnhancedRobotsTxt(): string {
@@ -318,8 +367,12 @@ Disallow: /*?*ref=*
 Disallow: /*?*fbclid=*
 Disallow: /*?*gclid=*
 
-# Allow important resources
+# Allow important resources but don't crawl individual images as pages
 Allow: /images/
+Disallow: /images/*.jpg$
+Disallow: /images/*.png$
+Disallow: /images/*.gif$
+Disallow: /images/*.webp$
 Allow: /css/
 Allow: /js/
 Allow: /fonts/
@@ -340,6 +393,9 @@ Host: https://tsgfulfillment.com
 
 
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
+  // Setup authentication system with role-based access control
+  setupAuth(app);
+
   app.get('/health', (req, res) => {
     res.status(200).json({ 
       status: 'healthy',
@@ -432,6 +488,32 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
   });
 
+  // Handle image URLs that were incorrectly crawled as pages
+  const imageRedirects = [
+    '/images/facility/loading-docks.jpg',
+    '/images/facility/office-space.jpg', 
+    '/images/facility/warehouse-exterior.jpg',
+    '/images/facility/warehouse-interior.jpg',
+    '/images/operations/order-processing.jpg',
+    '/images/operations/packing-stations.jpg',
+    '/images/operations/picking-operations.jpg',
+    '/images/operations/shipping-area.jpg',
+    '/images/services/freight-logistics.jpg',
+    '/images/services/fulfillment-services.jpg',
+    '/images/services/kitting-assembly.jpg',
+    '/images/services/warehousing-solutions.jpg',
+    '/images/technology/automated-systems.jpg',
+    '/images/technology/barcode-scanning.jpg',
+    '/images/technology/tracking-dashboard.jpg',
+    '/images/technology/wms-system.jpg'
+  ];
+
+  imageRedirects.forEach(imagePath => {
+    app.get(imagePath, (req, res) => {
+      res.redirect(301, '/');
+    });
+  });
+
 
   // SEO Analytics Endpoint
   app.get('/api/seo/analytics', (req, res) => {
@@ -499,6 +581,48 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       });
     } catch (error) {
       handleError(res, error, 'Invalid quote request data');
+    }
+  });
+
+  // Get all quote requests (for employee portal)
+  app.get('/api/quote-requests', requireAuth, async (req, res) => {
+    try {
+      const quoteRequests = await storage.getQuoteRequests();
+      res.status(200).json(quoteRequests);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving quote requests');
+    }
+  });
+
+  // Get specific quote request
+  app.get('/api/quote-requests/:id', requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quoteRequest = await storage.getQuoteRequest(id);
+      
+      if (!quoteRequest) {
+        return res.status(404).json({ message: 'Quote request not found' });
+      }
+      
+      res.status(200).json(quoteRequest);
+    } catch (error) {
+      handleError(res, error, 'Error retrieving quote request');
+    }
+  });
+
+  // Update quote request status
+  app.patch('/api/quote-requests/:id', requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedQuoteRequest = await storage.updateQuoteRequest(id, req.body);
+      
+      if (!updatedQuoteRequest) {
+        return res.status(404).json({ message: 'Quote request not found' });
+      }
+      
+      res.status(200).json(updatedQuoteRequest);
+    } catch (error) {
+      handleError(res, error, 'Error updating quote request');
     }
   });
 
@@ -922,6 +1046,430 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     }
     });
   }
+
+  // ===== EMPLOYEE PORTAL ROUTES =====
+
+  // Employee Management
+  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const employeeData = insertEmployeeSchema.parse(req.body);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json({ message: "Employee created successfully", data: safeEmployee });
+    } catch (error) {
+      handleError(res, error, "Failed to create employee");
+    }
+  });
+
+  app.get("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const employees = await storage.getAllEmployees();
+      // Remove passwords from response
+      const safeEmployees = employees.map(({ password, ...employee }) => employee);
+      res.json(safeEmployees);
+    } catch (error) {
+      handleError(res, error, "Error retrieving employees");
+    }
+  });
+
+  app.get("/api/employees/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const employee = await storage.getEmployee(id);
+      if (!employee) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+      res.json({ data: employee });
+    } catch (error) {
+      handleError(res, error, "Error retrieving employee");
+    }
+  });
+
+  app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const employeeData = insertEmployeeSchema.parse(req.body);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json(safeEmployee);
+    } catch (error) {
+      handleError(res, error, "Failed to create employee");
+    }
+  });
+
+  app.patch("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updateData = req.body;
+      
+      // Check if admin is trying to edit a SuperAdmin or themselves
+      if (req.user?.role === "Admin") {
+        const targetEmployee = await storage.getEmployee(id);
+        if (!targetEmployee) {
+          return res.status(404).json({ error: "Employee not found" });
+        }
+        
+        // Admin cannot edit SuperAdmins or themselves
+        if (targetEmployee.role === "SuperAdmin" || targetEmployee.id === req.user.id) {
+          return res.status(403).json({ error: "Insufficient permissions" });
+        }
+      }
+      
+      const employee = await storage.updateEmployee(id, updateData);
+      if (!employee) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.json(safeEmployee);
+    } catch (error) {
+      handleError(res, error, "Failed to update employee");
+    }
+  });
+
+  app.delete("/api/employees/:id", requireAuth, canManageUsers, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      
+      // Check if admin is trying to delete a SuperAdmin or themselves
+      if (req.user?.role === "Admin") {
+        const targetEmployee = await storage.getEmployee(id);
+        if (!targetEmployee) {
+          return res.status(404).json({ error: "Employee not found" });
+        }
+        
+        // Admin cannot delete SuperAdmins or themselves
+        if (targetEmployee.role === "SuperAdmin" || targetEmployee.id === req.user.id) {
+          return res.status(403).json({ error: "Insufficient permissions" });
+        }
+      }
+      
+      // Prevent self-deletion
+      if (id === req.user?.id) {
+        return res.status(400).json({ error: "Cannot delete your own account" });
+      }
+      
+      const success = await storage.deleteEmployee(id);
+      if (!success) {
+        return res.status(404).json({ error: "Employee not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      handleError(res, error, "Failed to delete employee");
+    }
+  });
+
+  // Inquiry Management
+  app.get("/api/inquiries", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      
+      const assignments = await storage.getInquiryAssignments({ employeeId, status });
+      
+      // Get full quote request details for each assignment
+      const inquiriesWithDetails = await Promise.all(
+        assignments.map(async (assignment) => {
+          const quoteRequest = await storage.getQuoteRequest(assignment.quoteRequestId);
+          return {
+            ...assignment,
+            quoteRequest
+          };
+        })
+      );
+      
+      res.json({ data: inquiriesWithDetails });
+    } catch (error) {
+      handleError(res, error, "Error retrieving inquiries");
+    }
+  });
+
+  app.get("/api/inquiries/unassigned", async (req, res) => {
+    try {
+      const unassignedRequests = await storage.getUnassignedQuoteRequests();
+      res.json({ data: unassignedRequests });
+    } catch (error) {
+      handleError(res, error, "Error retrieving unassigned inquiries");
+    }
+  });
+
+  app.post("/api/inquiries/assign", async (req, res) => {
+    try {
+      const validatedData = insertInquiryAssignmentSchema.parse(req.body);
+      const assignment = await storage.createInquiryAssignment(validatedData);
+      res.status(201).json({ message: "Inquiry assigned successfully", data: assignment });
+    } catch (error) {
+      handleError(res, error, "Invalid assignment data");
+    }
+  });
+
+  app.patch("/api/inquiries/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const assignment = await storage.updateInquiryAssignment(id, req.body);
+      if (!assignment) {
+        return res.status(404).json({ message: "Assignment not found" });
+      }
+      res.json({ message: "Assignment updated successfully", data: assignment });
+    } catch (error) {
+      handleError(res, error, "Error updating assignment");
+    }
+  });
+
+  // Quote Management
+  app.post("/api/quotes", async (req, res) => {
+    try {
+      const validatedData = insertQuoteSchema.parse(req.body);
+      
+      // Generate quote number
+      const quoteNumber = `Q-${Date.now()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+      const quoteData = { ...validatedData, quoteNumber };
+      
+      const quote = await storage.createQuote(quoteData);
+      res.status(201).json({ message: "Quote created successfully", data: quote });
+    } catch (error) {
+      handleError(res, error, "Invalid quote data");
+    }
+  });
+
+  app.get("/api/quotes", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      const clientName = req.query.clientName as string;
+      
+      const quotes = await storage.getQuotes({ employeeId, status, clientName });
+      res.json({ data: quotes });
+    } catch (error) {
+      handleError(res, error, "Error retrieving quotes");
+    }
+  });
+
+  app.get("/api/quotes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quote = await storage.getQuote(id);
+      if (!quote) {
+        return res.status(404).json({ message: "Quote not found" });
+      }
+      res.json({ data: quote });
+    } catch (error) {
+      handleError(res, error, "Error retrieving quote");
+    }
+  });
+
+  app.patch("/api/quotes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const quote = await storage.updateQuote(id, req.body);
+      if (!quote) {
+        return res.status(404).json({ message: "Quote not found" });
+      }
+      res.json({ message: "Quote updated successfully", data: quote });
+    } catch (error) {
+      handleError(res, error, "Error updating quote");
+    }
+  });
+
+  // Contract Management
+  app.post("/api/contracts", async (req, res) => {
+    try {
+      const validatedData = insertContractSchema.parse(req.body);
+      const contract = await storage.createContract(validatedData);
+      res.status(201).json({ message: "Contract created successfully", data: contract });
+    } catch (error) {
+      handleError(res, error, "Invalid contract data");
+    }
+  });
+
+  app.get("/api/contracts", async (req, res) => {
+    try {
+      const employeeId = req.query.employeeId ? parseInt(req.query.employeeId as string) : undefined;
+      const status = req.query.status as string;
+      
+      const contracts = await storage.getContracts({ employeeId, status });
+      res.json({ data: contracts });
+    } catch (error) {
+      handleError(res, error, "Error retrieving contracts");
+    }
+  });
+
+  // Vendor Management
+  app.post("/api/vendors", async (req, res) => {
+    try {
+      const validatedData = insertVendorSchema.parse(req.body);
+      const vendor = await storage.createVendor(validatedData);
+      res.status(201).json({ message: "Vendor created successfully", data: vendor });
+    } catch (error) {
+      handleError(res, error, "Invalid vendor data");
+    }
+  });
+
+  app.get("/api/vendors", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
+      
+      const vendors = await storage.getVendors({ category, isActive });
+      res.json({ data: vendors });
+    } catch (error) {
+      handleError(res, error, "Error retrieving vendors");
+    }
+  });
+
+  app.patch("/api/vendors/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const vendor = await storage.updateVendor(id, req.body);
+      if (!vendor) {
+        return res.status(404).json({ message: "Vendor not found" });
+      }
+      res.json({ message: "Vendor updated successfully", data: vendor });
+    } catch (error) {
+      handleError(res, error, "Error updating vendor");
+    }
+  });
+
+  // Material Management
+  app.post("/api/materials", async (req, res) => {
+    try {
+      const validatedData = insertMaterialSchema.parse(req.body);
+      const material = await storage.createMaterial(validatedData);
+      res.status(201).json({ message: "Material created successfully", data: material });
+    } catch (error) {
+      handleError(res, error, "Invalid material data");
+    }
+  });
+
+  app.get("/api/materials", async (req, res) => {
+    try {
+      const category = req.query.category as string;
+      const isActive = req.query.isActive === "true" ? true : req.query.isActive === "false" ? false : undefined;
+      
+      const materials = await storage.getMaterials({ category, isActive });
+      res.json({ data: materials });
+    } catch (error) {
+      handleError(res, error, "Error retrieving materials");
+    }
+  });
+
+  app.patch("/api/materials/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const material = await storage.updateMaterial(id, req.body);
+      if (!material) {
+        return res.status(404).json({ message: "Material not found" });
+      }
+      res.json({ message: "Material updated successfully", data: material });
+    } catch (error) {
+      handleError(res, error, "Error updating material");
+    }
+  });
+
+  // DocuSign OAuth callback handler
+  app.get('/auth/docusign/callback', async (req, res) => {
+    try {
+      const { code, state } = req.query;
+      
+      if (!code) {
+        return res.status(400).json({ error: 'Authorization code missing' });
+      }
+      
+      // Exchange authorization code for access token
+      const { docusignService } = await import('./services/docusign');
+      const tokenData = await docusignService.exchangeCodeForToken(code as string);
+      
+      res.json({
+        success: true,
+        message: 'DocuSign authorization completed successfully! Your integration is now fully operational.',
+        access_token_received: !!tokenData.access_token,
+        state: state,
+        next_steps: 'You can now send contracts for signature, track status, and download completed documents.'
+      });
+    } catch (error) {
+      console.error('DocuSign callback error:', error);
+      res.status(500).json({ 
+        error: 'Token exchange failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Test endpoints for third-party integrations
+  app.get('/api/test/docusign', async (req, res) => {
+    try {
+      const { docusignService } = await import('./services/docusign');
+      
+      // Test DocuSign authentication
+      const testResult = await docusignService.testConnection();
+      
+      if (testResult.authenticated) {
+        res.json({
+          service: 'DocuSign',
+          status: 'connected',
+          message: 'DocuSign API connection successful',
+          details: testResult
+        });
+      } else {
+        // Handle consent required case
+        res.status(200).json({
+          service: 'DocuSign',
+          status: 'consent_required',
+          message: testResult.message,
+          consentUrl: testResult.consentUrl,
+          details: testResult
+        });
+      }
+    } catch (error) {
+      console.error('DocuSign test failed:', error);
+      res.status(400).json({
+        service: 'DocuSign',
+        status: 'error',
+        message: 'DocuSign API connection failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  app.get('/api/test/hubspot', async (req, res) => {
+    try {
+      const { hubspotService } = await import('./services/hubspot');
+      
+      // Test HubSpot connection
+      const contacts = await hubspotService.getContacts(1);
+      res.json({
+        service: 'HubSpot',
+        status: 'connected',
+        message: 'HubSpot API connection successful',
+        contactCount: contacts.length
+      });
+    } catch (error) {
+      console.error('HubSpot test failed:', error);
+      res.status(400).json({
+        service: 'HubSpot',
+        status: 'error',
+        message: 'HubSpot API connection failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
 
   const httpServer = createServer(app);
 

@@ -3,6 +3,45 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { seedAnalyticsData } from "./seed-data";
 
+// Environment variable validation
+function validateEnvironment() {
+  const requiredVars = [
+    'DATABASE_URL',
+    'SESSION_SECRET',
+    'DOCUSIGN_INTEGRATION_KEY',
+    'DOCUSIGN_USER_ID', 
+    'DOCUSIGN_ACCOUNT_ID',
+    'DOCUSIGN_PRIVATE_KEY'
+  ];
+
+  const optionalVars = [
+    'HUBSPOT_ACCESS_TOKEN',
+    'SUPABASE_URL',
+    'SUPABASE_ANON_KEY'
+  ];
+
+  const missing = requiredVars.filter(varName => !process.env[varName]);
+  
+  if (missing.length > 0) {
+    console.error('❌ Missing required environment variables:');
+    missing.forEach(varName => console.error(`   - ${varName}`));
+    console.error('\nPlease set these environment variables before starting the server.');
+    process.exit(1);
+  }
+
+  console.log('✅ Required environment variables validated');
+  
+  const missingOptional = optionalVars.filter(varName => !process.env[varName]);
+  if (missingOptional.length > 0) {
+    console.warn('⚠️  Optional environment variables not set:');
+    missingOptional.forEach(varName => console.warn(`   - ${varName}`));
+    console.warn('   Some features may be unavailable.\n');
+  }
+}
+
+// Validate environment before starting
+validateEnvironment();
+
 const analyticsEnabled = process.env.ANALYTICS_ENABLED === "true";
 
 const app = express();

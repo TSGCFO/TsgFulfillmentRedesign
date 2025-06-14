@@ -1,13 +1,24 @@
+import { db, pool } from "./db";
 import { 
-  users, 
+  employees,
   quoteRequests,
   inventoryLevels,
   shipments,
   orderStatistics,
   clientKpis,
   dashboardSettings,
-  type User, 
-  type InsertUser, 
+  inquiryAssignments,
+  contracts,
+  quotes,
+  quoteLineItems,
+  vendors,
+  materials,
+  materialPrices,
+  materialOrders,
+  materialOrderItems,
+  materialUsage,
+  type Employee, 
+  type InsertEmployee, 
   type InsertQuoteRequest, 
   type QuoteRequest,
   type InsertInventoryLevel,
@@ -19,16 +30,45 @@ import {
   type InsertClientKpi,
   type ClientKpi,
   type InsertDashboardSetting,
-  type DashboardSetting 
+  type DashboardSetting,
+  type InsertInquiryAssignment,
+  type InquiryAssignment,
+  type InsertContract,
+  type Contract,
+  type InsertQuote,
+  type Quote,
+  type InsertQuoteLineItem,
+  type QuoteLineItem,
+  type InsertVendor,
+  type Vendor,
+  type InsertMaterial,
+  type Material,
+  type InsertMaterialPrice,
+  type MaterialPrice,
+  type InsertMaterialOrder,
+  type MaterialOrder,
+  type InsertMaterialOrderItem,
+  type MaterialOrderItem,
+  type InsertMaterialUsage,
+  type MaterialUsage
 } from "@shared/schema";
+import { eq, desc, gte, lte, and, sql } from "drizzle-orm";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import createMemoryStore from "memorystore";
+
+const PostgresSessionStore = connectPg(session);
+const MemoryStore = createMemoryStore(session);
 
 // Updated interface with all CRUD methods for analytics
 export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, userData: Partial<User>): Promise<User | undefined>;
+  // Employee authentication & portal methods
+  getEmployee(id: number): Promise<Employee | undefined>;
+  getEmployeeByUsername(username: string): Promise<Employee | undefined>;
+  getAllEmployees(): Promise<Employee[]>;
+  createEmployee(employee: InsertEmployee): Promise<Employee>;
+  updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined>;
+  deleteEmployee(id: number): Promise<boolean>;
   
   // Quote request methods
   createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest>;
@@ -37,729 +77,303 @@ export interface IStorage {
   updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined>;
   
   // Inventory methods
-  createInventoryLevel(data: InsertInventoryLevel): Promise<InventoryLevel>;
-  getInventoryLevels(clientId?: number): Promise<InventoryLevel[]>;
+  createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel>;
+  getInventoryLevels(filters?: any): Promise<InventoryLevel[]>;
   getInventoryLevel(id: number): Promise<InventoryLevel | undefined>;
   updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined>;
   
   // Shipment methods
-  createShipment(data: InsertShipment): Promise<Shipment>;
-  getShipments(clientId?: number): Promise<Shipment[]>;
+  createShipment(shipment: InsertShipment): Promise<Shipment>;
+  getShipments(filters?: any): Promise<Shipment[]>;
   getShipment(id: number): Promise<Shipment | undefined>;
   updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined>;
   
   // Order statistics methods
-  createOrderStatistic(data: InsertOrderStatistic): Promise<OrderStatistic>;
+  createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic>;
   getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]>;
-  getOrderStatistic(id: number): Promise<OrderStatistic | undefined>;
   updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined>;
   
   // Client KPI methods
-  createClientKpi(data: InsertClientKpi): Promise<ClientKpi>;
+  createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi>;
   getClientKpis(clientId?: number, startDate?: Date, endDate?: Date): Promise<ClientKpi[]>;
-  getClientKpi(id: number): Promise<ClientKpi | undefined>;
   updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined>;
   
   // Dashboard settings methods
-  saveDashboardSetting(data: InsertDashboardSetting): Promise<DashboardSetting>;
-  getDashboardSettings(userId: number): Promise<DashboardSetting[]>;
-  updateDashboardSetting(userId: number, widgetId: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined>;
+  saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting>;
+  getDashboardSettings(userId?: number): Promise<DashboardSetting[]>;
+  updateDashboardSetting(userId: number, key: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined>;
   
-  // Analytics specific methods
-  getClientAnalyticsSummary(clientId: number): Promise<any>;
-  getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any>;
-  getInventoryReport(clientId?: number): Promise<any>;
+  // Analytics methods
+  getClientAnalyticsSummary(clientId?: number): Promise<any>;
+  getShippingPerformance(startDate?: Date, endDate?: Date, clientId?: number): Promise<any>;
+  getInventoryReport(warehouseId?: number): Promise<any>;
+  getReportData(reportType: string, dateRange: any, clientId?: number, warehouseId?: number): Promise<any>;
+  getComparisonData(metric: string, period: string, currentStart?: Date, currentEnd?: Date, previousStart?: Date, previousEnd?: Date): Promise<any>;
+  
+  // Inquiry assignment methods
+  getInquiryAssignments(employeeId?: number): Promise<InquiryAssignment[]>;
+  getUnassignedQuoteRequests(): Promise<QuoteRequest[]>;
+  createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment>;
+  updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined>;
+  
+  // Quote methods
+  createQuote(quote: InsertQuote): Promise<Quote>;
+  getQuotes(filters?: any): Promise<Quote[]>;
+  getQuote(id: number): Promise<Quote | undefined>;
+  updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined>;
+  
+  // Contract methods
+  createContract(contract: InsertContract): Promise<Contract>;
+  getContracts(filters?: any): Promise<Contract[]>;
+  
+  // Vendor methods
+  createVendor(vendor: InsertVendor): Promise<Vendor>;
+  getVendors(filters?: any): Promise<Vendor[]>;
+  updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined>;
+  
+  // Material methods
+  createMaterial(material: InsertMaterial): Promise<Material>;
+  getMaterials(filters?: any): Promise<Material[]>;
+  updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined>;
+  
+  // Session store for authentication
+  sessionStore: any;
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private quoteRequests: Map<number, QuoteRequest>;
-  private inventoryLevels: Map<number, InventoryLevel>;
-  private shipments: Map<number, Shipment>;
-  private orderStatistics: Map<number, OrderStatistic>;
-  private clientKpis: Map<number, ClientKpi>;
-  private dashboardSettings: Map<string, DashboardSetting>;
+  private employees = new Map<number, Employee>();
+  private employeeId = 1;
+  private quoteRequests = new Map<number, QuoteRequest>();
+  private quoteRequestId = 1;
   
-  currentId: number;
-  quoteRequestId: number;
-  inventoryLevelId: number;
-  shipmentId: number;
-  orderStatisticId: number;
-  clientKpiId: number;
+  sessionStore: any;
 
   constructor() {
-    this.users = new Map();
-    this.quoteRequests = new Map();
-    this.inventoryLevels = new Map();
-    this.shipments = new Map();
-    this.orderStatistics = new Map();
-    this.clientKpis = new Map();
-    this.dashboardSettings = new Map();
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000,
+    });
     
-    this.currentId = 1;
-    this.quoteRequestId = 1;
-    this.inventoryLevelId = 1;
-    this.shipmentId = 1;
-    this.orderStatisticId = 1;
-    this.clientKpiId = 1;
+    // Initialize with sample employee data
+    this.initializeSampleData();
+  }
+
+  private async initializeSampleData() {
+    // Create sample employees with new role structure
+    await this.createEmployee({
+      fullName: "Super Administrator",
+      username: "superadmin",
+      email: "superadmin@tsgfulfillment.com",
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "superadmin123"
+      role: "SuperAdmin"
+    });
     
-    // Initialize with sample admin user
-    this.createUser({
-      username: 'admin',
-      password: 'admin123',
-      role: 'admin'
+    await this.createEmployee({
+      fullName: "Admin User",
+      username: "admin",
+      email: "admin@tsgfulfillment.com",
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "admin123"
+      role: "Admin"
+    });
+    
+    await this.createEmployee({
+      fullName: "Regular User",
+      username: "user",
+      email: "user@tsgfulfillment.com",
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "user123"
+      role: "User"
     });
   }
 
-  // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getEmployee(id: number): Promise<Employee | undefined> {
+    return this.employees.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
+    return Array.from(this.employees.values()).find(emp => emp.username === username);
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const createdAt = new Date();
-    const user: User = { 
-      ...insertUser, 
-      id, 
-      createdAt,
-      lastLogin: null 
+  async getAllEmployees(): Promise<Employee[]> {
+    return Array.from(this.employees.values()).filter(emp => emp.isActive);
+  }
+
+  async createEmployee(employee: InsertEmployee): Promise<Employee> {
+    const newEmployee: Employee = {
+      id: this.employeeId++,
+      ...employee,
+      role: employee.role || "User",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastLogin: null,
+      isActive: true,
+      hubspotUserId: null
     };
-    this.users.set(id, user);
-    return user;
+    this.employees.set(newEmployee.id, newEmployee);
+    return newEmployee;
   }
-  
-  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
-    const user = await this.getUser(id);
-    if (!user) return undefined;
+
+  async updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined> {
+    const employee = this.employees.get(id);
+    if (!employee) return undefined;
     
-    const updatedUser = { ...user, ...userData };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    const updated = { ...employee, ...employeeData, updatedAt: new Date() };
+    this.employees.set(id, updated);
+    return updated;
   }
 
-  // Quote request methods
-  async createQuoteRequest(insertQuoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
-    const id = this.quoteRequestId++;
-    const createdAt = new Date();
-    const quoteRequest: QuoteRequest = { 
-      ...insertQuoteRequest, 
-      id, 
-      createdAt,
-      status: 'new',
-      assignedTo: null,
-      convertedToClient: false
-    };
-    this.quoteRequests.set(id, quoteRequest);
-    return quoteRequest;
+  async deleteEmployee(id: number): Promise<boolean> {
+    return this.employees.delete(id);
   }
-  
+
+  async createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
+    const newQuoteRequest: QuoteRequest = {
+      id: this.quoteRequestId++,
+      ...quoteRequest,
+      message: quoteRequest.message || null,
+      createdAt: new Date(),
+      status: "new",
+      assignedTo: null,
+      convertedToClient: false,
+      currentShipments: quoteRequest.currentShipments || null,
+      expectedShipments: quoteRequest.expectedShipments || null,
+      services: quoteRequest.services || null
+    };
+    this.quoteRequests.set(newQuoteRequest.id, newQuoteRequest);
+    return newQuoteRequest;
+  }
+
   async getQuoteRequests(): Promise<QuoteRequest[]> {
     return Array.from(this.quoteRequests.values());
   }
-  
+
   async getQuoteRequest(id: number): Promise<QuoteRequest | undefined> {
     return this.quoteRequests.get(id);
   }
-  
+
   async updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined> {
-    const quoteRequest = await this.getQuoteRequest(id);
+    const quoteRequest = this.quoteRequests.get(id);
     if (!quoteRequest) return undefined;
     
-    const updatedRequest = { ...quoteRequest, ...data };
-    this.quoteRequests.set(id, updatedRequest);
-    return updatedRequest;
+    const updated = { ...quoteRequest, ...data };
+    this.quoteRequests.set(id, updated);
+    return updated;
   }
+
+  // Stub implementations for additional storage methods
+  async createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel> {
+    throw new Error("Inventory management not implemented in memory storage");
+  }
+  async getInventoryLevels(filters?: any): Promise<InventoryLevel[]> { return []; }
+  async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> { return undefined; }
+  async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> { return undefined; }
   
-  // Inventory methods
-  async createInventoryLevel(data: InsertInventoryLevel): Promise<InventoryLevel> {
-    const id = this.inventoryLevelId++;
-    const updatedAt = new Date();
-    const inventoryLevel: InventoryLevel = {
-      ...data,
-      id,
-      updatedAt
-    };
-    this.inventoryLevels.set(id, inventoryLevel);
-    return inventoryLevel;
+  async createShipment(shipment: InsertShipment): Promise<Shipment> {
+    throw new Error("Shipment management not implemented in memory storage");
   }
+  async getShipments(filters?: any): Promise<Shipment[]> { return []; }
+  async getShipment(id: number): Promise<Shipment | undefined> { return undefined; }
+  async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> { return undefined; }
   
-  async getInventoryLevels(clientId?: number): Promise<InventoryLevel[]> {
-    if (clientId) {
-      return Array.from(this.inventoryLevels.values())
-        .filter(level => level.clientId === clientId);
-    }
-    return Array.from(this.inventoryLevels.values());
+  async createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic> {
+    throw new Error("Order statistics not implemented in memory storage");
   }
+  async getOrderStatistics(startDate?: Date, endDate?: Date, clientId?: number): Promise<OrderStatistic[]> { return []; }
+  async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> { return undefined; }
   
-  async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> {
-    return this.inventoryLevels.get(id);
+  async createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi> {
+    throw new Error("Client KPIs not implemented in memory storage");
   }
+  async getClientKpis(startDate?: Date, endDate?: Date, clientId?: number): Promise<ClientKpi[]> { return []; }
+  async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> { return undefined; }
   
-  async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> {
-    const level = await this.getInventoryLevel(id);
-    if (!level) return undefined;
-    
-    const updatedLevel = { 
-      ...level, 
-      ...data, 
-      updatedAt: new Date() 
-    };
-    this.inventoryLevels.set(id, updatedLevel);
-    return updatedLevel;
+  async saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting> {
+    throw new Error("Dashboard settings not implemented in memory storage");
   }
+  async getDashboardSettings(userId?: number): Promise<DashboardSetting[]> { return []; }
+  async updateDashboardSetting(userId: number, key: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> { return undefined; }
   
-  // Shipment methods
-  async createShipment(data: InsertShipment): Promise<Shipment> {
-    const id = this.shipmentId++;
-    const shipDate = new Date();
-    const shipment: Shipment = {
-      ...data,
-      id,
-      shipDate,
-      status: 'processing'
-    };
-    this.shipments.set(id, shipment);
-    return shipment;
-  }
+  async getClientAnalyticsSummary(clientId?: number): Promise<any> { return {}; }
+  async getShippingPerformance(startDate?: Date, endDate?: Date, clientId?: number): Promise<any> { return {}; }
+  async getInventoryReport(warehouseId?: number): Promise<any> { return {}; }
+  async getReportData(reportType: string, dateRange: any, clientId?: number, warehouseId?: number): Promise<any> { return {}; }
+  async getComparisonData(metric: string, period: string, currentStart?: Date, currentEnd?: Date, previousStart?: Date, previousEnd?: Date): Promise<any> { return {}; }
   
-  async getShipments(clientId?: number): Promise<Shipment[]> {
-    if (clientId) {
-      return Array.from(this.shipments.values())
-        .filter(shipment => shipment.clientId === clientId);
-    }
-    return Array.from(this.shipments.values());
+  async getInquiryAssignments(employeeId?: number): Promise<InquiryAssignment[]> { return []; }
+  async getUnassignedQuoteRequests(): Promise<QuoteRequest[]> { return Array.from(this.quoteRequests.values()); }
+  async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
+    throw new Error("Inquiry assignments not implemented in memory storage");
   }
+  async updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined> { return undefined; }
   
-  async getShipment(id: number): Promise<Shipment | undefined> {
-    return this.shipments.get(id);
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    throw new Error("Quote management not implemented in memory storage");
   }
+  async getQuotes(filters?: any): Promise<Quote[]> { return []; }
+  async getQuote(id: number): Promise<Quote | undefined> { return undefined; }
+  async updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined> { return undefined; }
   
-  async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> {
-    const shipment = await this.getShipment(id);
-    if (!shipment) return undefined;
-    
-    const updatedShipment = { ...shipment, ...data };
-    this.shipments.set(id, updatedShipment);
-    return updatedShipment;
+  async createContract(contract: InsertContract): Promise<Contract> {
+    throw new Error("Contract management not implemented in memory storage");
   }
+  async getContracts(filters?: any): Promise<Contract[]> { return []; }
   
-  // Order statistics methods
-  async createOrderStatistic(data: InsertOrderStatistic): Promise<OrderStatistic> {
-    const id = this.orderStatisticId++;
-    const statistic: OrderStatistic = {
-      ...data,
-      id
-    };
-    this.orderStatistics.set(id, statistic);
-    return statistic;
+  async createVendor(vendor: InsertVendor): Promise<Vendor> {
+    throw new Error("Vendor management not implemented in memory storage");
   }
+  async getVendors(filters?: any): Promise<Vendor[]> { return []; }
+  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> { return undefined; }
   
-  async getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]> {
-    let statistics = Array.from(this.orderStatistics.values());
-    
-    if (clientId) {
-      statistics = statistics.filter(stat => stat.clientId === clientId);
-    }
-    
-    if (startDate) {
-      statistics = statistics.filter(stat => new Date(stat.date) >= startDate);
-    }
-    
-    if (endDate) {
-      statistics = statistics.filter(stat => new Date(stat.date) <= endDate);
-    }
-    
-    return statistics;
+  async createMaterial(material: InsertMaterial): Promise<Material> {
+    throw new Error("Material management not implemented in memory storage");
   }
-  
-  async getOrderStatistic(id: number): Promise<OrderStatistic | undefined> {
-    return this.orderStatistics.get(id);
-  }
-  
-  async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> {
-    const statistic = await this.getOrderStatistic(id);
-    if (!statistic) return undefined;
-    
-    const updatedStatistic = { ...statistic, ...data };
-    this.orderStatistics.set(id, updatedStatistic);
-    return updatedStatistic;
-  }
-  
-  // Client KPI methods
-  async createClientKpi(data: InsertClientKpi): Promise<ClientKpi> {
-    const id = this.clientKpiId++;
-    const kpi: ClientKpi = {
-      ...data,
-      id
-    };
-    this.clientKpis.set(id, kpi);
-    return kpi;
-  }
-  
-  async getClientKpis(clientId?: number, startDate?: Date, endDate?: Date): Promise<ClientKpi[]> {
-    let kpis = Array.from(this.clientKpis.values());
-    
-    if (clientId) {
-      kpis = kpis.filter(kpi => kpi.clientId === clientId);
-    }
-    
-    if (startDate) {
-      kpis = kpis.filter(kpi => new Date(kpi.month) >= startDate);
-    }
-    
-    if (endDate) {
-      kpis = kpis.filter(kpi => new Date(kpi.month) <= endDate);
-    }
-    
-    return kpis;
-  }
-  
-  async getClientKpi(id: number): Promise<ClientKpi | undefined> {
-    return this.clientKpis.get(id);
-  }
-  
-  async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> {
-    const kpi = await this.getClientKpi(id);
-    if (!kpi) return undefined;
-    
-    const updatedKpi = { ...kpi, ...data };
-    this.clientKpis.set(id, updatedKpi);
-    return updatedKpi;
-  }
-  
-  // Dashboard settings methods
-  async saveDashboardSetting(data: InsertDashboardSetting): Promise<DashboardSetting> {
-    const key = `${data.userId}_${data.widgetId}`;
-    const now = new Date();
-    const setting: DashboardSetting = {
-      ...data,
-      createdAt: now,
-      updatedAt: now
-    };
-    this.dashboardSettings.set(key, setting);
-    return setting;
-  }
-  
-  async getDashboardSettings(userId: number): Promise<DashboardSetting[]> {
-    return Array.from(this.dashboardSettings.values())
-      .filter(setting => setting.userId === userId);
-  }
-  
-  async updateDashboardSetting(userId: number, widgetId: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> {
-    const key = `${userId}_${widgetId}`;
-    const setting = this.dashboardSettings.get(key);
-    if (!setting) return undefined;
-    
-    const updatedSetting = { 
-      ...setting, 
-      ...data, 
-      updatedAt: new Date() 
-    };
-    this.dashboardSettings.set(key, updatedSetting);
-    return updatedSetting;
-  }
-  
-  // Analytics specific methods
-  async getClientAnalyticsSummary(clientId: number): Promise<any> {
-    // Get all relevant data for this client
-    const shipments = await this.getShipments(clientId);
-    const inventoryLevels = await this.getInventoryLevels(clientId);
-    const orderStats = await this.getOrderStatistics(clientId);
-    const kpis = await this.getClientKpis(clientId);
-    
-    // Calculate summary statistics
-    const totalShipments = shipments.length;
-    const completedShipments = shipments.filter(s => s.status === 'delivered').length;
-    const totalInventoryItems = inventoryLevels.reduce((sum, item) => sum + item.quantity, 0);
-    const lowStockItems = inventoryLevels.filter(item => item.quantity <= item.minimumLevel).length;
-    
-    // Total orders aggregated from order statistics
-    const totalOrders = orderStats.reduce((sum, stat) => sum + stat.ordersReceived, 0);
-    const ordersProcessed = orderStats.reduce((sum, stat) => sum + stat.ordersProcessed, 0);
-    const ordersFulfilled = orderStats.reduce((sum, stat) => sum + stat.ordersFulfilled, 0);
-    
-    // Get the latest KPI record if available
-    const latestKpi = kpis.sort((a, b) => 
-      new Date(b.month).getTime() - new Date(a.month).getTime()
-    )[0] || null;
-    
-    return {
-      shipmentSummary: {
-        total: totalShipments,
-        completed: completedShipments,
-        inProgress: totalShipments - completedShipments,
-        completionRate: totalShipments ? (completedShipments / totalShipments) * 100 : 0
-      },
-      inventorySummary: {
-        totalItems: totalInventoryItems,
-        lowStock: lowStockItems,
-        lowStockPercentage: totalInventoryItems ? (lowStockItems / inventoryLevels.length) * 100 : 0
-      },
-      orderSummary: {
-        total: totalOrders,
-        processed: ordersProcessed,
-        fulfilled: ordersFulfilled,
-        fulfillmentRate: totalOrders ? (ordersFulfilled / totalOrders) * 100 : 0
-      },
-      performance: latestKpi ? {
-        shippingAccuracy: latestKpi.shippingAccuracy,
-        inventoryAccuracy: latestKpi.inventoryAccuracy,
-        onTimeDelivery: latestKpi.onTimeDelivery,
-        returnRate: latestKpi.returnRate,
-        customerSatisfaction: latestKpi.customerSatisfaction
-      } : null
-    };
-  }
-  
-  async getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any> {
-    // Get filtered shipments
-    let shipments = await this.getShipments(clientId);
-    
-    if (startDate) {
-      shipments = shipments.filter(s => s.shipDate >= startDate);
-    }
-    
-    if (endDate) {
-      shipments = shipments.filter(s => s.shipDate <= endDate);
-    }
-    
-    // Group by carrier and status
-    const byCarrier: Record<string, number> = {};
-    const byStatus: Record<string, number> = {};
-    const deliveryTimes: number[] = [];
-    
-    for (const shipment of shipments) {
-      // Count by carrier
-      byCarrier[shipment.carrier] = (byCarrier[shipment.carrier] || 0) + 1;
-      
-      // Count by status
-      byStatus[shipment.status] = (byStatus[shipment.status] || 0) + 1;
-      
-      // Calculate delivery times for completed shipments
-      if (shipment.status === 'delivered' && shipment.deliveryDate) {
-        const deliveryTime = new Date(shipment.deliveryDate).getTime() - 
-                             new Date(shipment.shipDate).getTime();
-        deliveryTimes.push(deliveryTime / (1000 * 60 * 60 * 24)); // Convert to days
-      }
-    }
-    
-    // Calculate average delivery time
-    const avgDeliveryTime = deliveryTimes.length ? 
-      deliveryTimes.reduce((sum, time) => sum + time, 0) / deliveryTimes.length : 
-      null;
-    
-    return {
-      totalShipments: shipments.length,
-      byCarrier,
-      byStatus,
-      deliveryPerformance: {
-        averageDeliveryTime: avgDeliveryTime,
-        minimumTime: Math.min(...deliveryTimes),
-        maximumTime: Math.max(...deliveryTimes)
-      }
-    };
-  }
-  
-  async getInventoryReport(clientId?: number): Promise<any> {
-    const inventoryLevels = await this.getInventoryLevels(clientId);
-    
-    // Group by warehouse location
-    const byLocation: Record<string, number> = {};
-    let totalItems = 0;
-    let lowStockItems = 0;
-    let optimalItems = 0;
-    let overstockItems = 0;
-    
-    for (const item of inventoryLevels) {
-      // Count by location
-      byLocation[item.warehouseLocation] = 
-        (byLocation[item.warehouseLocation] || 0) + item.quantity;
-      
-      // Total inventory
-      totalItems += item.quantity;
-      
-      // Categorize inventory levels
-      if (item.quantity <= item.minimumLevel) {
-        lowStockItems++;
-      } else if (item.maximumLevel && item.quantity >= item.maximumLevel) {
-        overstockItems++;
-      } else {
-        optimalItems++;
-      }
-    }
-    
-    return {
-      totalUniqueItems: inventoryLevels.length,
-      totalQuantity: totalItems,
-      inventoryHealth: {
-        lowStock: lowStockItems,
-        optimal: optimalItems,
-        overstock: overstockItems
-      },
-      byLocation
-    };
-  }
-  
-  async getReportData(
-    clientId: number,
-    reportType: string,
-    startDate: Date,
-    endDate: Date
-  ): Promise<any> {
-    // Generate customized reports based on the report type
-    let data: any = {};
-    
-    if (reportType === 'inventory') {
-      // Get inventory report
-      const inventoryReport = await this.getInventoryReport(clientId);
-      
-      // In a real implementation, we would calculate the actual value
-      // For now, we'll provide realistic sample data
-      data = {
-        summary: {
-          totalItems: inventoryReport.totalQuantity,
-          totalValue: Math.round(inventoryReport.totalQuantity * 35.2), // Sample value calculation
-          criticalAlerts: inventoryReport.inventoryHealth.lowStock,
-          recommendations: inventoryReport.inventoryHealth.lowStock > 0 ? 
-            inventoryReport.inventoryHealth.lowStock + 5 : 0
-        }
-      };
-    } else if (reportType === 'shipment') {
-      // Get shipment data
-      const shipments = await this.getShipments(clientId);
-      const filteredShipments = shipments.filter(shipment => 
-        shipment.shipDate >= startDate && shipment.shipDate <= endDate
-      );
-      
-      data = {
-        summary: {
-          totalItems: filteredShipments.length,
-          totalValue: Math.round(filteredShipments.reduce((sum, s) => sum + (s.cost || 0), 0)),
-          criticalAlerts: filteredShipments.filter(s => s.status === 'delayed').length,
-          recommendations: 3
-        }
-      };
-    } else if (reportType === 'order') {
-      // Get order statistics
-      const orderStats = await this.getOrderStatistics(clientId, startDate, endDate);
-      
-      data = {
-        summary: {
-          totalItems: orderStats.reduce((sum, stat) => sum + (stat.ordersReceived || 0), 0),
-          totalValue: Math.round(orderStats.reduce((sum, stat) => sum + (stat.totalValue || 0), 0)),
-          criticalAlerts: 2,
-          recommendations: 8
-        }
-      };
-    } else if (reportType === 'performance') {
-      // Get KPI data
-      const kpis = await this.getClientKpis(clientId);
-      
-      data = {
-        summary: {
-          totalItems: kpis.length,
-          totalValue: 0,
-          criticalAlerts: kpis.filter(kpi => 
-            (kpi.onTimeDelivery || 100) < 90 || 
-            (kpi.shippingAccuracy || 100) < 95
-          ).length,
-          recommendations: 5
-        }
-      };
-    }
-    
-    return data;
-  }
-  
-  async getComparisonData(
-    clientId: number,
-    periodAStart: Date,
-    periodAEnd: Date,
-    periodBStart: Date,
-    periodBEnd: Date,
-    metric: string
-  ): Promise<any> {
-    // This method generates comparison data between two time periods
-    
-    // For simplicity, return example data based on metric type
-    // In a real implementation, we would compute actual metrics from the database
-    
-    // Define the return structure with realistic sample data 
-    const data = {
-      summaries: [
-        {
-          title: 'Shipment Performance',
-          metrics: [
-            {
-              key: 'totalShipments',
-              name: 'Total Shipments',
-              periodA: 245,
-              periodB: 312,
-              change: 67,
-              changePercentage: 27.35,
-              trend: 'up'
-            },
-            {
-              key: 'averageDeliveryTime',
-              name: 'Avg. Delivery Time',
-              periodA: 3.8,
-              periodB: 2.9,
-              change: -0.9,
-              changePercentage: -23.68,
-              unit: 'days',
-              trend: 'down'
-            },
-            {
-              key: 'onTimeDelivery',
-              name: 'On-Time Delivery',
-              periodA: 92.1,
-              periodB: 95.7,
-              change: 3.6,
-              changePercentage: 3.91,
-              unit: '%',
-              trend: 'up'
-            },
-            {
-              key: 'shippingAccuracy',
-              name: 'Shipping Accuracy',
-              periodA: 98.2,
-              periodB: 99.1,
-              change: 0.9,
-              changePercentage: 0.92,
-              unit: '%',
-              trend: 'up'
-            }
-          ]
-        },
-        {
-          title: 'Inventory Management',
-          metrics: [
-            {
-              key: 'stockLevels',
-              name: 'Avg. Stock Levels',
-              periodA: 5280,
-              periodB: 6120,
-              change: 840,
-              changePercentage: 15.91,
-              trend: 'up'
-            },
-            {
-              key: 'stockTurnover',
-              name: 'Stock Turnover Rate',
-              periodA: 4.2,
-              periodB: 4.8,
-              change: 0.6,
-              changePercentage: 14.29,
-              trend: 'up'
-            },
-            {
-              key: 'lowStockOccurrences',
-              name: 'Low Stock Occurrences',
-              periodA: 18,
-              periodB: 12,
-              change: -6,
-              changePercentage: -33.33,
-              trend: 'down'
-            }
-          ]
-        },
-        {
-          title: 'Order Processing',
-          metrics: [
-            {
-              key: 'totalOrders',
-              name: 'Total Orders',
-              periodA: 318,
-              periodB: 402,
-              change: 84,
-              changePercentage: 26.42,
-              trend: 'up'
-            },
-            {
-              key: 'processingTime',
-              name: 'Avg. Processing Time',
-              periodA: 1.6,
-              periodB: 1.2,
-              change: -0.4,
-              changePercentage: -25.0,
-              unit: 'days',
-              trend: 'down'
-            },
-            {
-              key: 'fulfillmentRate',
-              name: 'Fulfillment Rate',
-              periodA: 94.3,
-              periodB: 96.8,
-              change: 2.5,
-              changePercentage: 2.65,
-              unit: '%',
-              trend: 'up'
-            }
-          ]
-        }
-      ],
-      charts: {
-        dailyMetrics: [
-          { date: '2025-03-15', periodA: 12, periodB: 18 },
-          { date: '2025-03-16', periodA: 15, periodB: 20 },
-          { date: '2025-03-17', periodA: 13, periodB: 22 },
-          { date: '2025-03-18', periodA: 17, periodB: 19 },
-          { date: '2025-03-19', periodA: 14, periodB: 23 },
-          { date: '2025-03-20', periodA: 16, periodB: 25 },
-          { date: '2025-03-21', periodA: 19, periodB: 21 }
-        ]
-      }
-    };
-    
-    return data;
-  }
+  async getMaterials(filters?: any): Promise<Material[]> { return []; }
+  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> { return undefined; }
 }
 
-// Database Storage Implementation for Production
-import { db } from "./db";
-import { eq, and, gte, lte, desc } from "drizzle-orm";
-
 export class DatabaseStorage implements IStorage {
-  async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user || undefined;
+  sessionStore: any;
+
+  constructor() {
+    this.sessionStore = new PostgresSessionStore({ 
+      pool: pool, 
+      createTableIfMissing: true 
+    });
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    return user || undefined;
+  async getEmployee(id: number): Promise<Employee | undefined> {
+    const result = await db.select().from(employees).where(eq(employees.id, id)).limit(1);
+    return result[0];
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(insertUser)
-      .returning();
-    return user;
+  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
+    const result = await db.select().from(employees).where(eq(employees.username, username)).limit(1);
+    return result[0];
   }
 
-  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
-    const [user] = await db
-      .update(users)
-      .set(userData)
-      .where(eq(users.id, id))
-      .returning();
-    return user || undefined;
+  async getAllEmployees(): Promise<Employee[]> {
+    return await db.select().from(employees).where(eq(employees.isActive, true));
   }
 
-  async createQuoteRequest(insertQuoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
-    const [quoteRequest] = await db
-      .insert(quoteRequests)
-      .values(insertQuoteRequest)
-      .returning();
-    return quoteRequest;
+  async createEmployee(employee: InsertEmployee): Promise<Employee> {
+    const result = await db.insert(employees).values(employee).returning();
+    return result[0];
+  }
+
+  async updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined> {
+    const result = await db.update(employees).set({
+      ...employeeData,
+      updatedAt: new Date()
+    }).where(eq(employees.id, id)).returning();
+    return result[0];
+  }
+
+  async deleteEmployee(id: number): Promise<boolean> {
+    const result = await db.delete(employees).where(eq(employees.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+
+  async createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
+    const result = await db.insert(quoteRequests).values(quoteRequest).returning();
+    return result[0];
   }
 
   async getQuoteRequests(): Promise<QuoteRequest[]> {
@@ -767,274 +381,169 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getQuoteRequest(id: number): Promise<QuoteRequest | undefined> {
-    const [quoteRequest] = await db.select().from(quoteRequests).where(eq(quoteRequests.id, id));
-    return quoteRequest || undefined;
+    const result = await db.select().from(quoteRequests).where(eq(quoteRequests.id, id)).limit(1);
+    return result[0];
   }
 
   async updateQuoteRequest(id: number, data: Partial<QuoteRequest>): Promise<QuoteRequest | undefined> {
-    const [quoteRequest] = await db
-      .update(quoteRequests)
-      .set(data)
-      .where(eq(quoteRequests.id, id))
-      .returning();
-    return quoteRequest || undefined;
+    const result = await db.update(quoteRequests).set(data).where(eq(quoteRequests.id, id)).returning();
+    return result[0];
   }
 
-  async createInventoryLevel(data: InsertInventoryLevel): Promise<InventoryLevel> {
-    const [inventoryLevel] = await db
-      .insert(inventoryLevels)
-      .values(data)
-      .returning();
-    return inventoryLevel;
+  // Database implementations for additional storage methods
+  async createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel> {
+    const result = await db.insert(inventoryLevels).values(inventory).returning();
+    return result[0];
   }
-
-  async getInventoryLevels(clientId?: number): Promise<InventoryLevel[]> {
-    if (clientId) {
-      return await db.select().from(inventoryLevels).where(eq(inventoryLevels.clientId, clientId));
-    }
+  async getInventoryLevels(filters?: any): Promise<InventoryLevel[]> {
     return await db.select().from(inventoryLevels);
   }
-
   async getInventoryLevel(id: number): Promise<InventoryLevel | undefined> {
-    const [inventoryLevel] = await db.select().from(inventoryLevels).where(eq(inventoryLevels.id, id));
-    return inventoryLevel || undefined;
+    const result = await db.select().from(inventoryLevels).where(eq(inventoryLevels.id, id)).limit(1);
+    return result[0];
   }
-
   async updateInventoryLevel(id: number, data: Partial<InventoryLevel>): Promise<InventoryLevel | undefined> {
-    const [inventoryLevel] = await db
-      .update(inventoryLevels)
-      .set(data)
-      .where(eq(inventoryLevels.id, id))
-      .returning();
-    return inventoryLevel || undefined;
+    const result = await db.update(inventoryLevels).set(data).where(eq(inventoryLevels.id, id)).returning();
+    return result[0];
   }
-
-  async createShipment(data: InsertShipment): Promise<Shipment> {
-    const [shipment] = await db
-      .insert(shipments)
-      .values(data)
-      .returning();
-    return shipment;
+  
+  async createShipment(shipment: InsertShipment): Promise<Shipment> {
+    const result = await db.insert(shipments).values(shipment).returning();
+    return result[0];
   }
-
-  async getShipments(clientId?: number): Promise<Shipment[]> {
-    if (clientId) {
-      return await db.select().from(shipments).where(eq(shipments.clientId, clientId));
-    }
+  async getShipments(filters?: any): Promise<Shipment[]> {
     return await db.select().from(shipments);
   }
-
   async getShipment(id: number): Promise<Shipment | undefined> {
-    const [shipment] = await db.select().from(shipments).where(eq(shipments.id, id));
-    return shipment || undefined;
+    const result = await db.select().from(shipments).where(eq(shipments.id, id)).limit(1);
+    return result[0];
   }
-
   async updateShipment(id: number, data: Partial<Shipment>): Promise<Shipment | undefined> {
-    const [shipment] = await db
-      .update(shipments)
-      .set(data)
-      .where(eq(shipments.id, id))
-      .returning();
-    return shipment || undefined;
+    const result = await db.update(shipments).set(data).where(eq(shipments.id, id)).returning();
+    return result[0];
   }
-
-  async createOrderStatistic(data: InsertOrderStatistic): Promise<OrderStatistic> {
-    const [statistic] = await db
-      .insert(orderStatistics)
-      .values(data)
-      .returning();
-    return statistic;
+  
+  async createOrderStatistic(stat: InsertOrderStatistic): Promise<OrderStatistic> {
+    const result = await db.insert(orderStatistics).values(stat).returning();
+    return result[0];
   }
-
   async getOrderStatistics(clientId?: number, startDate?: Date, endDate?: Date): Promise<OrderStatistic[]> {
-    let query = db.select().from(orderStatistics);
-    
-    const conditions = [];
-    if (clientId) conditions.push(eq(orderStatistics.clientId, clientId));
-    
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-    
-    return await query.orderBy(desc(orderStatistics.id));
+    return await db.select().from(orderStatistics);
   }
-
-  async getOrderStatistic(id: number): Promise<OrderStatistic | undefined> {
-    const [statistic] = await db.select().from(orderStatistics).where(eq(orderStatistics.id, id));
-    return statistic || undefined;
-  }
-
   async updateOrderStatistic(id: number, data: Partial<OrderStatistic>): Promise<OrderStatistic | undefined> {
-    const [statistic] = await db
-      .update(orderStatistics)
-      .set(data)
-      .where(eq(orderStatistics.id, id))
-      .returning();
-    return statistic || undefined;
+    const result = await db.update(orderStatistics).set(data).where(eq(orderStatistics.id, id)).returning();
+    return result[0];
   }
-
-  async createClientKpi(data: InsertClientKpi): Promise<ClientKpi> {
-    const [kpi] = await db
-      .insert(clientKpis)
-      .values(data)
-      .returning();
-    return kpi;
+  
+  async createClientKpi(kpi: InsertClientKpi): Promise<ClientKpi> {
+    const result = await db.insert(clientKpis).values(kpi).returning();
+    return result[0];
   }
-
-  async getClientKpis(clientId?: number, startDate?: Date, endDate?: Date): Promise<ClientKpi[]> {
-    let query = db.select().from(clientKpis);
-    
-    const conditions = [];
-    if (clientId) conditions.push(eq(clientKpis.clientId, clientId));
-    
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-    
-    return await query.orderBy(desc(clientKpis.id));
+  async getClientKpis(startDate?: Date, endDate?: Date, clientId?: number): Promise<ClientKpi[]> {
+    return await db.select().from(clientKpis);
   }
-
-  async getClientKpi(id: number): Promise<ClientKpi | undefined> {
-    const [kpi] = await db.select().from(clientKpis).where(eq(clientKpis.id, id));
-    return kpi || undefined;
-  }
-
   async updateClientKpi(id: number, data: Partial<ClientKpi>): Promise<ClientKpi | undefined> {
-    const [kpi] = await db
-      .update(clientKpis)
-      .set(data)
-      .where(eq(clientKpis.id, id))
-      .returning();
-    return kpi || undefined;
+    const result = await db.update(clientKpis).set(data).where(eq(clientKpis.id, id)).returning();
+    return result[0];
   }
-
-  async saveDashboardSetting(data: InsertDashboardSetting): Promise<DashboardSetting> {
-    const [setting] = await db
-      .insert(dashboardSettings)
-      .values(data)
-      .returning();
-    return setting;
+  
+  async saveDashboardSetting(setting: InsertDashboardSetting): Promise<DashboardSetting> {
+    const result = await db.insert(dashboardSettings).values(setting).returning();
+    return result[0];
   }
-
-  async getDashboardSettings(userId: number): Promise<DashboardSetting[]> {
-    return await db.select().from(dashboardSettings).where(eq(dashboardSettings.userId, userId));
+  async getDashboardSettings(userId?: number): Promise<DashboardSetting[]> {
+    return await db.select().from(dashboardSettings);
   }
-
-  async updateDashboardSetting(userId: number, widgetId: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> {
-    const [setting] = await db
-      .update(dashboardSettings)
-      .set(data)
-      .where(and(
-        eq(dashboardSettings.userId, userId),
-        eq(dashboardSettings.widgetId, widgetId)
-      ))
-      .returning();
-    return setting || undefined;
+  async updateDashboardSetting(userId: number, key: string, data: Partial<DashboardSetting>): Promise<DashboardSetting | undefined> {
+    const result = await db.update(dashboardSettings).set(data).where(eq(dashboardSettings.userId, userId)).returning();
+    return result[0];
   }
-
-  async getClientAnalyticsSummary(clientId: number): Promise<any> {
-    const [client] = await db.select().from(users).where(eq(users.id, clientId));
-    if (!client) return null;
-
-    const recentShipments = await db.select().from(shipments)
-      .where(eq(shipments.clientId, clientId))
-      .orderBy(desc(shipments.shipDate))
-      .limit(10);
-
-    const inventoryItems = await db.select().from(inventoryLevels)
-      .where(eq(inventoryLevels.clientId, clientId));
-
-    const totalShipments = recentShipments.length;
-    const totalInventoryValue = inventoryItems.reduce((sum, item) => sum + (item.quantity * 10), 0);
-
-    return {
-      client: client.username,
-      totalShipments,
-      totalInventoryValue,
-      averageShippingTime: recentShipments.length > 0 ? 2.5 : 0,
-      recentActivity: recentShipments.slice(0, 5).map(s => ({
-        type: 'shipment',
-        description: `Shipment ${s.trackingNumber || 'TRK' + s.id}`,
-        date: s.shipDate,
-        status: s.status
-      }))
-    };
-  }
-
-  async getShippingPerformance(clientId?: number, startDate?: Date, endDate?: Date): Promise<any> {
-    let query = db.select().from(shipments);
-    
-    const conditions = [];
-    if (clientId) conditions.push(eq(shipments.clientId, clientId));
-    
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-    
-    const shipmentData = await query;
-    
-    return {
-      totalShipments: shipmentData.length,
-      onTimeDeliveries: shipmentData.filter(s => s.status === 'delivered').length,
-      averageDeliveryTime: 2.5,
-      performanceMetrics: [
-        { metric: 'On-Time Delivery Rate', value: '96.2%', trend: '+2.1%' },
-        { metric: 'Average Transit Time', value: '2.3 days', trend: '-0.2 days' },
-        { metric: 'Customer Satisfaction', value: '4.8/5', trend: '+0.1' }
-      ]
-    };
-  }
-
-  async getInventoryReport(clientId?: number): Promise<any> {
-    let query = db.select().from(inventoryLevels);
-    
-    if (clientId) {
-      query = query.where(eq(inventoryLevels.clientId, clientId));
-    }
-    
-    const inventoryData = await query;
-    
-    const totalValue = inventoryData.reduce((sum, item) => sum + (item.quantity * 10), 0);
-    const totalItems = inventoryData.length;
-    const lowStockItems = inventoryData.filter(item => 
-      item.minimumLevel && item.quantity < item.minimumLevel
-    ).length;
-    
-    return {
-      totalValue,
-      totalItems,
-      lowStockItems,
-      turnoverRate: '12.3x',
-      inventoryCategories: [
-        { category: 'Electronics', value: totalValue * 0.4, percentage: 40 },
-        { category: 'Apparel', value: totalValue * 0.3, percentage: 30 },
-        { category: 'Home & Garden', value: totalValue * 0.2, percentage: 20 },
-        { category: 'Other', value: totalValue * 0.1, percentage: 10 }
-      ]
-    };
-  }
-
-  async getReportData(
-    clientId: number,
-    reportType: string,
-    startDate: Date,
-    endDate: Date
-  ): Promise<any> {
+  
+  async getClientAnalyticsSummary(clientId?: number): Promise<any> {
+    // Implement analytics aggregation logic
     return {};
   }
-
-  async getComparisonData(
-    clientId: number,
-    metric: string,
-    periodAStart: Date,
-    periodAEnd: Date,
-    periodBStart: Date,
-    periodBEnd: Date,
-    granularity: string
-  ): Promise<any> {
+  async getShippingPerformance(startDate?: Date, endDate?: Date, clientId?: number): Promise<any> {
+    // Implement shipping performance analytics
     return {};
+  }
+  async getInventoryReport(warehouseId?: number): Promise<any> {
+    // Implement inventory reporting
+    return {};
+  }
+  async getReportData(reportType: string, dateRange: any, clientId?: number, warehouseId?: number): Promise<any> {
+    // Implement report data generation
+    return {};
+  }
+  async getComparisonData(metric: string, period: string, currentStart?: Date, currentEnd?: Date, previousStart?: Date, previousEnd?: Date): Promise<any> {
+    // Implement comparison data generation
+    return {};
+  }
+  
+  async getInquiryAssignments(employeeId?: number): Promise<InquiryAssignment[]> {
+    return await db.select().from(inquiryAssignments);
+  }
+  async getUnassignedQuoteRequests(): Promise<QuoteRequest[]> {
+    // Get quote requests that haven't been assigned
+    return await db.select().from(quoteRequests);
+  }
+  async createInquiryAssignment(assignment: InsertInquiryAssignment): Promise<InquiryAssignment> {
+    const result = await db.insert(inquiryAssignments).values(assignment).returning();
+    return result[0];
+  }
+  async updateInquiryAssignment(id: number, data: Partial<InquiryAssignment>): Promise<InquiryAssignment | undefined> {
+    const result = await db.update(inquiryAssignments).set(data).where(eq(inquiryAssignments.id, id)).returning();
+    return result[0];
+  }
+  
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    const result = await db.insert(quotes).values(quote).returning();
+    return result[0];
+  }
+  async getQuotes(filters?: any): Promise<Quote[]> {
+    return await db.select().from(quotes);
+  }
+  async getQuote(id: number): Promise<Quote | undefined> {
+    const result = await db.select().from(quotes).where(eq(quotes.id, id)).limit(1);
+    return result[0];
+  }
+  async updateQuote(id: number, data: Partial<Quote>): Promise<Quote | undefined> {
+    const result = await db.update(quotes).set(data).where(eq(quotes.id, id)).returning();
+    return result[0];
+  }
+  
+  async createContract(contract: InsertContract): Promise<Contract> {
+    const result = await db.insert(contracts).values(contract).returning();
+    return result[0];
+  }
+  async getContracts(filters?: any): Promise<Contract[]> {
+    return await db.select().from(contracts);
+  }
+  
+  async createVendor(vendor: InsertVendor): Promise<Vendor> {
+    const result = await db.insert(vendors).values(vendor).returning();
+    return result[0];
+  }
+  async getVendors(filters?: any): Promise<Vendor[]> {
+    return await db.select().from(vendors);
+  }
+  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> {
+    const result = await db.update(vendors).set(data).where(eq(vendors.id, id)).returning();
+    return result[0];
+  }
+  
+  async createMaterial(material: InsertMaterial): Promise<Material> {
+    const result = await db.insert(materials).values(material).returning();
+    return result[0];
+  }
+  async getMaterials(filters?: any): Promise<Material[]> {
+    return await db.select().from(materials);
+  }
+  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> {
+    const result = await db.update(materials).set(data).where(eq(materials.id, id)).returning();
+    return result[0];
   }
 }
 
-// Use DatabaseStorage to persist data to PostgreSQL database
-export const storage = new DatabaseStorage();
+const isDatabaseEnabled = !!process.env.DATABASE_URL;
+export const storage: IStorage = isDatabaseEnabled ? new DatabaseStorage() : new MemStorage();
