@@ -19,18 +19,7 @@
     </image:image>
   </url>
 
-  <!-- Services Page -->
-  <url>
-    <loc>https://tsgfulfillment.com/services</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://tsgfulfillment.com/images/services-warehouse.jpg</image:loc>
-      <image:title>Fulfillment Services - Warehousing and Order Processing</image:title>
-      <image:caption>Comprehensive fulfillment services including warehousing, kitting, and order processing</image:caption>
-    </image:image>
-  </url>
+
 
   <!-- About Page -->
   <url>
@@ -45,9 +34,9 @@
     </image:image>
   </url>
 
-  <!-- Contact Page -->
+  <!-- Contact Form Page -->
   <url>
-    <loc>https://tsgfulfillment.com/contact</loc>
+    <loc>https://tsgfulfillment.com/contact-form</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -99,6 +88,13 @@
 
   <!-- Service Detail Pages -->
   <url>
+    <loc>https://tsgfulfillment.com/services/fulfillment</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://tsgfulfillment.com/services/warehousing</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
@@ -106,14 +102,7 @@
   </url>
 
   <url>
-    <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <loc>https://tsgfulfillment.com/services/value-added-services</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -123,14 +112,49 @@
     <loc>https://tsgfulfillment.com/services/transportation</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://tsgfulfillment.com/services/value-added</loc>
+    <loc>https://tsgfulfillment.com/services/kitting-services</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/hand-assembly</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/reverse-logistics</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/inventory-management</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://tsgfulfillment.com/services/healthcare-services</loc>
+    <lastmod>2025-01-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 
 </urlset>
