@@ -4,12 +4,12 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
-  <!-- Main Services Page -->
+  <!-- Order Fulfillment Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services</loc>
+    <loc>https://tsgfulfillment.com/services/fulfillment</loc>
     <lastmod>2025-01-06</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Warehousing Services -->
@@ -20,17 +20,9 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Order Fulfillment Services -->
+  <!-- Value-Added Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/order-fulfillment</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Kitting Services -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/kitting</loc>
+    <loc>https://tsgfulfillment.com/services/value-added-services</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -41,78 +33,52 @@
     <loc>https://tsgfulfillment.com/services/transportation</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Value-Added Services -->
+  <!-- Kitting Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/value-added</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Industry-Specific Services -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/ecommerce-fulfillment</loc>
+    <loc>https://tsgfulfillment.com/services/kitting-services</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
+  <!-- Hand Assembly Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/b2b-fulfillment</loc>
+    <loc>https://tsgfulfillment.com/services/hand-assembly</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
+  <!-- Reverse Logistics Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/subscription-box</loc>
+    <loc>https://tsgfulfillment.com/services/reverse-logistics</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
 
-  <!-- Specialized Services -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/returns-management</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
+  <!-- Inventory Management Services -->
   <url>
     <loc>https://tsgfulfillment.com/services/inventory-management</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
 
+  <!-- Freight Forwarding Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/custom-packaging</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Regional Services -->
-  <url>
-    <loc>https://tsgfulfillment.com/services/canada-fulfillment</loc>
+    <loc>https://tsgfulfillment.com/services/freight-forwarding</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
+  <!-- Healthcare Services -->
   <url>
-    <loc>https://tsgfulfillment.com/services/ontario-warehousing</loc>
-    <lastmod>2025-01-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://tsgfulfillment.com/services/toronto-logistics</loc>
+    <loc>https://tsgfulfillment.com/services/healthcare-services</loc>
     <lastmod>2025-01-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
