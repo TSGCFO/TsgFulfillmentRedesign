@@ -124,13 +124,27 @@ export const STRUCTURED_DATA_TEMPLATES = {
     "name": BUSINESS_INFO.name,
     "legalName": BUSINESS_INFO.legalName,
     "url": SITE_CONFIG.siteUrl,
-    "logo": `${SITE_CONFIG.siteUrl}/images/logo.png`,
-    "image": `${SITE_CONFIG.siteUrl}/images/organization-image.jpg`,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${SITE_CONFIG.siteUrl}/images/logo.png`,
+      "width": 300,
+      "height": 100
+    },
+    "image": {
+      "@type": "ImageObject", 
+      "url": `${SITE_CONFIG.siteUrl}/images/organization-image.jpg`,
+      "width": 1200,
+      "height": 630
+    },
     "description": SITE_CONFIG.defaultDescription,
     "foundingDate": "2020",
     "address": {
       "@type": "PostalAddress",
-      ...BUSINESS_INFO.address
+      "streetAddress": BUSINESS_INFO.address.streetAddress,
+      "addressLocality": BUSINESS_INFO.address.addressLocality,
+      "addressRegion": BUSINESS_INFO.address.addressRegion,
+      "postalCode": BUSINESS_INFO.address.postalCode,
+      "addressCountry": BUSINESS_INFO.address.addressCountry
     },
     "geo": {
       "@type": "GeoCoordinates",
@@ -155,23 +169,35 @@ export const STRUCTURED_DATA_TEMPLATES = {
           "itemOffered": {
             "@type": "Service",
             "name": "Order Fulfillment",
-            "description": "Complete order processing and shipping services"
+            "description": "Complete order processing and shipping services",
+            "provider": {
+              "@type": "Organization",
+              "name": BUSINESS_INFO.name
+            }
           }
         },
         {
           "@type": "Offer",
           "itemOffered": {
-            "@type": "Service",
+            "@type": "Service", 
             "name": "Warehousing",
-            "description": "Secure inventory storage and management"
+            "description": "Secure inventory storage and management",
+            "provider": {
+              "@type": "Organization",
+              "name": BUSINESS_INFO.name
+            }
           }
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Kitting Services",
-            "description": "Product assembly and packaging solutions"
+            "name": "Kitting Services", 
+            "description": "Product assembly and packaging solutions",
+            "provider": {
+              "@type": "Organization",
+              "name": BUSINESS_INFO.name
+            }
           }
         }
       ]
@@ -183,13 +209,22 @@ export const STRUCTURED_DATA_TEMPLATES = {
     "@type": "LocalBusiness",
     "@id": `${SITE_CONFIG.siteUrl}#localbusiness`,
     "name": BUSINESS_INFO.name,
-    "image": `${SITE_CONFIG.siteUrl}/images/warehouse-exterior.jpg`,
+    "image": {
+      "@type": "ImageObject",
+      "url": `${SITE_CONFIG.siteUrl}/images/warehouse-exterior.jpg`,
+      "width": 1200,
+      "height": 800
+    },
     "url": SITE_CONFIG.siteUrl,
     "telephone": BUSINESS_INFO.contact.phone,
     "email": BUSINESS_INFO.contact.email,
     "address": {
       "@type": "PostalAddress",
-      ...BUSINESS_INFO.address
+      "streetAddress": BUSINESS_INFO.address.streetAddress,
+      "addressLocality": BUSINESS_INFO.address.addressLocality,
+      "addressRegion": BUSINESS_INFO.address.addressRegion,
+      "postalCode": BUSINESS_INFO.address.postalCode,
+      "addressCountry": BUSINESS_INFO.address.addressCountry
     },
     "geo": {
       "@type": "GeoCoordinates",
@@ -205,10 +240,20 @@ export const STRUCTURED_DATA_TEMPLATES = {
       }
     ],
     "priceRange": "$$",
-    "areaServed": {
-      "@type": "State",
-      "name": "Ontario"
-    }
+    "areaServed": [
+      {
+        "@type": "State",
+        "name": "Ontario"
+      },
+      {
+        "@type": "City", 
+        "name": "Toronto"
+      },
+      {
+        "@type": "City",
+        "name": "Vaughan"
+      }
+    ]
   },
 
   website: {
@@ -249,23 +294,25 @@ export const STRUCTURED_DATA_TEMPLATES = {
     "description": description,
     "url": `${SITE_CONFIG.siteUrl}${url}`,
     "provider": {
-      "@id": `${SITE_CONFIG.siteUrl}#organization`
+      "@type": "Organization",
+      "name": BUSINESS_INFO.name,
+      "url": SITE_CONFIG.siteUrl
     },
-    "areaServed": {
-      "@type": "State",
-      "name": "Ontario"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": serviceName,
-      "itemListElement": [{
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": serviceName,
-          "description": description
-        }
-      }]
+    "areaServed": [
+      {
+        "@type": "State",
+        "name": "Ontario"
+      },
+      {
+        "@type": "Country",
+        "name": "Canada"
+      }
+    ],
+    "serviceType": "Logistics and Fulfillment Services",
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "priceCurrency": "CAD"
     }
   }),
 
@@ -287,13 +334,27 @@ export const STRUCTURED_DATA_TEMPLATES = {
     "@type": "Article",
     "headline": title,
     "description": description,
-    "image": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+    "image": {
+      "@type": "ImageObject",
+      "url": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+      "width": 1200,
+      "height": 630
+    },
     "author": {
       "@type": "Organization",
-      "@id": `${SITE_CONFIG.siteUrl}#organization`
+      "name": BUSINESS_INFO.name,
+      "url": SITE_CONFIG.siteUrl
     },
     "publisher": {
-      "@id": `${SITE_CONFIG.siteUrl}#organization`
+      "@type": "Organization",
+      "name": BUSINESS_INFO.name,
+      "url": SITE_CONFIG.siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${SITE_CONFIG.siteUrl}/images/logo.png`,
+        "width": 300,
+        "height": 100
+      }
     },
     "datePublished": datePublished,
     "dateModified": dateModified || datePublished,
@@ -308,7 +369,12 @@ export const STRUCTURED_DATA_TEMPLATES = {
     "@type": "HowTo",
     "name": name,
     "description": description,
-    "image": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+    "image": {
+      "@type": "ImageObject",
+      "url": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`,
+      "width": 1200,
+      "height": 630
+    },
     "totalTime": "PT30M",
     "estimatedCost": {
       "@type": "MonetaryAmount",
@@ -325,9 +391,13 @@ export const STRUCTURED_DATA_TEMPLATES = {
     }],
     "step": steps.map((step, index) => ({
       "@type": "HowToStep",
-      "position": index + 1,
       "name": step.name,
-      "text": step.text
+      "text": step.text,
+      "url": `${SITE_CONFIG.siteUrl}#step-${index + 1}`,
+      "image": {
+        "@type": "ImageObject", 
+        "url": `${SITE_CONFIG.siteUrl}/images/og-default.jpg`
+      }
     }))
   }),
 

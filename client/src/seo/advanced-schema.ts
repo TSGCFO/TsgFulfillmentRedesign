@@ -23,7 +23,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Order Fulfillment",
           "description": "Complete order processing, picking, packing, and shipping services",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": { "@type": "State", "name": "Ontario" },
           "serviceType": "Logistics Service"
         }
@@ -35,7 +39,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Warehousing",
           "description": "Secure inventory storage and warehouse management solutions",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": { "@type": "State", "name": "Ontario" },
           "serviceType": "Storage Service"
         }
@@ -47,7 +55,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Kitting Services",
           "description": "Product assembly, bundling, and custom packaging solutions",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": { "@type": "State", "name": "Ontario" },
           "serviceType": "Value-Added Service"
         }
@@ -59,7 +71,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Freight Forwarding",
           "description": "International and domestic freight forwarding and shipping",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": [
             { "@type": "State", "name": "Ontario" },
             { "@type": "Country", "name": "Canada" }
@@ -74,7 +90,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Inventory Management",
           "description": "Real-time inventory tracking and management systems",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": { "@type": "State", "name": "Ontario" },
           "serviceType": "Management Service"
         }
@@ -86,7 +106,11 @@ export const ADVANCED_SCHEMA_TEMPLATES = {
           "@type": "Service",
           "name": "Returns Processing",
           "description": "Efficient returns handling and reverse logistics",
-          "provider": { "@id": `${SITE_CONFIG.siteUrl}#organization` },
+          "provider": {
+            "@type": "Organization",
+            "name": "TSG Fulfillment Services",
+            "url": SITE_CONFIG.siteUrl
+          },
           "areaServed": { "@type": "State", "name": "Ontario" },
           "serviceType": "Logistics Service"
         }
