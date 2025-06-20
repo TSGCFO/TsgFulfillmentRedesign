@@ -54,14 +54,32 @@ const FAQSection: React.FC = () => {
     }
   ];
 
+  // Prepare FAQPage structured data for Google
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <section 
       id="faq"
       className="py-20 bg-white"
       aria-labelledby="faq-heading"
-      itemScope
-      itemType="https://schema.org/FAQPage"
     >
+      {/* Hidden JSON-LD structured data for Google */}
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      
       <div className="container mx-auto px-6">
         <motion.header 
           className="text-center mb-16"
