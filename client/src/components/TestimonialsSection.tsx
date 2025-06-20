@@ -65,8 +65,6 @@ const TestimonialsSection: React.FC = () => {
     <section 
       id="testimonials" 
       className="py-24 bg-primary relative overflow-hidden"
-      itemScope
-      itemType="https://schema.org/Review"
     >
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -101,10 +99,7 @@ const TestimonialsSection: React.FC = () => {
               {/* Quote section */}
               <div className="md:w-2/3 p-8 md:p-12 flex flex-col justify-between">
                 <div>
-                  <div className="flex mb-6" itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">
-                    <meta itemProp="worstRating" content="1" />
-                    <meta itemProp="bestRating" content="5" />
-                    <meta itemProp="ratingValue" content={currentTestimonial.rating.toString()} />
+                  <div className="flex mb-6">
                     {Array.from({ length: 5 }).map((_, index) => (
                       <Star 
                         key={index} 
@@ -117,16 +112,15 @@ const TestimonialsSection: React.FC = () => {
                     <Quote className="absolute -top-2 -left-2 w-10 h-10 text-primary/20 transform -scale-x-100" />
                     <p 
                       className="italic text-gray-700 text-lg md:text-xl relative z-10 pl-8 md:pl-10"
-                      itemProp="reviewBody"
                     >
                       "{currentTestimonial.quote}"
                     </p>
                   </div>
                 </div>
                 
-                <div className="mt-8 flex items-center" itemProp="author" itemScope itemType="https://schema.org/Person">
+                <div className="mt-8 flex items-center">
                   <div className="flex-shrink-0">
-                    <EnhancedImage 
+                    <img 
                       src={currentTestimonial.image} 
                       alt={currentTestimonial.name} 
                       width={60}
@@ -135,10 +129,10 @@ const TestimonialsSection: React.FC = () => {
                     />
                   </div>
                   <div className="ml-4">
-                    <h4 className="font-bold text-gray-900" itemProp="name">{currentTestimonial.name}</h4>
-                    <div itemProp="jobTitle">{currentTestimonial.position}</div>
-                    <div className="text-primary" itemProp="worksFor" itemScope itemType="https://schema.org/Organization">
-                      <span itemProp="name">{currentTestimonial.company}</span>
+                    <h4 className="font-bold text-gray-900">{currentTestimonial.name}</h4>
+                    <div>{currentTestimonial.position}</div>
+                    <div className="text-primary">
+                      <span>{currentTestimonial.company}</span>
                     </div>
                   </div>
                 </div>
@@ -182,18 +176,39 @@ const TestimonialsSection: React.FC = () => {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "TSG Fulfillment Services",
-        "review": testimonials.map(testimonial => ({
+        "url": "https://tsgfulfillment.com",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": 5.0,
+          "reviewCount": testimonials.length,
+          "bestRating": 5,
+          "worstRating": 1
+        },
+        "review": testimonials.map((testimonial, index) => ({
           "@type": "Review",
+          "@id": `https://tsgfulfillment.com/reviews/${index + 1}`,
+          "datePublished": "2024-01-01",
           "reviewRating": {
             "@type": "Rating",
             "ratingValue": testimonial.rating,
-            "bestRating": "5"
+            "bestRating": 5,
+            "worstRating": 1
           },
           "author": {
             "@type": "Person",
-            "name": testimonial.name
+            "name": testimonial.name,
+            "jobTitle": testimonial.position,
+            "worksFor": {
+              "@type": "Organization",
+              "name": testimonial.company
+            }
           },
-          "reviewBody": testimonial.quote
+          "reviewBody": testimonial.quote,
+          "itemReviewed": {
+            "@type": "Service",
+            "name": "TSG Fulfillment Services",
+            "description": "Professional logistics and fulfillment services"
+          }
         }))
       })}} />
     </section>

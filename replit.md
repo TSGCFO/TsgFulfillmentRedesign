@@ -112,11 +112,14 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 
 ## Recent Changes
 
-- June 20, 2025: Fixed Google Search Console FAQ structured data issue
+- June 20, 2025: Fixed Google Search Console structured data validation errors
   - **SEO FIX**: Added proper JSON-LD structured data to FAQ section with mainEntity property
   - Fixed "Missing field 'mainEntity'" error for FAQPage schema
-  - Removed itemScope/itemType attributes in favor of JSON-LD for better Google parsing
-  - Enhanced FAQ section with complete Question/Answer structured data markup
+  - **SCHEMA FIXES**: Corrected Organization, LocalBusiness, Service, Article, and HowTo schemas
+  - Enhanced image objects with proper ImageObject type and dimensions
+  - Fixed provider references to use complete Organization objects instead of @id references
+  - Improved areaServed properties with proper geographic entity types
+  - Updated all structured data templates to meet Google's validation requirements
 
 - June 14, 2025: Critical security vulnerability patched
   - **SECURITY FIX**: Removed hardcoded JWT tokens and API keys from deployment documentation

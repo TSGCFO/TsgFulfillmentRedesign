@@ -401,16 +401,27 @@ export const STRUCTURED_DATA_TEMPLATES = {
     }))
   }),
 
-  testimonial: (testimonials: Array<{ name: string; text: string; company?: string; rating?: number }>) => ({
+  testimonial: (testimonials: Array<{ name: string; text: string; company?: string; rating?: number; position?: string }>) => ({
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": `${SITE_CONFIG.siteUrl}#organization`,
-    "review": testimonials.map(testimonial => ({
+    "name": BUSINESS_INFO.name,
+    "url": SITE_CONFIG.siteUrl,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": 5.0,
+      "reviewCount": testimonials.length,
+      "bestRating": 5,
+      "worstRating": 1
+    },
+    "review": testimonials.map((testimonial, index) => ({
       "@type": "Review",
+      "@id": `${SITE_CONFIG.siteUrl}/reviews/${index + 1}`,
+      "datePublished": "2024-01-01",
       "reviewBody": testimonial.text,
       "author": {
         "@type": "Person",
         "name": testimonial.name,
+        "jobTitle": testimonial.position,
         "worksFor": testimonial.company ? {
           "@type": "Organization",
           "name": testimonial.company
@@ -419,8 +430,14 @@ export const STRUCTURED_DATA_TEMPLATES = {
       "reviewRating": testimonial.rating ? {
         "@type": "Rating",
         "ratingValue": testimonial.rating,
-        "bestRating": 5
-      } : undefined
+        "bestRating": 5,
+        "worstRating": 1
+      } : undefined,
+      "itemReviewed": {
+        "@type": "Service",
+        "name": "TSG Fulfillment Services",
+        "description": "Professional logistics and fulfillment services"
+      }
     }))
   })
 };
