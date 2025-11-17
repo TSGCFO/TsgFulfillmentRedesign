@@ -19,7 +19,7 @@ const clientLogos = [
   },
   {
     name: 'Walmart',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg',
+    logo: 'https://uccigyirrndwjgdcnqpz.supabase.co/storage/v1/object/public/logo/walmart_2025_with_spark.svg',
   },
   {
     name: 'Shopify',
