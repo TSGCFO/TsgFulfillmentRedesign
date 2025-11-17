@@ -19,23 +19,15 @@ const clientLogos = [
   },
   {
     name: 'Walmart',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg',
-  },
-  {
-    name: 'Target',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/9/9a/Target_logo.svg',
+    logo: 'https://uccigyirrndwjgdcnqpz.supabase.co/storage/v1/object/public/logo/walmart_2025_with_spark.svg',
   },
   {
     name: 'Shopify',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg',
   },
   {
-    name: 'Nike',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-  },
-  {
-    name: 'Adidas',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg',
+    name: 'Costco',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/59/Costco_Wholesale_logo_2010-10-26.svg',
   }
 ];
 
