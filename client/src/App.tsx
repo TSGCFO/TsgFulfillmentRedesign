@@ -8,7 +8,7 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { useAuth, AuthProvider } from "@/hooks/use-auth";
+import { useAuth, AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 // Lazy load page components
