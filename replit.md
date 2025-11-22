@@ -112,6 +112,14 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 
 ## Recent Changes
 
+- November 22, 2024: Added Replit Auth integration
+  - **AUTH UPDATE**: Integrated Replit's OpenID Connect authentication
+  - Supports login with Google, GitHub, X (Twitter), Apple, and email/password
+  - Replaced traditional username/password authentication with Replit Auth
+  - Added beautiful landing page for logged-out users
+  - Session management now uses PostgreSQL database storage
+  - All employee portal routes now protected with Replit Auth middleware
+  
 - June 20, 2025: Fixed Google Search Console structured data validation errors
   - **SEO FIX**: Added proper JSON-LD structured data to FAQ section with mainEntity property
   - Fixed "Missing field 'mainEntity'" error for FAQPage schema

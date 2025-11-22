@@ -19,12 +19,12 @@ localPort = 33171
 externalPort = 3000
 
 [[ports]]
-localPort = 43785
-externalPort = 3003
-
-[[ports]]
 localPort = 44881
 externalPort = 3001
+
+[[ports]]
+localPort = 46425
+externalPort = 3002
 
 [workflows]
 runButton = "Project"
@@ -54,4 +54,4 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["hubspot:1.0.0", "outlook:1.0.0", "sharepoint:1.0.0", "onedrive:1.0.0"]
+integrations = ["hubspot:1.0.0", "outlook:1.0.0", "sharepoint:1.0.0", "onedrive:1.0.0", "javascript_database:1.0.0", "javascript_log_in_with_replit:1.0.0"]
