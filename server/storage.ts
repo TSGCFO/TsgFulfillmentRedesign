@@ -203,14 +203,12 @@ export class MemStorage implements IStorage {
   }
 
   private initializeSampleData() {
-    // Create sample employees with new role structure and CORRECT password hashes
-    // Using direct synchronous initialization for in-memory storage
+    // Create sample employees for Replit Auth system
     const superAdmin: Employee = {
       id: this.employeeId++,
+      userId: null,
       fullName: "Super Administrator",
-      username: "superadmin",
       email: "superadmin@tsgfulfillment.com",
-      password: "$2b$10$vl8hCzwsrLC1ZkBLTjRkN.JMnuZtC59Q2.IMsbM96jmhpN0DLGYaC", // hashed "superadmin123"
       role: "SuperAdmin",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -222,10 +220,9 @@ export class MemStorage implements IStorage {
     
     const admin: Employee = {
       id: this.employeeId++,
+      userId: null,
       fullName: "Admin User",
-      username: "admin",
       email: "admin@tsgfulfillment.com",
-      password: "$2b$10$IIPHEJmyZDrIe2jmhmUWf.xBG29l/5tqD/k/B.EIVtxWQyYntnrna", // hashed "admin123"
       role: "Admin",
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -237,10 +234,9 @@ export class MemStorage implements IStorage {
     
     const user: Employee = {
       id: this.employeeId++,
+      userId: null,
       fullName: "Regular User",
-      username: "user",
       email: "user@tsgfulfillment.com",
-      password: "$2b$10$PxwScsIwQuMLuzl9sKzsuOISZgID/9mV0BIRhvU1Nuog5pQDqevgC", // hashed "user123"
       role: "User",
       createdAt: new Date(),
       updatedAt: new Date(),

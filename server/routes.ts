@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, hashPassword, requireAuth, canManageUsers, requireRole, requireSuperAdmin } from "./auth";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
@@ -393,52 +393,19 @@ Host: https://tsgfulfillment.com
 
 
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
-  // Setup authentication system with role-based access control
-  setupAuth(app);
+  // Setup Replit Auth (OIDC)
+  await setupAuth(app);
 
-  // Authentication routes
-  app.post('/api/login', 
-    (req, res, next) => {
-      const passport = require('passport');
-      passport.authenticate('local', (err: any, user: any) => {
-        if (err) return next(err);
-        if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-        
-        req.logIn(user, (err) => {
-          if (err) return next(err);
-          res.json({ 
-            id: user.id,
-            username: user.username,
-            fullName: user.fullName,
-            email: user.email,
-            role: user.role
-          });
-        });
-      })(req, res, next);
+  // Authentication route - get current user from Replit Auth
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
     }
-  );
-
-  app.post('/api/logout', (req, res) => {
-    req.logout((err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to logout' });
-      }
-      res.json({ success: true });
-    });
-  });
-
-  app.get('/api/user', requireAuth, (req, res) => {
-    const user = req.user;
-    if (!user) {
-      return res.status(401).json({ error: 'Not authenticated' });
-    }
-    res.json({
-      id: user.id,
-      username: user.username,
-      fullName: user.fullName,
-      email: user.email,
-      role: user.role
-    });
   });
 
   app.get('/health', (req, res) => {
