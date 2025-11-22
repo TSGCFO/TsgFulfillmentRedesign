@@ -34,7 +34,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: sessionTtl,
     },
   });
@@ -163,8 +163,7 @@ async function getEmployeeFromRequest(req: any) {
   const userId = req.user?.claims?.sub;
   if (!userId) return null;
   
-  const employees = await storage.getAllEmployees();
-  return employees.find(emp => emp.userId === userId);
+  return await storage.getEmployeeByUserId(userId);
 }
 
 export function requireRole(roles: string[]) {

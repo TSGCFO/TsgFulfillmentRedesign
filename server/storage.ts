@@ -71,7 +71,7 @@ export interface IStorage {
   
   // Employee authentication & portal methods
   getEmployee(id: number): Promise<Employee | undefined>;
-  getEmployeeByUsername(username: string): Promise<Employee | undefined>;
+  getEmployeeByUserId(userId: string): Promise<Employee | undefined>;
   getAllEmployees(): Promise<Employee[]>;
   createEmployee(employee: InsertEmployee): Promise<Employee>;
   updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined>;
@@ -340,8 +340,8 @@ export class MemStorage implements IStorage {
     return this.employees.get(id);
   }
 
-  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
-    return Array.from(this.employees.values()).find(emp => emp.email === username);
+  async getEmployeeByUserId(userId: string): Promise<Employee | undefined> {
+    return Array.from(this.employees.values()).find(emp => emp.userId === userId);
   }
 
   async getAllEmployees(): Promise<Employee[]> {
@@ -719,8 +719,8 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
-    const result = await db.select().from(employees).where(eq(employees.email, username)).limit(1);
+  async getEmployeeByUserId(userId: string): Promise<Employee | undefined> {
+    const result = await db.select().from(employees).where(eq(employees.userId, userId)).limit(1);
     return result[0];
   }
 

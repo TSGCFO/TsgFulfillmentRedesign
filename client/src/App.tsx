@@ -70,16 +70,30 @@ function Router() {
     window.scrollTo(0, 0);
   }, [location, setLocation]);
   
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/employee" component={EmployeePortal} />
-        <Route path="/employee/dashboard" component={CustomizableDashboard} />
-        <Route path="/employee/users" component={UserManagement} />
-        <Route path="/employee/inquiries" component={CustomerInquiries} />
-        <Route path="/employee/materials" component={MaterialsManagement} />
-        <Route path="/old-home" component={OWDStyleHome} />
+        {!isAuthenticated ? (
+          <>
+            <Route path="/" component={Landing} />
+            <Route path="/old-home" component={OWDStyleHome} />
+          </>
+        ) : (
+          <>
+            <Route path="/" component={EmployeePortal} />
+            <Route path="/employee" component={EmployeePortal} />
+            <Route path="/employee/dashboard" component={CustomizableDashboard} />
+            <Route path="/employee/users" component={UserManagement} />
+            <Route path="/employee/inquiries" component={CustomerInquiries} />
+            <Route path="/employee/materials" component={MaterialsManagement} />
+            <Route path="/old-home" component={OWDStyleHome} />
+          </>
+        )}
+
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
         <Route path="/about" component={About} />
