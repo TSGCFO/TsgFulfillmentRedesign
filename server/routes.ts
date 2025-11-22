@@ -1,9 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated, requireRole, canManageUsers, requireSuperAdmin } from "./replitAuth";
-
-const requireAuth = isAuthenticated;
+import { setupAuth, hashPassword, requireAuth, canManageUsers, requireRole, requireSuperAdmin } from "./auth";
 import { 
   insertQuoteRequestSchema, 
   insertInventoryLevelSchema,
@@ -395,20 +393,8 @@ Host: https://tsgfulfillment.com
 
 
 export async function registerRoutes(app: Express, analytics: boolean): Promise<Server> {
-  // Setup Replit Auth (OIDC)
-  await setupAuth(app);
-
-  // Authentication route - get current user from Replit Auth
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // Setup authentication system with role-based access control
+  setupAuth(app);
 
   app.get('/health', (req, res) => {
     res.status(200).json({ 
@@ -1068,8 +1054,16 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     try {
       const employeeData = insertEmployeeSchema.parse(req.body);
       
-      const employee = await storage.createEmployee(employeeData);
-      res.status(201).json({ message: "Employee created successfully", data: employee });
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json({ message: "Employee created successfully", data: safeEmployee });
     } catch (error) {
       handleError(res, error, "Failed to create employee");
     }
@@ -1078,7 +1072,9 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
       const employees = await storage.getAllEmployees();
-      res.json(employees);
+      // Remove passwords from response
+      const safeEmployees = employees.map(({ password, ...employee }) => employee);
+      res.json(safeEmployees);
     } catch (error) {
       handleError(res, error, "Error retrieving employees");
     }
@@ -1100,8 +1096,17 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
       const employeeData = insertEmployeeSchema.parse(req.body);
-      const employee = await storage.createEmployee(employeeData);
-      res.status(201).json(employee);
+      
+      // Hash password before storing
+      const hashedPassword = await hashPassword(employeeData.password);
+      const employee = await storage.createEmployee({
+        ...employeeData,
+        password: hashedPassword
+      });
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.status(201).json(safeEmployee);
     } catch (error) {
       handleError(res, error, "Failed to create employee");
     }
@@ -1129,7 +1134,10 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       if (!employee) {
         return res.status(404).json({ error: "Employee not found" });
       }
-      res.json(employee);
+      
+      // Remove password from response
+      const { password, ...safeEmployee } = employee;
+      res.json(safeEmployee);
     } catch (error) {
       handleError(res, error, "Failed to update employee");
     }
@@ -1372,107 +1380,6 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       res.json({ message: "Material updated successfully", data: material });
     } catch (error) {
       handleError(res, error, "Error updating material");
-    }
-  });
-
-  // Material usage route for recording material consumption
-  app.post("/api/materials/usage", requireAuth, async (req, res) => {
-    try {
-      const { materialId, quantityUsed, purpose, clientReference, notes, employeeId } = req.body;
-      
-      // Validate material exists and has enough stock
-      const material = await storage.getMaterial(materialId);
-      if (!material) {
-        return res.status(404).json({ error: "Material not found" });
-      }
-      
-      if (material.currentStock < quantityUsed) {
-        return res.status(400).json({ 
-          error: "Insufficient stock", 
-          currentStock: material.currentStock, 
-          requested: quantityUsed 
-        });
-      }
-      
-      // Record the usage
-      const usage = await storage.createMaterialUsage({
-        materialId,
-        employeeId: employeeId || req.user?.id,
-        quantityUsed,
-        purpose,
-        clientReference,
-        notes
-      });
-      
-      res.json({ message: "Material usage recorded successfully", data: usage });
-    } catch (error) {
-      handleError(res, error, "Error recording material usage");
-    }
-  });
-
-  // Stock alert check route
-  app.post("/api/materials/check-stock-alerts", requireAuth, async (req, res) => {
-    try {
-      const materials = await storage.getMaterials();
-      const lowStockItems = materials.filter(material => 
-        material.currentStock <= material.minimumStock && material.isActive
-      );
-      
-      // Send alerts (in production, this would send emails)
-      const alertsSent = lowStockItems.length;
-      console.log(`[STOCK ALERTS] Found ${alertsSent} low stock items:`, lowStockItems.map(m => ({
-        name: m.name,
-        sku: m.sku,
-        current: m.currentStock,
-        minimum: m.minimumStock
-      })));
-      
-      res.json({ 
-        message: `Stock alerts processed`, 
-        alertsSent,
-        lowStockItems: lowStockItems.map(m => ({
-          id: m.id,
-          name: m.name,
-          sku: m.sku,
-          currentStock: m.currentStock,
-          minimumStock: m.minimumStock
-        }))
-      });
-    } catch (error) {
-      handleError(res, error, "Error checking stock alerts");
-    }
-  });
-
-  // Material orders routes
-  app.get("/api/material-orders", requireAuth, async (req, res) => {
-    try {
-      const orders = await storage.getMaterialOrders(req.query);
-      res.json({ data: orders });
-    } catch (error) {
-      handleError(res, error, "Error fetching material orders");
-    }
-  });
-  
-  app.post("/api/material-orders", requireAuth, async (req, res) => {
-    try {
-      const validated = insertMaterialOrderSchema.parse(req.body);
-      const order = await storage.createMaterialOrder(validated);
-      res.json({ message: "Material order created successfully", data: order });
-    } catch (error) {
-      handleError(res, error, "Error creating material order");
-    }
-  });
-  
-  app.patch("/api/material-orders/:id", requireAuth, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const order = await storage.updateMaterialOrder(id, req.body);
-      if (!order) {
-        return res.status(404).json({ message: "Material order not found" });
-      }
-      res.json({ message: "Material order updated successfully", data: order });
-    } catch (error) {
-      handleError(res, error, "Error updating material order");
     }
   });
 

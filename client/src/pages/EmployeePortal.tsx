@@ -1,4 +1,4 @@
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -113,14 +113,12 @@ export default function EmployeePortal() {
                 <TrendingUp className="h-5 w-5 text-blue-600" />
                 <CardTitle>Dashboard Overview</CardTitle>
               </div>
-              <CardDescription>View your personalized dashboard</CardDescription>
+              <CardDescription>View your dashboard and analytics</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Access your customizable dashboard with widgets and analytics.</p>
-              <Button asChild className="w-full">
-                <Link href="/employee/dashboard">
-                  View Dashboard
-                </Link>
+              <p className="text-sm text-gray-600 mb-4">Access comprehensive analytics and performance metrics.</p>
+              <Button className="w-full">
+                View Dashboard
               </Button>
             </CardContent>
           </Card>
@@ -141,25 +139,6 @@ export default function EmployeePortal() {
               <Button asChild className="w-full">
                 <Link href="/employee/inquiries">
                   View Inquiries
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Materials Management Card */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Package className="h-5 w-5 text-green-600" />
-                <CardTitle>Materials & Inventory</CardTitle>
-              </div>
-              <CardDescription>Manage materials, inventory, and stock alerts</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600 mb-4">Track inventory levels, manage orders, and monitor stock alerts.</p>
-              <Button asChild className="w-full">
-                <Link href="/employee/materials">
-                  Manage Materials
                 </Link>
               </Button>
             </CardContent>

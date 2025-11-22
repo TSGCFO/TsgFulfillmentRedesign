@@ -1,6 +1,5 @@
 import { db, pool } from "./db";
 import { 
-  users,
   employees,
   quoteRequests,
   inventoryLevels,
@@ -18,8 +17,6 @@ import {
   materialOrders,
   materialOrderItems,
   materialUsage,
-  type User,
-  type UpsertUser,
   type Employee, 
   type InsertEmployee, 
   type InsertQuoteRequest, 
@@ -65,13 +62,9 @@ const MemoryStore = createMemoryStore(session);
 
 // Updated interface with all CRUD methods for analytics
 export interface IStorage {
-  // Replit Auth User operations (MANDATORY for Replit Auth)
-  getUser(id: string): Promise<User | undefined>;
-  upsertUser(user: UpsertUser): Promise<User>;
-  
   // Employee authentication & portal methods
   getEmployee(id: number): Promise<Employee | undefined>;
-  getEmployeeByUserId(userId: string): Promise<Employee | undefined>;
+  getEmployeeByUsername(username: string): Promise<Employee | undefined>;
   getAllEmployees(): Promise<Employee[]>;
   createEmployee(employee: InsertEmployee): Promise<Employee>;
   updateEmployee(id: number, employeeData: Partial<Employee>): Promise<Employee | undefined>;
@@ -141,30 +134,7 @@ export interface IStorage {
   // Material methods
   createMaterial(material: InsertMaterial): Promise<Material>;
   getMaterials(filters?: any): Promise<Material[]>;
-  getMaterial(id: number): Promise<Material | undefined>;
   updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined>;
-  
-  // Material price methods
-  createMaterialPrice(price: InsertMaterialPrice): Promise<MaterialPrice>;
-  getMaterialPrices(filters?: any): Promise<MaterialPrice[]>;
-  updateMaterialPrice(id: number, data: Partial<MaterialPrice>): Promise<MaterialPrice | undefined>;
-  
-  // Material order methods
-  createMaterialOrder(order: InsertMaterialOrder): Promise<MaterialOrder>;
-  getMaterialOrders(filters?: any): Promise<MaterialOrder[]>;
-  getMaterialOrder(id: number): Promise<MaterialOrder | undefined>;
-  updateMaterialOrder(id: number, data: Partial<MaterialOrder>): Promise<MaterialOrder | undefined>;
-  
-  // Material order item methods
-  createMaterialOrderItem(item: InsertMaterialOrderItem): Promise<MaterialOrderItem>;
-  getMaterialOrderItems(orderId: number): Promise<MaterialOrderItem[]>;
-  
-  // Material usage methods
-  createMaterialUsage(usage: InsertMaterialUsage): Promise<MaterialUsage>;
-  getMaterialUsage(filters?: any): Promise<MaterialUsage[]>;
-  
-  // Additional utility methods
-  getEmployees(): Promise<Employee[]>;
   
   // Session store for authentication
   sessionStore: any;
@@ -173,23 +143,8 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private employees = new Map<number, Employee>();
   private employeeId = 1;
-  private users = new Map<string, User>();
   private quoteRequests = new Map<number, QuoteRequest>();
   private quoteRequestId = 1;
-  
-  // Material management storage maps
-  private materials = new Map<number, Material>();
-  private materialId = 1;
-  private materialPrices = new Map<number, MaterialPrice>();
-  private materialPriceId = 1;
-  private materialOrders = new Map<number, MaterialOrder>();
-  private materialOrderId = 1;
-  private materialOrderItems = new Map<number, MaterialOrderItem>();
-  private materialOrderItemId = 1;
-  private materialUsage = new Map<number, MaterialUsage>();
-  private materialUsageId = 1;
-  private vendors = new Map<number, Vendor>();
-  private vendorId = 1;
   
   sessionStore: any;
 
@@ -198,158 +153,47 @@ export class MemStorage implements IStorage {
       checkPeriod: 86400000,
     });
     
-    // Initialize with sample employee data synchronously
+    // Initialize with sample employee data
     this.initializeSampleData();
   }
 
-  private initializeSampleData() {
-    // Create sample employees for Replit Auth system
-    const superAdmin: Employee = {
-      id: this.employeeId++,
-      userId: null,
+  private async initializeSampleData() {
+    // Create sample employees with new role structure
+    await this.createEmployee({
       fullName: "Super Administrator",
+      username: "superadmin",
       email: "superadmin@tsgfulfillment.com",
-      role: "SuperAdmin",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastLogin: null,
-      isActive: true,
-      hubspotUserId: null
-    };
-    this.employees.set(superAdmin.id, superAdmin);
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "superadmin123"
+      role: "SuperAdmin"
+    });
     
-    const admin: Employee = {
-      id: this.employeeId++,
-      userId: null,
+    await this.createEmployee({
       fullName: "Admin User",
+      username: "admin",
       email: "admin@tsgfulfillment.com",
-      role: "Admin",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastLogin: null,
-      isActive: true,
-      hubspotUserId: null
-    };
-    this.employees.set(admin.id, admin);
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "admin123"
+      role: "Admin"
+    });
     
-    const user: Employee = {
-      id: this.employeeId++,
-      userId: null,
+    await this.createEmployee({
       fullName: "Regular User",
+      username: "user",
       email: "user@tsgfulfillment.com",
-      role: "User",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastLogin: null,
-      isActive: true,
-      hubspotUserId: null
-    };
-    this.employees.set(user.id, user);
-    
-    // Initialize sample materials for testing
-    const boxMaterial: Material = {
-      id: this.materialId++,
-      name: "Cardboard Box - Small",
-      sku: "BOX-S-001",
-      description: "Small cardboard box for shipping",
-      unit: "piece",
-      currentStock: 500,
-      minimumStock: 100,
-      category: "Packaging",
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materials.set(boxMaterial.id, boxMaterial);
-    
-    const bubbleWrap: Material = {
-      id: this.materialId++,
-      name: "Bubble Wrap",
-      sku: "BW-001",
-      description: "Protective bubble wrap roll",
-      unit: "meter",
-      currentStock: 50,
-      minimumStock: 100,
-      category: "Packaging",
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materials.set(bubbleWrap.id, bubbleWrap);
-    
-    const shippingLabel: Material = {
-      id: this.materialId++,
-      name: "Shipping Label",
-      sku: "LABEL-001",
-      description: "Adhesive shipping labels",
-      unit: "piece",
-      currentStock: 1000,
-      minimumStock: 500,
-      category: "Labels",
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materials.set(shippingLabel.id, shippingLabel);
-    
-    // Initialize sample vendor
-    const vendor: Vendor = {
-      id: this.vendorId++,
-      name: "ABC Packaging Supplies",
-      contactEmail: "contact@abcpackaging.com",
-      contactPhone: "(555) 123-4567",
-      address: "123 Supply Street, Industrial City, IC 12345",
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.vendors.set(vendor.id, vendor);
-    
-    console.log('[STORAGE] Initialized sample data with', this.employees.size, 'employees and', this.materials.size, 'materials');
-  }
-
-  // Replit Auth User operations (MANDATORY for Replit Auth)
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const existingUser = this.users.get(userData.id);
-    const now = new Date();
-    
-    if (existingUser) {
-      const updatedUser = {
-        ...existingUser,
-        ...userData,
-        updatedAt: now
-      };
-      this.users.set(userData.id, updatedUser);
-      return updatedUser;
-    } else {
-      const newUser: User = {
-        ...userData,
-        createdAt: userData.createdAt || now,
-        updatedAt: userData.updatedAt || now
-      };
-      this.users.set(userData.id, newUser);
-      return newUser;
-    }
+      password: "$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", // hashed "user123"
+      role: "User"
+    });
   }
 
   async getEmployee(id: number): Promise<Employee | undefined> {
     return this.employees.get(id);
   }
 
-  async getEmployeeByUserId(userId: string): Promise<Employee | undefined> {
-    return Array.from(this.employees.values()).find(emp => emp.userId === userId);
+  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
+    return Array.from(this.employees.values()).find(emp => emp.username === username);
   }
 
   async getAllEmployees(): Promise<Employee[]> {
     return Array.from(this.employees.values()).filter(emp => emp.isActive);
-  }
-
-  async getEmployees(): Promise<Employee[]> {
-    return this.getAllEmployees();
   }
 
   async createEmployee(employee: InsertEmployee): Promise<Employee> {
@@ -378,26 +222,6 @@ export class MemStorage implements IStorage {
 
   async deleteEmployee(id: number): Promise<boolean> {
     return this.employees.delete(id);
-  }
-
-  // Replit Auth User operations
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const existing = this.users.get(userData.id!);
-    const user: User = {
-      id: userData.id || crypto.randomUUID(),
-      email: userData.email || null,
-      firstName: userData.firstName || null,
-      lastName: userData.lastName || null,
-      profileImageUrl: userData.profileImageUrl || null,
-      createdAt: existing?.createdAt || new Date(),
-      updatedAt: new Date(),
-    };
-    this.users.set(user.id, user);
-    return user;
   }
 
   async createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
@@ -434,136 +258,6 @@ export class MemStorage implements IStorage {
     return updated;
   }
 
-  // Material management method implementations
-  async getMaterial(id: number): Promise<Material | undefined> { 
-    return this.materials.get(id);
-  }
-  
-  async createMaterialPrice(price: InsertMaterialPrice): Promise<MaterialPrice> {
-    const newPrice: MaterialPrice = {
-      id: this.materialPriceId++,
-      ...price,
-      effectiveDate: price.effectiveDate || new Date(),
-      isActive: price.isActive ?? true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materialPrices.set(newPrice.id, newPrice);
-    return newPrice;
-  }
-  
-  async getMaterialPrices(filters?: any): Promise<MaterialPrice[]> { 
-    const prices = Array.from(this.materialPrices.values());
-    if (filters?.materialId) {
-      return prices.filter(p => p.materialId === filters.materialId);
-    }
-    if (filters?.vendorId) {
-      return prices.filter(p => p.vendorId === filters.vendorId);
-    }
-    if (filters?.isActive !== undefined) {
-      return prices.filter(p => p.isActive === filters.isActive);
-    }
-    return prices;
-  }
-  
-  async updateMaterialPrice(id: number, data: Partial<MaterialPrice>): Promise<MaterialPrice | undefined> { 
-    const price = this.materialPrices.get(id);
-    if (!price) return undefined;
-    
-    const updated = { ...price, ...data, updatedAt: new Date() };
-    this.materialPrices.set(id, updated);
-    return updated;
-  }
-  
-  async createMaterialOrder(order: InsertMaterialOrder): Promise<MaterialOrder> {
-    const newOrder: MaterialOrder = {
-      id: this.materialOrderId++,
-      ...order,
-      orderNumber: order.orderNumber || `ORD-${Date.now()}`,
-      status: order.status || "pending",
-      orderDate: order.orderDate || new Date(),
-      expectedDeliveryDate: order.expectedDeliveryDate || null,
-      actualDeliveryDate: order.actualDeliveryDate || null,
-      notes: order.notes || null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materialOrders.set(newOrder.id, newOrder);
-    return newOrder;
-  }
-  
-  async getMaterialOrders(filters?: any): Promise<MaterialOrder[]> { 
-    const orders = Array.from(this.materialOrders.values());
-    if (filters?.vendorId) {
-      return orders.filter(o => o.vendorId === filters.vendorId);
-    }
-    if (filters?.status) {
-      return orders.filter(o => o.status === filters.status);
-    }
-    return orders;
-  }
-  
-  async getMaterialOrder(id: number): Promise<MaterialOrder | undefined> { 
-    return this.materialOrders.get(id);
-  }
-  
-  async updateMaterialOrder(id: number, data: Partial<MaterialOrder>): Promise<MaterialOrder | undefined> { 
-    const order = this.materialOrders.get(id);
-    if (!order) return undefined;
-    
-    const updated = { ...order, ...data, updatedAt: new Date() };
-    this.materialOrders.set(id, updated);
-    return updated;
-  }
-  
-  async createMaterialOrderItem(item: InsertMaterialOrderItem): Promise<MaterialOrderItem> {
-    const newItem: MaterialOrderItem = {
-      id: this.materialOrderItemId++,
-      ...item,
-      quantityReceived: item.quantityReceived || 0,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materialOrderItems.set(newItem.id, newItem);
-    return newItem;
-  }
-  
-  async getMaterialOrderItems(orderId: number): Promise<MaterialOrderItem[]> { 
-    return Array.from(this.materialOrderItems.values()).filter(item => item.orderId === orderId);
-  }
-  
-  async createMaterialUsage(usage: InsertMaterialUsage): Promise<MaterialUsage> {
-    const newUsage: MaterialUsage = {
-      id: this.materialUsageId++,
-      ...usage,
-      purpose: usage.purpose || null,
-      clientReference: usage.clientReference || null,
-      notes: usage.notes || null,
-      usedAt: new Date()
-    };
-    this.materialUsage.set(newUsage.id, newUsage);
-    
-    // Update material stock
-    const material = this.materials.get(usage.materialId);
-    if (material) {
-      material.currentStock -= usage.quantityUsed;
-      this.materials.set(material.id, material);
-    }
-    
-    return newUsage;
-  }
-  
-  async getMaterialUsage(filters?: any): Promise<MaterialUsage[]> { 
-    const usage = Array.from(this.materialUsage.values());
-    if (filters?.materialId) {
-      return usage.filter(u => u.materialId === filters.materialId);
-    }
-    if (filters?.employeeId) {
-      return usage.filter(u => u.employeeId === filters.employeeId);
-    }
-    return usage;
-  }
-  
   // Stub implementations for additional storage methods
   async createInventoryLevel(inventory: InsertInventoryLevel): Promise<InventoryLevel> {
     throw new Error("Inventory management not implemented in memory storage");
@@ -623,65 +317,16 @@ export class MemStorage implements IStorage {
   async getContracts(filters?: any): Promise<Contract[]> { return []; }
   
   async createVendor(vendor: InsertVendor): Promise<Vendor> {
-    const newVendor: Vendor = {
-      id: this.vendorId++,
-      ...vendor,
-      isActive: vendor.isActive ?? true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.vendors.set(newVendor.id, newVendor);
-    return newVendor;
+    throw new Error("Vendor management not implemented in memory storage");
   }
-  
-  async getVendors(filters?: any): Promise<Vendor[]> { 
-    const vendors = Array.from(this.vendors.values());
-    if (filters?.isActive !== undefined) {
-      return vendors.filter(v => v.isActive === filters.isActive);
-    }
-    return vendors;
-  }
-  
-  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> { 
-    const vendor = this.vendors.get(id);
-    if (!vendor) return undefined;
-    
-    const updated = { ...vendor, ...data, updatedAt: new Date() };
-    this.vendors.set(id, updated);
-    return updated;
-  }
+  async getVendors(filters?: any): Promise<Vendor[]> { return []; }
+  async updateVendor(id: number, data: Partial<Vendor>): Promise<Vendor | undefined> { return undefined; }
   
   async createMaterial(material: InsertMaterial): Promise<Material> {
-    const newMaterial: Material = {
-      id: this.materialId++,
-      ...material,
-      isActive: material.isActive ?? true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.materials.set(newMaterial.id, newMaterial);
-    return newMaterial;
+    throw new Error("Material management not implemented in memory storage");
   }
-  
-  async getMaterials(filters?: any): Promise<Material[]> { 
-    const materials = Array.from(this.materials.values());
-    if (filters?.isActive !== undefined) {
-      return materials.filter(m => m.isActive === filters.isActive);
-    }
-    if (filters?.category) {
-      return materials.filter(m => m.category === filters.category);
-    }
-    return materials;
-  }
-  
-  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> { 
-    const material = this.materials.get(id);
-    if (!material) return undefined;
-    
-    const updated = { ...material, ...data, updatedAt: new Date() };
-    this.materials.set(id, updated);
-    return updated;
-  }
+  async getMaterials(filters?: any): Promise<Material[]> { return []; }
+  async updateMaterial(id: number, data: Partial<Material>): Promise<Material | undefined> { return undefined; }
 }
 
 export class DatabaseStorage implements IStorage {
@@ -694,33 +339,13 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
-  }
-
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
-    return user;
-  }
-
   async getEmployee(id: number): Promise<Employee | undefined> {
     const result = await db.select().from(employees).where(eq(employees.id, id)).limit(1);
     return result[0];
   }
 
-  async getEmployeeByUserId(userId: string): Promise<Employee | undefined> {
-    const result = await db.select().from(employees).where(eq(employees.userId, userId)).limit(1);
+  async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
+    const result = await db.select().from(employees).where(eq(employees.username, username)).limit(1);
     return result[0];
   }
 
@@ -920,7 +545,5 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// For testing purposes, force MemStorage to use sample data
-// To use database, set USE_DATABASE=true environment variable
-const isDatabaseEnabled = process.env.USE_DATABASE === 'true';
+const isDatabaseEnabled = !!process.env.DATABASE_URL;
 export const storage: IStorage = isDatabaseEnabled ? new DatabaseStorage() : new MemStorage();

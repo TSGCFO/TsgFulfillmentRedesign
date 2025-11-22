@@ -1,21 +1,40 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Shield, LogIn } from "lucide-react";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { insertEmployeeSchema } from "@shared/schema";
+import { z } from "zod";
+import { Loader2, Shield } from "lucide-react";
 import { Link } from "wouter";
 
-export default function AuthPage() {
-  const { user, isLoading, isAuthenticated } = useAuth();
+const loginFormSchema = insertEmployeeSchema.pick({
+  username: true,
+  password: true
+});
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <Loader2 className="h-8 w-8 animate-spin text-border" />
-      </div>
-    );
+export default function AuthPage() {
+  const { user, loginMutation, logoutMutation } = useAuth();
+
+  const loginForm = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  function onLogin(values: z.infer<typeof loginFormSchema>) {
+    loginMutation.mutate(values);
   }
 
-  if (isAuthenticated && user) {
+  function onLogout() {
+    logoutMutation.mutate();
+  }
+
+  if (user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
@@ -23,16 +42,11 @@ export default function AuthPage() {
             <div className="mx-auto mb-4 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <CardTitle>Welcome Back!</CardTitle>
+            <CardTitle>Welcome, {user.fullName}</CardTitle>
             <CardDescription>You are successfully logged in</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {user.email && (
-                <div className="text-center text-sm text-muted-foreground">
-                  {user.email}
-                </div>
-              )}
+            <div className="space-y-2">
               <Button 
                 asChild 
                 className="w-full"
@@ -42,10 +56,11 @@ export default function AuthPage() {
               
               <Button 
                 variant="outline" 
-                onClick={() => window.location.href = '/api/logout'}
+                onClick={onLogout}
+                disabled={logoutMutation.isPending}
                 className="w-full"
-                data-testid="button-logout"
               >
+                {logoutMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Logout
               </Button>
             </div>
@@ -67,19 +82,46 @@ export default function AuthPage() {
         </CardHeader>
         
         <CardContent>
-          <div className="space-y-4">
-            <p className="text-sm text-center text-muted-foreground">
-              Sign in with your account to access the employee portal
-            </p>
-            <Button 
-              className="w-full"
-              onClick={() => window.location.href = '/api/login'}
-              data-testid="button-login"
-            >
-              <LogIn className="mr-2 h-4 w-4" />
-              Sign In
-            </Button>
-          </div>
+          <Form {...loginForm}>
+            <form onSubmit={loginForm.handleSubmit(onLogin)} className="space-y-4">
+              <FormField
+                control={loginForm.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your username" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={loginForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Enter your password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Login
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

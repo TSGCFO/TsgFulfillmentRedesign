@@ -18,7 +18,7 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Language**: TypeScript with ES modules
-- **Authentication**: Replit Auth (OIDC) with session management
+- **Authentication**: Passport.js with local strategy and session management
 - **Database ORM**: Drizzle ORM for type-safe database operations
 - **Session Storage**: Database-backed sessions in production, memory-based in development
 - **File Storage**: Supabase for image and document storage
@@ -26,11 +26,10 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 ## Key Components
 
 ### Authentication System
-- **Replit Auth**: OIDC-based authentication supporting Google, GitHub, X (Twitter), Apple, and email/password login
-- **Employee Linking**: Users table with optional linkage to employees table for employee portal access
-- **Roles**: SuperAdmin, Admin, User with hierarchical permissions (linked to employee records)
-- **Session Management**: Express-session with database persistence, environment-conditional secure cookies
-- **Protected Routes**: Client-side route protection using useAuth hook and ProtectedRoute wrapper
+- **Employee Authentication**: Username/password based login with role-based access control
+- **Roles**: SuperAdmin, Admin, User with hierarchical permissions
+- **Session Management**: Express-session with database persistence in production
+- **Password Security**: Scrypt hashing for new passwords, bcrypt compatibility for migrated data
 
 ### Employee Portal Features
 - **User Management**: Create, update, and deactivate employee accounts
@@ -40,9 +39,7 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 - **Inventory Tracking**: Stock levels and warehouse management
 
 ### Database Schema
-- **users**: Replit Auth user profiles (id, username, displayName, profileImage, email)
-- **sessions**: Express session storage for authentication state
-- **employees**: Employee records with optional userId linkage for portal access
+- **employees**: User authentication and profile information
 - **quote_requests**: Customer inquiries and service requests
 - **inquiry_assignments**: Assignment of inquiries to employees
 - **contracts**: DocuSign contract management
@@ -53,13 +50,11 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 ## Data Flow
 
 ### Authentication Flow
-1. User clicks login and is redirected to Replit Auth (/api/login)
-2. Replit Auth OIDC flow authenticates user with chosen provider (Google, GitHub, etc.)
-3. Callback endpoint (/api/callback) processes authentication response
-4. User profile stored in users table, session created in database
-5. Protected routes check /api/auth/user endpoint for authentication status
-6. Employee portal access granted if user has linked employee record
-7. Role-based access control applied based on employee.role field
+1. User submits credentials via login form
+2. Passport.js validates against employee database
+3. Session created and stored in database
+4. Protected routes check authentication middleware
+5. Role-based access control applied to resources
 
 ### Customer Inquiry Process
 1. Quote requests submitted through public form
@@ -117,30 +112,6 @@ TSG Fulfillment is a comprehensive employee portal application built with React 
 
 ## Recent Changes
 
-- November 22, 2025: Completed Replit Auth migration
-  - **AUTH UPDATE**: Fully migrated from Passport.js to Replit's OpenID Connect authentication
-  - Supports multiple login providers: Google, GitHub, X (Twitter), Apple, and email/password
-  - Backend Implementation:
-    - New OIDC setup in server/replitAuth.ts with production-ready configuration
-    - Auth endpoints: /api/login, /api/callback, /api/logout, /api/auth/user
-    - Session configuration with environment-conditional secure cookies
-    - Database-backed session storage using connect-pg-simple
-  - Database Schema Updates:
-    - Added users table for Replit Auth profiles
-    - Added sessions table for authentication state persistence
-    - Modified employees table with optional userId field for account linking
-    - Added getEmployeeByUserId() method for efficient lookups
-  - Frontend Implementation:
-    - Simple useAuth hook with React Query integration
-    - ProtectedRoute wrapper for authenticated pages
-    - Clean routing without AuthProvider context complexity
-    - All employee portal routes properly protected
-  - Testing & Validation:
-    - Application runs without console errors
-    - Auth endpoints respond correctly (401 for unauthenticated users)
-    - Session management working in both development and production modes
-    - Clean browser console logs confirming successful integration
-  
 - June 20, 2025: Fixed Google Search Console structured data validation errors
   - **SEO FIX**: Added proper JSON-LD structured data to FAQ section with mainEntity property
   - Fixed "Missing field 'mainEntity'" error for FAQPage schema
