@@ -9,6 +9,7 @@ import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth, AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/lib/protected-route";
 
 // Lazy load page components
 const Landing = lazy(() => import("@/pages/Landing"));
@@ -77,22 +78,16 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        {!isAuthenticated ? (
-          <>
-            <Route path="/" component={Landing} />
-            <Route path="/old-home" component={OWDStyleHome} />
-          </>
-        ) : (
-          <>
-            <Route path="/" component={EmployeePortal} />
-            <Route path="/employee" component={EmployeePortal} />
-            <Route path="/employee/dashboard" component={CustomizableDashboard} />
-            <Route path="/employee/users" component={UserManagement} />
-            <Route path="/employee/inquiries" component={CustomerInquiries} />
-            <Route path="/employee/materials" component={MaterialsManagement} />
-            <Route path="/old-home" component={OWDStyleHome} />
-          </>
-        )}
+        {!isAuthenticated && <Route path="/" component={Landing} />}
+        {isAuthenticated && <Route path="/" component={EmployeePortal} />}
+        
+        <ProtectedRoute path="/employee" component={EmployeePortal} />
+        <ProtectedRoute path="/employee/dashboard" component={CustomizableDashboard} />
+        <ProtectedRoute path="/employee/users" component={UserManagement} />
+        <ProtectedRoute path="/employee/inquiries" component={CustomerInquiries} />
+        <ProtectedRoute path="/employee/materials" component={MaterialsManagement} />
+        
+        <Route path="/old-home" component={OWDStyleHome} />
 
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
@@ -145,13 +140,11 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <HelmetProvider>
-          <Router />
-          <Toaster />
-          <CookieConsent />
-        </HelmetProvider>
-      </AuthProvider>
+      <HelmetProvider>
+        <Router />
+        <Toaster />
+        <CookieConsent />
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
