@@ -1,5 +1,6 @@
 import { db, pool } from "./db";
 import { 
+  users,
   employees,
   quoteRequests,
   inventoryLevels,
@@ -17,6 +18,8 @@ import {
   materialOrders,
   materialOrderItems,
   materialUsage,
+  type User,
+  type UpsertUser,
   type Employee, 
   type InsertEmployee, 
   type InsertQuoteRequest, 
@@ -62,6 +65,10 @@ const MemoryStore = createMemoryStore(session);
 
 // Updated interface with all CRUD methods for analytics
 export interface IStorage {
+  // Replit Auth User operations (MANDATORY for Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  
   // Employee authentication & portal methods
   getEmployee(id: number): Promise<Employee | undefined>;
   getEmployeeByUsername(username: string): Promise<Employee | undefined>;
@@ -166,6 +173,7 @@ export interface IStorage {
 export class MemStorage implements IStorage {
   private employees = new Map<number, Employee>();
   private employeeId = 1;
+  private users = new Map<string, User>();
   private quoteRequests = new Map<number, QuoteRequest>();
   private quoteRequestId = 1;
   
@@ -304,6 +312,34 @@ export class MemStorage implements IStorage {
     console.log('[STORAGE] Initialized sample data with', this.employees.size, 'employees and', this.materials.size, 'materials');
   }
 
+  // Replit Auth User operations (MANDATORY for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const existingUser = this.users.get(userData.id);
+    const now = new Date();
+    
+    if (existingUser) {
+      const updatedUser = {
+        ...existingUser,
+        ...userData,
+        updatedAt: now
+      };
+      this.users.set(userData.id, updatedUser);
+      return updatedUser;
+    } else {
+      const newUser: User = {
+        ...userData,
+        createdAt: userData.createdAt || now,
+        updatedAt: userData.updatedAt || now
+      };
+      this.users.set(userData.id, newUser);
+      return newUser;
+    }
+  }
+
   async getEmployee(id: number): Promise<Employee | undefined> {
     return this.employees.get(id);
   }
@@ -346,6 +382,26 @@ export class MemStorage implements IStorage {
 
   async deleteEmployee(id: number): Promise<boolean> {
     return this.employees.delete(id);
+  }
+
+  // Replit Auth User operations
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const existing = this.users.get(userData.id!);
+    const user: User = {
+      id: userData.id || crypto.randomUUID(),
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      profileImageUrl: userData.profileImageUrl || null,
+      createdAt: existing?.createdAt || new Date(),
+      updatedAt: new Date(),
+    };
+    this.users.set(user.id, user);
+    return user;
   }
 
   async createQuoteRequest(quoteRequest: InsertQuoteRequest): Promise<QuoteRequest> {
@@ -640,6 +696,26 @@ export class DatabaseStorage implements IStorage {
       pool: pool, 
       createTableIfMissing: true 
     });
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
   }
 
   async getEmployee(id: number): Promise<Employee | undefined> {
