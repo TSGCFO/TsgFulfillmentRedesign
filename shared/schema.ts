@@ -46,6 +46,7 @@ export const quoteRequests = pgTable("quote_requests", {
   consent: boolean("consent").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   status: text("status").default("new").notNull(),
+  priority: text("priority", { enum: ["low", "medium", "high", "urgent"] }).default("medium").notNull(),
   assignedTo: integer("assigned_to").references(() => employees.id),
   convertedToClient: boolean("converted_to_client").default(false),
   currentShipments: text("current_shipments"),

@@ -26,7 +26,10 @@ import {
   ArrowUpDown,
   CheckCircle,
   AlertCircle,
-  Hourglass
+  Hourglass,
+  AlertTriangle,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
@@ -140,6 +143,41 @@ export default function CustomerInquiries() {
     });
   };
 
+  const getPriorityBadge = (priority?: string) => {
+    const priorityValue = priority || "medium";
+    switch (priorityValue) {
+      case "urgent":
+        return (
+          <Badge variant="destructive" className="flex items-center gap-1">
+            <AlertTriangle className="h-3 w-3" />
+            URGENT
+          </Badge>
+        );
+      case "high":
+        return (
+          <Badge variant="destructive" className="flex items-center gap-1 bg-orange-100 text-orange-800">
+            <ChevronUp className="h-3 w-3" />
+            High
+          </Badge>
+        );
+      case "medium":
+        return (
+          <Badge variant="secondary" className="flex items-center gap-1">
+            Medium
+          </Badge>
+        );
+      case "low":
+        return (
+          <Badge variant="outline" className="flex items-center gap-1">
+            <ChevronDown className="h-3 w-3" />
+            Low
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">{priorityValue}</Badge>;
+    }
+  };
+
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
       case "high": return "text-red-600";
@@ -147,6 +185,13 @@ export default function CustomerInquiries() {
       case "low": return "text-green-600";
       default: return "text-gray-600";
     }
+  };
+
+  const handlePriorityUpdate = (inquiry: QuoteRequest, newPriority: string) => {
+    updateInquiryMutation.mutate({
+      id: inquiry.id,
+      data: { priority: newPriority }
+    });
   };
 
   const handleStatusUpdate = (inquiry: QuoteRequest, newStatus: string) => {
@@ -325,6 +370,7 @@ export default function CustomerInquiries() {
                     <TableHead>Customer</TableHead>
                     <TableHead>Company</TableHead>
                     <TableHead>Service Type</TableHead>
+                    <TableHead>Priority</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Assigned To</TableHead>
                     <TableHead>Submitted</TableHead>
@@ -364,6 +410,40 @@ export default function CustomerInquiries() {
                           <Package className="h-4 w-4 text-gray-400" />
                           {inquiry.service || "General Inquiry"}
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <Select
+                          value={inquiry.priority || "medium"}
+                          onValueChange={(value) => handlePriorityUpdate(inquiry, value)}
+                          disabled={updateInquiryMutation.isPending}
+                        >
+                          <SelectTrigger className="w-[120px] h-8">
+                            <div className="flex items-center gap-2">
+                              {getPriorityBadge(inquiry.priority || "medium")}
+                            </div>
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="low">
+                              <div className="flex items-center gap-2">
+                                <ChevronDown className="h-3 w-3" />
+                                Low
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="medium">Medium</SelectItem>
+                            <SelectItem value="high">
+                              <div className="flex items-center gap-2">
+                                <ChevronUp className="h-3 w-3 text-orange-600" />
+                                High
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="urgent">
+                              <div className="flex items-center gap-2">
+                                <AlertTriangle className="h-3 w-3 text-red-600" />
+                                Urgent
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(inquiry.status)}

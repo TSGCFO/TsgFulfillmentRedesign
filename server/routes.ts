@@ -396,6 +396,51 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   // Setup authentication system with role-based access control
   setupAuth(app);
 
+  // Authentication routes
+  app.post('/api/login', 
+    (req, res, next) => {
+      const passport = require('passport');
+      passport.authenticate('local', (err: any, user: any) => {
+        if (err) return next(err);
+        if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+        
+        req.logIn(user, (err) => {
+          if (err) return next(err);
+          res.json({ 
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            email: user.email,
+            role: user.role
+          });
+        });
+      })(req, res, next);
+    }
+  );
+
+  app.post('/api/logout', (req, res) => {
+    req.logout((err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to logout' });
+      }
+      res.json({ success: true });
+    });
+  });
+
+  app.get('/api/user', requireAuth, (req, res) => {
+    const user = req.user;
+    if (!user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+    res.json({
+      id: user.id,
+      username: user.username,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role
+    });
+  });
+
   app.get('/health', (req, res) => {
     res.status(200).json({ 
       status: 'healthy',
@@ -1380,6 +1425,107 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       res.json({ message: "Material updated successfully", data: material });
     } catch (error) {
       handleError(res, error, "Error updating material");
+    }
+  });
+
+  // Material usage route for recording material consumption
+  app.post("/api/materials/usage", requireAuth, async (req, res) => {
+    try {
+      const { materialId, quantityUsed, purpose, clientReference, notes, employeeId } = req.body;
+      
+      // Validate material exists and has enough stock
+      const material = await storage.getMaterial(materialId);
+      if (!material) {
+        return res.status(404).json({ error: "Material not found" });
+      }
+      
+      if (material.currentStock < quantityUsed) {
+        return res.status(400).json({ 
+          error: "Insufficient stock", 
+          currentStock: material.currentStock, 
+          requested: quantityUsed 
+        });
+      }
+      
+      // Record the usage
+      const usage = await storage.createMaterialUsage({
+        materialId,
+        employeeId: employeeId || req.user?.id,
+        quantityUsed,
+        purpose,
+        clientReference,
+        notes
+      });
+      
+      res.json({ message: "Material usage recorded successfully", data: usage });
+    } catch (error) {
+      handleError(res, error, "Error recording material usage");
+    }
+  });
+
+  // Stock alert check route
+  app.post("/api/materials/check-stock-alerts", requireAuth, async (req, res) => {
+    try {
+      const materials = await storage.getMaterials();
+      const lowStockItems = materials.filter(material => 
+        material.currentStock <= material.minimumStock && material.isActive
+      );
+      
+      // Send alerts (in production, this would send emails)
+      const alertsSent = lowStockItems.length;
+      console.log(`[STOCK ALERTS] Found ${alertsSent} low stock items:`, lowStockItems.map(m => ({
+        name: m.name,
+        sku: m.sku,
+        current: m.currentStock,
+        minimum: m.minimumStock
+      })));
+      
+      res.json({ 
+        message: `Stock alerts processed`, 
+        alertsSent,
+        lowStockItems: lowStockItems.map(m => ({
+          id: m.id,
+          name: m.name,
+          sku: m.sku,
+          currentStock: m.currentStock,
+          minimumStock: m.minimumStock
+        }))
+      });
+    } catch (error) {
+      handleError(res, error, "Error checking stock alerts");
+    }
+  });
+
+  // Material orders routes
+  app.get("/api/material-orders", requireAuth, async (req, res) => {
+    try {
+      const orders = await storage.getMaterialOrders(req.query);
+      res.json({ data: orders });
+    } catch (error) {
+      handleError(res, error, "Error fetching material orders");
+    }
+  });
+  
+  app.post("/api/material-orders", requireAuth, async (req, res) => {
+    try {
+      const validated = insertMaterialOrderSchema.parse(req.body);
+      const order = await storage.createMaterialOrder(validated);
+      res.json({ message: "Material order created successfully", data: order });
+    } catch (error) {
+      handleError(res, error, "Error creating material order");
+    }
+  });
+  
+  app.patch("/api/material-orders/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const order = await storage.updateMaterialOrder(id, req.body);
+      if (!order) {
+        return res.status(404).json({ message: "Material order not found" });
+      }
+      res.json({ message: "Material order updated successfully", data: order });
+    } catch (error) {
+      handleError(res, error, "Error updating material order");
     }
   });
 
