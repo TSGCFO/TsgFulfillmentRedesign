@@ -8,7 +8,7 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth";
 
 // Lazy load page components
 const Landing = lazy(() => import("@/pages/Landing"));
@@ -73,18 +73,12 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        {isLoading || !isAuthenticated ? (
-          <Route path="/" component={Landing} />
-        ) : (
-          <>
-            <Route path="/" component={EmployeePortal} />
-            <Route path="/employee" component={EmployeePortal} />
-            <Route path="/employee/dashboard" component={CustomizableDashboard} />
-            <Route path="/employee/users" component={UserManagement} />
-            <Route path="/employee/inquiries" component={CustomerInquiries} />
-            <Route path="/employee/materials" component={MaterialsManagement} />
-          </>
-        )}
+        <Route path="/" component={Home} />
+        <Route path="/employee" component={EmployeePortal} />
+        <Route path="/employee/dashboard" component={CustomizableDashboard} />
+        <Route path="/employee/users" component={UserManagement} />
+        <Route path="/employee/inquiries" component={CustomerInquiries} />
+        <Route path="/employee/materials" component={MaterialsManagement} />
         <Route path="/old-home" component={OWDStyleHome} />
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
