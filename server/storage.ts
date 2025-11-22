@@ -341,7 +341,7 @@ export class MemStorage implements IStorage {
   }
 
   async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
-    return Array.from(this.employees.values()).find(emp => emp.username === username);
+    return Array.from(this.employees.values()).find(emp => emp.email === username);
   }
 
   async getAllEmployees(): Promise<Employee[]> {
@@ -720,7 +720,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getEmployeeByUsername(username: string): Promise<Employee | undefined> {
-    const result = await db.select().from(employees).where(eq(employees.username, username)).limit(1);
+    const result = await db.select().from(employees).where(eq(employees.email, username)).limit(1);
     return result[0];
   }
 

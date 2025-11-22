@@ -8,10 +8,10 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { AuthProvider } from "@/hooks/use-auth";
-import { ProtectedRoute } from "@/lib/protected-route";
+import { useAuth } from "@/hooks/useAuth";
 
 // Lazy load page components
+const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home"));
 const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
@@ -48,6 +48,7 @@ const PageLoader = () => (
 
 function Router() {
   const [location, setLocation] = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
   
   // Track page views when routes change
   useAnalytics();
@@ -72,7 +73,18 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={Home} />
+        {isLoading || !isAuthenticated ? (
+          <Route path="/" component={Landing} />
+        ) : (
+          <>
+            <Route path="/" component={EmployeePortal} />
+            <Route path="/employee" component={EmployeePortal} />
+            <Route path="/employee/dashboard" component={CustomizableDashboard} />
+            <Route path="/employee/users" component={UserManagement} />
+            <Route path="/employee/inquiries" component={CustomerInquiries} />
+            <Route path="/employee/materials" component={MaterialsManagement} />
+          </>
+        )}
         <Route path="/old-home" component={OWDStyleHome} />
         <Route path="/services/:slug" component={ServiceDetail} />
         <Route path="/industries/:slug" component={IndustryDetail} />
@@ -91,31 +103,6 @@ function Router() {
         <Route path="/contact-form" component={ContactForm} />
         <Route path="/quote" component={QuoteRequest} />
         <Route path="/auth" component={AuthPage} />
-        <ProtectedRoute 
-          path="/employee" 
-          component={EmployeePortal} 
-          requiredRoles={["SuperAdmin", "Admin", "User"]} 
-        />
-        <ProtectedRoute 
-          path="/employee/dashboard" 
-          component={CustomizableDashboard} 
-          requiredRoles={["SuperAdmin", "Admin", "User"]} 
-        />
-        <ProtectedRoute 
-          path="/employee/users" 
-          component={UserManagement} 
-          requiredRoles={["SuperAdmin", "Admin"]} 
-        />
-        <ProtectedRoute 
-          path="/employee/inquiries" 
-          component={CustomerInquiries} 
-          requiredRoles={["SuperAdmin", "Admin", "User"]} 
-        />
-        <ProtectedRoute 
-          path="/employee/materials" 
-          component={MaterialsManagement} 
-          requiredRoles={["SuperAdmin", "Admin", "User"]} 
-        />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

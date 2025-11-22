@@ -1068,16 +1068,8 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
     try {
       const employeeData = insertEmployeeSchema.parse(req.body);
       
-      // Hash password before storing
-      const hashedPassword = await hashPassword(employeeData.password);
-      const employee = await storage.createEmployee({
-        ...employeeData,
-        password: hashedPassword
-      });
-      
-      // Remove password from response
-      const { password, ...safeEmployee } = employee;
-      res.status(201).json({ message: "Employee created successfully", data: safeEmployee });
+      const employee = await storage.createEmployee(employeeData);
+      res.status(201).json({ message: "Employee created successfully", data: employee });
     } catch (error) {
       handleError(res, error, "Failed to create employee");
     }
@@ -1086,9 +1078,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.get("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
       const employees = await storage.getAllEmployees();
-      // Remove passwords from response
-      const safeEmployees = employees.map(({ password, ...employee }) => employee);
-      res.json(safeEmployees);
+      res.json(employees);
     } catch (error) {
       handleError(res, error, "Error retrieving employees");
     }
@@ -1110,17 +1100,8 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
   app.post("/api/employees", requireAuth, canManageUsers, async (req, res) => {
     try {
       const employeeData = insertEmployeeSchema.parse(req.body);
-      
-      // Hash password before storing
-      const hashedPassword = await hashPassword(employeeData.password);
-      const employee = await storage.createEmployee({
-        ...employeeData,
-        password: hashedPassword
-      });
-      
-      // Remove password from response
-      const { password, ...safeEmployee } = employee;
-      res.status(201).json(safeEmployee);
+      const employee = await storage.createEmployee(employeeData);
+      res.status(201).json(employee);
     } catch (error) {
       handleError(res, error, "Failed to create employee");
     }
@@ -1148,10 +1129,7 @@ export async function registerRoutes(app: Express, analytics: boolean): Promise<
       if (!employee) {
         return res.status(404).json({ error: "Employee not found" });
       }
-      
-      // Remove password from response
-      const { password, ...safeEmployee } = employee;
-      res.json(safeEmployee);
+      res.json(employee);
     } catch (error) {
       handleError(res, error, "Failed to update employee");
     }

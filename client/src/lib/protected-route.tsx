@@ -1,6 +1,8 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 import { Redirect, Route } from "wouter";
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export function ProtectedRoute({
   path,
@@ -11,7 +13,23 @@ export function ProtectedRoute({
   component: React.ComponentType<any>;
   requiredRoles?: string[];
 }) {
-  const { user, isLoading } = useAuth();
+  const { toast } = useToast();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      toast({
+        title: "Unauthorized",
+        description: "You are logged out. Logging in again...",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 500);
+      return;
+    }
+  }, [isAuthenticated, isLoading, toast]);
 
   if (isLoading) {
     return (
@@ -23,25 +41,10 @@ export function ProtectedRoute({
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     return (
       <Route path={path}>
         <Redirect to="/auth" />
-      </Route>
-    );
-  }
-
-  // Check role permissions if required roles are specified
-  if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
-    return (
-      <Route path={path}>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-            <p className="text-gray-600 mb-4">You don't have permission to access this page.</p>
-            <p className="text-sm text-gray-500">Required role: {requiredRoles.join(" or ")}</p>
-          </div>
-        </div>
       </Route>
     );
   }
