@@ -137,13 +137,11 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <HelmetProvider>
-          <Router />
-          <Toaster />
-          <CookieConsent />
-        </HelmetProvider>
-      </AuthProvider>
+      <HelmetProvider>
+        <Router />
+        <Toaster />
+        <CookieConsent />
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
