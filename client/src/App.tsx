@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 // Lazy load page components
+const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home"));
 const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
@@ -69,41 +70,43 @@ function Router() {
     // Scroll to top on route change
     window.scrollTo(0, 0);
   }, [location, setLocation]);
-  
-  if (isLoading) {
-    return <PageLoader />;
-  }
 
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        <Route path="/" component={Home} />
-        
-        <ProtectedRoute path="/employee" component={EmployeePortal} />
-        <ProtectedRoute path="/employee/dashboard" component={CustomizableDashboard} />
-        <ProtectedRoute path="/employee/users" component={UserManagement} />
-        <ProtectedRoute path="/employee/inquiries" component={CustomerInquiries} />
-        <ProtectedRoute path="/employee/materials" component={MaterialsManagement} />
-        
-        <Route path="/old-home" component={OWDStyleHome} />
-
-        <Route path="/services/:slug" component={ServiceDetail} />
-        <Route path="/industries/:slug" component={IndustryDetail} />
-        <Route path="/about" component={About} />
-        <Route path="/locations" component={Locations} />
-        {analyticsEnabled && (
+        {!isAuthenticated || isLoading ? (
+          <Route path="/" component={Landing} />
+        ) : (
           <>
-            <Route path="/analytics" component={Analytics} />
-            <Route path="/analytics/reports" component={ReportGenerator} />
-            <Route path="/analytics/comparison" component={PerformanceComparison} />
-            <Route path="/analytics/dashboard" component={CustomDashboard} />
+            <Route path="/" component={Home} />
+            
+            <ProtectedRoute path="/employee" component={EmployeePortal} />
+            <ProtectedRoute path="/employee/dashboard" component={CustomizableDashboard} />
+            <ProtectedRoute path="/employee/users" component={UserManagement} />
+            <ProtectedRoute path="/employee/inquiries" component={CustomerInquiries} />
+            <ProtectedRoute path="/employee/materials" component={MaterialsManagement} />
+            
+            <Route path="/old-home" component={OWDStyleHome} />
+
+            <Route path="/services/:slug" component={ServiceDetail} />
+            <Route path="/industries/:slug" component={IndustryDetail} />
+            <Route path="/about" component={About} />
+            <Route path="/locations" component={Locations} />
+            {analyticsEnabled && (
+              <>
+                <Route path="/analytics" component={Analytics} />
+                <Route path="/analytics/reports" component={ReportGenerator} />
+                <Route path="/analytics/comparison" component={PerformanceComparison} />
+                <Route path="/analytics/dashboard" component={CustomDashboard} />
+              </>
+            )}
+            <Route path="/admin/images" component={ImageManagement} />
+            <Route path="/test/quote-buttons" component={QuoteButtonTest} />
+            <Route path="/contact-form" component={ContactForm} />
+            <Route path="/quote" component={QuoteRequest} />
+            <Route path="/auth" component={AuthPage} />
           </>
         )}
-        <Route path="/admin/images" component={ImageManagement} />
-        <Route path="/test/quote-buttons" component={QuoteButtonTest} />
-        <Route path="/contact-form" component={ContactForm} />
-        <Route path="/quote" component={QuoteRequest} />
-        <Route path="/auth" component={AuthPage} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
