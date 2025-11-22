@@ -158,3 +158,69 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     return;
   }
 };
+
+async function getEmployeeFromRequest(req: any) {
+  const userId = req.user?.claims?.sub;
+  if (!userId) return null;
+  
+  const employees = await storage.getAllEmployees();
+  return employees.find(emp => emp.userId === userId);
+}
+
+export function requireRole(roles: string[]) {
+  return async (req: any, res: any, next: any) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+    
+    const employee = await getEmployeeFromRequest(req);
+    if (!employee) {
+      return res.status(403).json({ error: "Employee profile not found" });
+    }
+    
+    if (employee.role === "SuperAdmin") {
+      return next();
+    }
+    
+    if (!roles.includes(employee.role)) {
+      return res.status(403).json({ error: "Insufficient permissions" });
+    }
+    next();
+  };
+}
+
+export const canManageUsers = async (req: any, res: any, next: any) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  
+  const employee = await getEmployeeFromRequest(req);
+  if (!employee) {
+    return res.status(403).json({ error: "Employee profile not found" });
+  }
+  
+  if (employee.role === "SuperAdmin") {
+    return next();
+  }
+  
+  if (employee.role !== "Admin") {
+    return res.status(403).json({ error: "Admin access required" });
+  }
+  next();
+};
+
+export const requireSuperAdmin = async (req: any, res: any, next: any) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  
+  const employee = await getEmployeeFromRequest(req);
+  if (!employee) {
+    return res.status(403).json({ error: "Employee profile not found" });
+  }
+  
+  if (employee.role !== "SuperAdmin") {
+    return res.status(403).json({ error: "SuperAdmin access required" });
+  }
+  next();
+};
