@@ -46,4 +46,4 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["hubspot:1.0.0"]
+integrations = ["hubspot:1.0.0", "outlook:1.0.0"]
