@@ -1,0 +1,55 @@
+I want build an employee portal feature for my companies' website. 
+
+Intended Purpose
+The portal serves as a centralized platform for TSG Fulfillment employees to:
+Manage customer inquiries and quote requests
+Track contracts and quotes through the sales pipeline
+Monitor material inventory and vendor relationships
+Access analytics and performance metrics
+Streamline business processes with integrated third-party services
+Core Features Implemented
+1. Authentication & User Management
+Secure login system with username/password authentication
+Three-tier role hierarchy:
+SuperAdmin - Full system access with administrative privileges
+Admin - Can manage users and most operations (except SuperAdmin accounts)
+User - Standard employee access to operational features
+Session management with persistent login
+User profile management with last login tracking
+2. Customer Inquiry Management
+View and manage incoming customer quote requests
+Assign inquiries to specific employees
+Track inquiry status (new, assigned, in_progress, completed, closed)
+Set priority levels (low, medium, high, urgent)
+Convert inquiries to clients
+Integration with HubSpot for deal tracking
+3. Quote Management System
+Create detailed quotes with line items
+Track quote status (draft, sent, accepted, rejected, expired)
+Specify validity periods and terms
+Support for multiple categories (fulfillment, kitting, storage, shipping)
+Link quotes to contracts
+4. Contract Management
+DocuSign integration for electronic signatures
+Track contract lifecycle (draft, sent, signed, completed, declined)
+Monitor signing deadlines
+Store signed documents
+Link contracts to quotes and customer inquiries
+5. Material & Inventory Tracking
+Material management: Track SKUs, categories, stock levels
+Vendor management: Maintain vendor database with contact info and specialties
+Price tracking: Monitor material prices from different vendors
+Order management: Create and track purchase orders
+Usage tracking: Record material consumption for clients
+Stock alerts: Minimum stock level monitoring
+6. Analytics Dashboard
+Client KPIs (shipping accuracy, on-time delivery, return rates)
+Order statistics and processing metrics
+Inventory reports by warehouse
+Shipment performance tracking
+Customer satisfaction metrics
+Customizable dashboard widgets per user
+7. Third-Party Integrations
+HubSpot: Syncs customer data and manages deals
+DocuSign: Facilitates contract signatures
+Supabase Storage: Document storage for signed contracts
