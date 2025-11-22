@@ -1,14 +1,37 @@
-import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb, real, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, date, jsonb, real, primaryKey, varchar, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 
-// Unified Employee Authentication & Portal Table
+// Replit Auth Tables
+// Session storage table for Replit Auth
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table for Replit Auth
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Employee Portal Table (linked to Replit Auth users)
 export const employees = pgTable("employees", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
   fullName: text("full_name").notNull(),
-  username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
-  password: text("password").notNull(),
   role: text("role", { enum: ["SuperAdmin", "Admin", "User"] }).default("User").notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   hubspotUserId: text("hubspot_user_id"),
@@ -17,23 +40,20 @@ export const employees = pgTable("employees", {
   lastLogin: timestamp("last_login")
 });
 
-// Employee Authentication Schemas
+// Replit Auth User Types
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+
+// Employee Portal Schemas
 export const insertEmployeeSchema = createInsertSchema(employees).pick({
   fullName: true,
-  username: true,
   email: true,
-  password: true,
   role: true,
-});
-
-export const loginSchema = z.object({
-  username: z.string().min(1),
-  password: z.string().min(1),
+  userId: true,
 });
 
 export type Employee = typeof employees.$inferSelect;
 export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
-export type LoginRequest = z.infer<typeof loginSchema>;
 
 export const quoteRequests = pgTable("quote_requests", {
   id: serial("id").primaryKey(),
