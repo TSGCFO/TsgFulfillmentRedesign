@@ -8,7 +8,7 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth, AuthProvider } from "@/hooks/use-auth";
 
 // Lazy load page components
 const Landing = lazy(() => import("@/pages/Landing"));
@@ -131,11 +131,13 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <Router />
-        <Toaster />
-        <CookieConsent />
-      </HelmetProvider>
+      <AuthProvider>
+        <HelmetProvider>
+          <Router />
+          <Toaster />
+          <CookieConsent />
+        </HelmetProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
