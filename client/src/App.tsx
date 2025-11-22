@@ -8,11 +8,10 @@ import CookieConsent from "@/components/CookieConsent";
 import HelmetProvider from "@/components/SEO/HelmetProvider";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { useAuth, AuthProvider } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 // Lazy load page components
-const Landing = lazy(() => import("@/pages/Landing"));
 const Home = lazy(() => import("@/pages/Home"));
 const OWDStyleHome = lazy(() => import("@/pages/OWDStyleHome"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
@@ -78,8 +77,7 @@ function Router() {
   return (
     <Suspense fallback={<PageLoader />}>
       <Switch>
-        {!isAuthenticated && <Route path="/" component={Landing} />}
-        {isAuthenticated && <Route path="/" component={EmployeePortal} />}
+        <Route path="/" component={Home} />
         
         <ProtectedRoute path="/employee" component={EmployeePortal} />
         <ProtectedRoute path="/employee/dashboard" component={CustomizableDashboard} />
