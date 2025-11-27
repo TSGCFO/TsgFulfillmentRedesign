@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: http://ogp.me/ns#">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GSWN00Z35Q"></script>
+    <!-- Google Analytics - Deferred Loading -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-GSWN00Z35Q');
+      // Defer Google Analytics loading until after page load
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var script = document.createElement('script');
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-GSWN00Z35Q';
+          script.async = true;
+          document.head.appendChild(script);
+          
+          script.onload = function() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', 'G-GSWN00Z35Q');
+          };
+        }, 100);
+      });
     </script>
     
     <meta charset="UTF-8" />
@@ -84,45 +95,35 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0056B3" />
     <!-- DNS Prefetch for Performance -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//www.google-analytics.com">
     <link rel="dns-prefetch" href="//www.googletagmanager.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     
-    <!-- Preconnect for Critical Resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
-    
-    <!-- Preload Critical Resources -->
-    <link rel="preload" as="font" href="/fonts/poppins-v20-latin-regular.woff2" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" as="font" href="/fonts/poppins-v20-latin-600.woff2" type="font/woff2" crossorigin="anonymous">
-    <link rel="preload" as="image" href="/images/logo.png" fetchpriority="high">
-    <link rel="preload" as="image" href="/images/hero-banner.jpg" fetchpriority="high">
-    
-    <!-- Preload Critical CSS -->
-    <link rel="preload" as="style" href="/src/index.css">
-    
-    <!-- Resource Hints for Better Performance -->
-    <link rel="prefetch" href="/images/services-warehouse.jpg">
-    <link rel="prefetch" href="/images/about-team.jpg">
-    
-    <!-- Prefetch key sections for faster navigation -->
-    <link rel="prefetch" href="/services/order-fulfillment">
-    <link rel="prefetch" href="/services/warehousing-services">
-    <link rel="prefetch" href="/services/kitting-services">
-    
-    <!-- DNS prefetch for external resources -->
-    <link rel="dns-prefetch" href="https://images.unsplash.com">
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
-    
-    <!-- Preconnect to analytics (for future implementation) -->
-    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
-    
-    <!-- Load fonts and styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- System Font Stack - No external requests needed -->
+    <style>
+      /* Critical CSS - Inline for faster first paint */
+      :root {
+        --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      }
+      body {
+        font-family: var(--font-sans);
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        font-weight: 600;
+      }
+      /* Prevent layout shift */
+      img, video {
+        max-width: 100%;
+        height: auto;
+      }
+      /* Mobile-first responsive base */
+      * {
+        box-sizing: border-box;
+      }
+    </style>
     
     <!-- Additional SEO metadata -->
     <meta name="format-detection" content="telephone=no">
