@@ -93,17 +93,17 @@ const Footer: React.FC = () => {
                 TSG Fulfillment specializes in retail, e-commerce, and B2B fulfillment. 
                 We provide practical, cost-effective logistics solutions tailored to your business needs.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="LinkedIn">
+              <div className="flex space-x-3">
+                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-12 w-12 min-h-[48px] min-w-[48px] rounded-full flex items-center justify-center transition-colors duration-300" aria-label="LinkedIn">
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Twitter">
+                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-12 w-12 min-h-[48px] min-w-[48px] rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Twitter">
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Facebook">
+                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-12 w-12 min-h-[48px] min-w-[48px] rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Facebook">
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Instagram">
+                <a href="#" className="bg-[#0F2149] hover:bg-[#1C3A84] h-12 w-12 min-h-[48px] min-w-[48px] rounded-full flex items-center justify-center transition-colors duration-300" aria-label="Instagram">
                   <Instagram className="h-5 w-5" />
                 </a>
               </div>
@@ -111,11 +111,11 @@ const Footer: React.FC = () => {
             
             <div>
               <h3 className="text-xl font-bold mb-6 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[3px] after:w-[30px] after:bg-primary">Services</h3>
-              <ul className="space-y-4">
+              <ul className="space-y-2">
                 {services.map((service, index) => (
-                  <li key={index} className="flex items-center">
-                    <ChevronRight className="h-4 w-4 text-primary mr-2" />
-                    <a href={`/services/${service.slug}`} className="text-gray-300 hover:text-white transition-colors duration-300">
+                  <li key={index}>
+                    <a href={`/services/${service.slug}`} className="flex items-center min-h-[44px] py-2 text-gray-300 hover:text-white transition-colors duration-300 text-base">
+                      <ChevronRight className="h-5 w-5 text-primary mr-2" />
                       {service.name}
                     </a>
                   </li>
@@ -125,11 +125,11 @@ const Footer: React.FC = () => {
             
             <div>
               <h3 className="text-xl font-bold mb-6 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[3px] after:w-[30px] after:bg-primary">Quick Links</h3>
-              <ul className="space-y-4">
+              <ul className="space-y-2">
                 {quickLinks.map((link, index) => (
-                  <li key={index} className="flex items-center">
-                    <ChevronRight className="h-4 w-4 text-primary mr-2" />
-                    <a href={link.href} className="text-gray-300 hover:text-white transition-colors duration-300">
+                  <li key={index}>
+                    <a href={link.href} className="flex items-center min-h-[44px] py-2 text-gray-300 hover:text-white transition-colors duration-300 text-base">
+                      <ChevronRight className="h-5 w-5 text-primary mr-2" />
                       {link.name}
                     </a>
                   </li>
@@ -139,14 +139,14 @@ const Footer: React.FC = () => {
             
             <div>
               <h3 className="text-xl font-bold mb-6 relative after:content-[''] after:absolute after:bottom-[-8px] after:left-0 after:h-[3px] after:w-[30px] after:bg-primary">Contact Info</h3>
-              <ul className="space-y-5">
+              <ul className="space-y-3">
                 {contactInfo.map((item, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="bg-[#0F2149] h-10 w-10 rounded-full flex items-center justify-center mr-3 mt-1 flex-shrink-0">
-                      {item.icon}
-                    </div>
-                    <a href={item.href} className="text-gray-300 hover:text-white transition-colors duration-300">
-                      {item.text}
+                  <li key={index}>
+                    <a href={item.href} className="flex items-center min-h-[48px] py-2 text-gray-300 hover:text-white transition-colors duration-300 text-base">
+                      <div className="bg-[#0F2149] h-12 w-12 min-h-[48px] min-w-[48px] rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                        {item.icon}
+                      </div>
+                      <span>{item.text}</span>
                     </a>
                   </li>
                 ))}
@@ -179,11 +179,11 @@ const Footer: React.FC = () => {
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
               &copy; {new Date().getFullYear()} TSG Fulfillment Services Inc. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <a href="/privacy-policy" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>
-              <a href="/terms-of-service" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Terms of Service</a>
-              <a href="/cookie-policy" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Cookie Policy</a>
-              <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Sitemap</a>
+            <div className="flex flex-wrap justify-center gap-2">
+              <a href="/privacy-policy" className="text-gray-400 hover:text-white text-base transition-colors duration-300 min-h-[44px] py-2 px-3 flex items-center">Privacy Policy</a>
+              <a href="/terms-of-service" className="text-gray-400 hover:text-white text-base transition-colors duration-300 min-h-[44px] py-2 px-3 flex items-center">Terms of Service</a>
+              <a href="/cookie-policy" className="text-gray-400 hover:text-white text-base transition-colors duration-300 min-h-[44px] py-2 px-3 flex items-center">Cookie Policy</a>
+              <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-base transition-colors duration-300 min-h-[44px] py-2 px-3 flex items-center">Sitemap</a>
             </div>
           </div>
         </div>

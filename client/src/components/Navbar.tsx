@@ -49,9 +49,9 @@ const Navbar: React.FC = () => {
   };
 
   const topbarLinks = [
-    { icon: <Phone className="h-4 w-4 mr-2" />, label: '(289) 815-5869', href: 'tel:2898155869' },
-    { icon: <Mail className="h-4 w-4 mr-2" />, label: 'info@tsgfulfillment.com', href: 'mailto:info@tsgfulfillment.com' },
-    { icon: <MapPin className="h-4 w-4 mr-2" />, label: 'Locations', href: '/locations', isRoute: true },
+    { icon: <Phone className="h-5 w-5 mr-2" />, label: '(289) 815-5869', href: 'tel:2898155869' },
+    { icon: <Mail className="h-5 w-5 mr-2" />, label: 'info@tsgfulfillment.com', href: 'mailto:info@tsgfulfillment.com' },
+    { icon: <MapPin className="h-5 w-5 mr-2" />, label: 'Locations', href: '/locations', isRoute: true },
   ];
 
   const serviceItems = [
@@ -200,24 +200,24 @@ const Navbar: React.FC = () => {
           
           <Sheet>
             <SheetTrigger asChild className="lg:hidden">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" className="min-h-[48px] min-w-[48px] h-12 w-12">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[350px]">
               <SheetTitle>Menu</SheetTitle>
               <SheetDescription>Navigate to different sections of our website</SheetDescription>
-              <div className="flex flex-col space-y-1 mt-4">
+              <div className="flex flex-col space-y-2 mt-4">
                 {navItems.map((item) => (
                   <div key={item.id} className="border-b border-gray-100">
                     {item.hasDropdown ? (
                       <>
                         <button
                           onClick={() => setMobileSubmenuOpen(mobileSubmenuOpen === item.id ? null : item.id)}
-                          className="flex items-center justify-between w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                          className="flex items-center justify-between w-full text-left min-h-[48px] py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-300 font-medium text-base"
                         >
                           <span>{item.label}</span>
-                          <ChevronDown className={`h-4 w-4 transition-transform ${mobileSubmenuOpen === item.id ? 'rotate-180' : ''}`} />
+                          <ChevronDown className={`h-5 w-5 transition-transform ${mobileSubmenuOpen === item.id ? 'rotate-180' : ''}`} />
                         </button>
                         
                         {mobileSubmenuOpen === item.id && (
@@ -227,7 +227,7 @@ const Navbar: React.FC = () => {
                                 <Link
                                   key={dropdownItem.id}
                                   href={`/services/${dropdownItem.id}`}
-                                  className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
+                                  className="block w-full text-left min-h-[48px] py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-100 transition-colors duration-200 text-base"
                                 >
                                   {dropdownItem.label}
                                 </Link>
@@ -235,7 +235,7 @@ const Navbar: React.FC = () => {
                                 <button
                                   key={dropdownItem.id}
                                   onClick={() => scrollTo(dropdownItem.id)}
-                                  className="block w-full text-left py-3 text-gray-600 hover:text-primary transition-colors duration-200"
+                                  className="block w-full text-left min-h-[48px] py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-100 transition-colors duration-200 text-base"
                                 >
                                   {dropdownItem.label}
                                 </button>
@@ -247,14 +247,14 @@ const Navbar: React.FC = () => {
                     ) : item.isLink ? (
                       <Link
                         href={`/${item.id}`}
-                        className="block w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                        className="block w-full text-left min-h-[48px] py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-300 font-medium text-base"
                       >
                         {item.label}
                       </Link>
                     ) : (
                       <button
                         onClick={() => scrollTo(item.id)}
-                        className="block w-full text-left py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium"
+                        className="block w-full text-left min-h-[48px] py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-300 font-medium text-base"
                       >
                         {item.label}
                       </button>
@@ -266,7 +266,7 @@ const Navbar: React.FC = () => {
                   <Link 
                     key={link.href}
                     href={link.href}
-                    className="block py-3 text-gray-700 hover:text-primary transition-colors duration-300 font-medium text-left border-b border-gray-100"
+                    className="block min-h-[48px] py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 transition-colors duration-300 font-medium text-left border-b border-gray-100 text-base"
                   >
                     {link.label}
                   </Link>
@@ -275,22 +275,22 @@ const Navbar: React.FC = () => {
                 <div className="pt-4">
                   <Button 
                     onClick={handleGetQuote} 
-                    className="w-full bg-primary text-white hover:bg-primary/90 flex items-center justify-center"
+                    className="w-full bg-primary text-white hover:bg-primary/90 flex items-center justify-center min-h-[48px]"
                   >
                     Get a Quote
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
                 
                 {/* Mobile contact info */}
                 <div className="mt-8 pt-4 border-t border-gray-200">
                   <h3 className="font-medium text-gray-700 mb-4">Contact Us</h3>
-                  <div className="flex flex-col space-y-3">
+                  <div className="flex flex-col space-y-2">
                     {topbarLinks.map((item, index) => (
                       <a 
                         key={index} 
                         href={item.href} 
-                        className="flex items-center text-gray-600 hover:text-primary transition-colors"
+                        className="flex items-center min-h-[48px] py-3 px-2 text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors text-base rounded-md"
                       >
                         {item.icon}
                         <span>{item.label}</span>

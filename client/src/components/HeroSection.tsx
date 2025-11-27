@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { EnhancedImage } from '@/components/ui/enhanced-image';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useLocation } from 'wouter';
 
@@ -56,7 +56,7 @@ const HeroSection: React.FC = () => {
       
       {/* Hero background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <EnhancedImage 
+        <OptimizedImage 
           src={heroImages[0]}
           alt="Modern logistics and fulfillment center" 
           className="w-full h-full object-cover" 
@@ -128,7 +128,7 @@ const HeroSection: React.FC = () => {
       {/* Scroll down indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
         <motion.button
-          className="flex flex-col items-center cursor-pointer bg-primary/50 px-4 py-2 rounded-full"
+          className="flex flex-col items-center cursor-pointer bg-primary/50 px-6 py-3 rounded-full min-h-[48px] min-w-[48px]"
           onClick={() => scrollTo('services')}
           initial={{ opacity: 0, y: -20 }}
           animate={{ 
@@ -137,7 +137,7 @@ const HeroSection: React.FC = () => {
             transition: { delay: 1, duration: 0.6 }
           }}
         >
-          <span className="text-sm mb-2 text-white">Scroll Down</span>
+          <span className="text-base mb-2 text-white">Scroll Down</span>
           <motion.div
             animate={{
               y: [0, 8, 0],
@@ -148,7 +148,7 @@ const HeroSection: React.FC = () => {
               }
             }}
           >
-            <ChevronDown className="h-6 w-6 text-white" />
+            <ChevronDown className="h-7 w-7 text-white" />
           </motion.div>
         </motion.button>
       </div>
