@@ -1,0 +1,240 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - link "(289) 815-5869" [ref=e6] [cursor=pointer]:
+        - /url: tel:2898155869
+        - img [ref=e7]
+        - generic [ref=e9]: (289) 815-5869
+      - link "info@tsgfulfillment.com" [ref=e10] [cursor=pointer]:
+        - /url: mailto:info@tsgfulfillment.com
+        - img [ref=e11]
+        - generic [ref=e14]: info@tsgfulfillment.com
+      - link "Locations" [ref=e15] [cursor=pointer]:
+        - /url: /locations
+        - img [ref=e16]
+        - generic [ref=e19]: Locations
+    - generic [ref=e20]:
+      - link [ref=e21] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e22]
+      - link [ref=e24] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e25]
+      - link [ref=e27] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e28]
+      - link [ref=e32] [cursor=pointer]:
+        - /url: "#"
+        - img [ref=e33]
+  - banner [ref=e36]:
+    - navigation [ref=e37]:
+      - link "TSG Fulfillment Services Inc" [ref=e38] [cursor=pointer]:
+        - /url: /
+        - img "TSG Fulfillment Services Inc" [ref=e40]
+      - generic [ref=e41]:
+        - generic [ref=e43] [cursor=pointer]:
+          - generic [ref=e44]: Services
+          - img [ref=e45]
+        - button "Industries" [ref=e48] [cursor=pointer]
+        - button "About Us" [ref=e50] [cursor=pointer]
+        - link "Locations" [ref=e52] [cursor=pointer]:
+          - /url: /locations
+        - link "Contact Us" [ref=e54] [cursor=pointer]:
+          - /url: /quote
+        - button "Get a Quote" [ref=e55] [cursor=pointer]:
+          - text: Get a Quote
+          - img
+  - main [ref=e56]:
+    - generic [ref=e59]:
+      - button "Back" [ref=e60] [cursor=pointer]:
+        - img
+        - text: Back
+      - heading "Request a Quote" [level=1] [ref=e61]
+      - paragraph [ref=e62]: Get a customized quote for your fulfillment needs. Our team will analyze your requirements and provide competitive pricing within 24 hours.
+    - generic [ref=e65]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - heading "Request a Quote" [level=3] [ref=e69]
+          - paragraph [ref=e70]: Get a customized quote for your fulfillment needs. Our team will analyze your requirements and provide competitive pricing within 24 hours.
+        - generic [ref=e72]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - text: Name *
+              - textbox "Name *" [ref=e75]:
+                - /placeholder: John Doe
+            - generic [ref=e76]:
+              - text: Business Email *
+              - textbox "Business Email *" [ref=e77]:
+                - /placeholder: john@company.com
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - text: Mobile Number *
+              - textbox "Mobile Number *" [ref=e80]:
+                - /placeholder: (555) 123-4567
+            - generic [ref=e81]:
+              - text: Company Name *
+              - textbox "Company Name *" [ref=e82]:
+                - /placeholder: Your Company Inc.
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - text: Current Monthly Shipments *
+              - combobox "Current Monthly Shipments *" [ref=e85] [cursor=pointer]:
+                - generic: Select current shipments
+                - img [ref=e86]
+              - combobox [ref=e88]
+            - generic [ref=e89]:
+              - text: Expected Monthly Shipments *
+              - combobox "Expected Monthly Shipments *" [ref=e90] [cursor=pointer]:
+                - generic: Select expected shipments
+                - img [ref=e91]
+              - combobox [ref=e93]
+          - generic [ref=e94]:
+            - text: Services Needed *
+            - combobox "Services Needed *" [ref=e95] [cursor=pointer]:
+              - generic: Select a service
+              - img [ref=e96]
+            - combobox [ref=e98]
+          - generic [ref=e99]:
+            - text: Additional Information
+            - textbox "Additional Information" [ref=e100]:
+              - /placeholder: Please describe your fulfillment needs, special requirements, or any questions you have...
+          - generic [ref=e101]:
+            - checkbox "I agree to TSG Fulfillment's privacy policy and terms of service *" [ref=e102] [cursor=pointer]
+            - checkbox
+            - generic [ref=e103]: I agree to TSG Fulfillment's privacy policy and terms of service *
+          - button "Submit Quote Request" [ref=e104] [cursor=pointer]:
+            - img
+            - text: Submit Quote Request
+      - generic [ref=e105]:
+        - generic [ref=e107]:
+          - generic [ref=e109]: "1"
+          - heading "Review" [level=3] [ref=e110]
+          - paragraph [ref=e111]: Our team analyzes your requirements and current fulfillment challenges
+        - generic [ref=e113]:
+          - generic [ref=e115]: "2"
+          - heading "Customize" [level=3] [ref=e116]
+          - paragraph [ref=e117]: We create a tailored solution and competitive pricing for your needs
+        - generic [ref=e119]:
+          - generic [ref=e121]: "3"
+          - heading "Connect" [level=3] [ref=e122]
+          - paragraph [ref=e123]: We schedule a call to present your quote and answer questions
+  - contentinfo [ref=e124]:
+    - generic [ref=e127]:
+      - generic [ref=e128]:
+        - heading "Ready to optimize your logistics?" [level=3] [ref=e129]
+        - paragraph [ref=e130]: Get in touch with our experts for a free consultation.
+      - button "Contact Us" [ref=e131] [cursor=pointer]:
+        - text: Contact Us
+        - img
+    - generic [ref=e133]:
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - img "TSG Fulfillment Services Inc" [ref=e138]
+          - paragraph [ref=e139]: TSG Fulfillment specializes in retail, e-commerce, and B2B fulfillment. We provide practical, cost-effective logistics solutions tailored to your business needs.
+          - generic [ref=e140]:
+            - link "LinkedIn" [ref=e141] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e142]
+            - link "Twitter" [ref=e146] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e147]
+            - link "Facebook" [ref=e149] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e150]
+            - link "Instagram" [ref=e152] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e153]
+        - generic [ref=e156]:
+          - heading "Services" [level=3] [ref=e157]
+          - list [ref=e158]:
+            - listitem [ref=e159]:
+              - link "Warehousing" [ref=e160] [cursor=pointer]:
+                - /url: /services/warehousing
+                - img [ref=e161]
+                - text: Warehousing
+            - listitem [ref=e163]:
+              - link "Fulfillment" [ref=e164] [cursor=pointer]:
+                - /url: /services/fulfillment
+                - img [ref=e165]
+                - text: Fulfillment
+            - listitem [ref=e167]:
+              - link "Transportation" [ref=e168] [cursor=pointer]:
+                - /url: /services/transportation
+                - img [ref=e169]
+                - text: Transportation
+            - listitem [ref=e171]:
+              - link "Value Added Services" [ref=e172] [cursor=pointer]:
+                - /url: /services/value-added-services
+                - img [ref=e173]
+                - text: Value Added Services
+        - generic [ref=e175]:
+          - heading "Quick Links" [level=3] [ref=e176]
+          - list [ref=e177]:
+            - listitem [ref=e178]:
+              - link "About Us" [ref=e179] [cursor=pointer]:
+                - /url: /#about
+                - img [ref=e180]
+                - text: About Us
+            - listitem [ref=e182]:
+              - link "Industries" [ref=e183] [cursor=pointer]:
+                - /url: /#industries
+                - img [ref=e184]
+                - text: Industries
+            - listitem [ref=e186]:
+              - link "Services" [ref=e187] [cursor=pointer]:
+                - /url: /#services
+                - img [ref=e188]
+                - text: Services
+            - listitem [ref=e190]:
+              - link "Locations" [ref=e191] [cursor=pointer]:
+                - /url: /locations
+                - img [ref=e192]
+                - text: Locations
+            - listitem [ref=e194]:
+              - link "Contact Us" [ref=e195] [cursor=pointer]:
+                - /url: /#contact
+                - img [ref=e196]
+                - text: Contact Us
+        - generic [ref=e198]:
+          - heading "Contact Info" [level=3] [ref=e199]
+          - list [ref=e200]:
+            - listitem [ref=e201]:
+              - link "(289) 815-5869" [ref=e202] [cursor=pointer]:
+                - /url: tel:2898155869
+                - img [ref=e204]
+                - generic [ref=e206]: (289) 815-5869
+            - listitem [ref=e207]:
+              - link "info@tsgfulfillment.com" [ref=e208] [cursor=pointer]:
+                - /url: mailto:info@tsgfulfillment.com
+                - img [ref=e210]
+                - generic [ref=e213]: info@tsgfulfillment.com
+            - listitem [ref=e214]:
+              - link "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2" [ref=e215] [cursor=pointer]:
+                - /url: https://maps.google.com
+                - img [ref=e217]
+                - generic [ref=e220]: 6750 Langstaff Road, Vaughan, Ontario, L4H 5K2
+          - generic [ref=e221]:
+            - heading "Subscribe to Our Newsletter" [level=4] [ref=e222]
+            - generic [ref=e223]:
+              - textbox "Your email address" [ref=e224]
+              - button [ref=e225] [cursor=pointer]:
+                - img
+            - paragraph [ref=e226]: Get the latest updates and insights directly to your inbox.
+      - separator [ref=e227]
+      - generic [ref=e228]:
+        - paragraph [ref=e229]: © 2025 TSG Fulfillment Services Inc. All rights reserved.
+        - generic [ref=e230]:
+          - link "Privacy Policy" [ref=e231] [cursor=pointer]:
+            - /url: /privacy-policy
+          - link "Terms of Service" [ref=e232] [cursor=pointer]:
+            - /url: /terms-of-service
+          - link "Cookie Policy" [ref=e233] [cursor=pointer]:
+            - /url: /cookie-policy
+          - link "Sitemap" [ref=e234] [cursor=pointer]:
+            - /url: /sitemap.xml
+  - region "Notifications (F8)":
+    - list
+```

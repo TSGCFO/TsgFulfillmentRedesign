@@ -1,0 +1,320 @@
+# Page snapshot
+
+```yaml
+- generic:
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - link:
+            - /url: tel:2898155869
+            - img
+            - generic: (289) 815-5869
+          - link:
+            - /url: mailto:info@tsgfulfillment.com
+            - img
+            - generic: info@tsgfulfillment.com
+          - link:
+            - /url: /locations
+            - img
+            - generic: Locations
+        - generic:
+          - link:
+            - /url: "#"
+            - img
+          - link:
+            - /url: "#"
+            - img
+          - link:
+            - /url: "#"
+            - img
+          - link:
+            - /url: "#"
+            - img
+    - banner:
+      - navigation:
+        - link:
+          - /url: /
+          - generic:
+            - img
+        - generic:
+          - generic:
+            - generic:
+              - generic: Services
+              - img
+          - generic:
+            - button: Industries
+          - generic:
+            - button: About Us
+          - generic:
+            - link:
+              - /url: /locations
+              - text: Locations
+          - generic:
+            - link:
+              - /url: /quote
+              - text: Contact Us
+          - button:
+            - text: Get a Quote
+            - img
+    - main:
+      - generic:
+        - generic:
+          - generic:
+            - button:
+              - img
+              - text: Back
+            - heading [level=1]: Request a Quote
+            - paragraph: Get a customized quote for your fulfillment needs. Our team will analyze your requirements and provide competitive pricing within 24 hours.
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - heading [level=3]: Request a Quote
+                  - paragraph: Get a customized quote for your fulfillment needs. Our team will analyze your requirements and provide competitive pricing within 24 hours.
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - text: Name *
+                        - textbox:
+                          - /placeholder: John Doe
+                          - text: John Doe
+                      - generic:
+                        - text: Business Email *
+                        - textbox:
+                          - /placeholder: john@company.com
+                          - text: john@example.com
+                    - generic:
+                      - generic:
+                        - text: Mobile Number *
+                        - textbox:
+                          - /placeholder: (555) 123-4567
+                          - text: "1234567890"
+                      - generic:
+                        - text: Company Name *
+                        - textbox:
+                          - /placeholder: Your Company Inc.
+                          - text: ACME
+                    - generic:
+                      - generic:
+                        - text: Current Monthly Shipments *
+                        - combobox:
+                          - generic: Select current shipments
+                          - img
+                        - combobox
+                      - generic:
+                        - text: Expected Monthly Shipments *
+                        - combobox:
+                          - generic: Select expected shipments
+                          - img
+                        - combobox
+                    - generic:
+                      - text: Services Needed *
+                      - combobox [expanded]:
+                        - generic: Select a service
+                        - img
+                      - combobox
+                    - generic:
+                      - text: Additional Information
+                      - textbox:
+                        - /placeholder: Please describe your fulfillment needs, special requirements, or any questions you have...
+                    - generic:
+                      - checkbox
+                      - checkbox
+                      - generic: I agree to TSG Fulfillment's privacy policy and terms of service *
+                    - button:
+                      - img
+                      - text: Submit Quote Request
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: "1"
+                  - heading [level=3]: Review
+                  - paragraph: Our team analyzes your requirements and current fulfillment challenges
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: "2"
+                  - heading [level=3]: Customize
+                  - paragraph: We create a tailored solution and competitive pricing for your needs
+              - generic:
+                - generic:
+                  - generic:
+                    - generic: "3"
+                  - heading [level=3]: Connect
+                  - paragraph: We schedule a call to present your quote and answer questions
+    - contentinfo:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - heading [level=3]: Ready to optimize your logistics?
+              - paragraph: Get in touch with our experts for a free consultation.
+            - button:
+              - text: Contact Us
+              - img
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+              - paragraph: TSG Fulfillment specializes in retail, e-commerce, and B2B fulfillment. We provide practical, cost-effective logistics solutions tailored to your business needs.
+              - generic:
+                - link:
+                  - /url: "#"
+                  - img
+                - link:
+                  - /url: "#"
+                  - img
+                - link:
+                  - /url: "#"
+                  - img
+                - link:
+                  - /url: "#"
+                  - img
+            - generic:
+              - heading [level=3]: Services
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /services/warehousing
+                    - img
+                    - text: Warehousing
+                - listitem:
+                  - link:
+                    - /url: /services/fulfillment
+                    - img
+                    - text: Fulfillment
+                - listitem:
+                  - link:
+                    - /url: /services/transportation
+                    - img
+                    - text: Transportation
+                - listitem:
+                  - link:
+                    - /url: /services/value-added-services
+                    - img
+                    - text: Value Added Services
+            - generic:
+              - heading [level=3]: Quick Links
+              - list:
+                - listitem:
+                  - link:
+                    - /url: /#about
+                    - img
+                    - text: About Us
+                - listitem:
+                  - link:
+                    - /url: /#industries
+                    - img
+                    - text: Industries
+                - listitem:
+                  - link:
+                    - /url: /#services
+                    - img
+                    - text: Services
+                - listitem:
+                  - link:
+                    - /url: /locations
+                    - img
+                    - text: Locations
+                - listitem:
+                  - link:
+                    - /url: /#contact
+                    - img
+                    - text: Contact Us
+            - generic:
+              - heading [level=3]: Contact Info
+              - list:
+                - listitem:
+                  - link:
+                    - /url: tel:2898155869
+                    - generic:
+                      - img
+                    - generic: (289) 815-5869
+                - listitem:
+                  - link:
+                    - /url: mailto:info@tsgfulfillment.com
+                    - generic:
+                      - img
+                    - generic: info@tsgfulfillment.com
+                - listitem:
+                  - link:
+                    - /url: https://maps.google.com
+                    - generic:
+                      - img
+                    - generic: 6750 Langstaff Road, Vaughan, Ontario, L4H 5K2
+              - generic:
+                - heading [level=4]: Subscribe to Our Newsletter
+                - generic:
+                  - textbox:
+                    - /placeholder: Your email address
+                  - button:
+                    - img
+                - paragraph: Get the latest updates and insights directly to your inbox.
+          - separator
+          - generic:
+            - paragraph: © 2025 TSG Fulfillment Services Inc. All rights reserved.
+            - generic:
+              - link:
+                - /url: /privacy-policy
+                - text: Privacy Policy
+              - link:
+                - /url: /terms-of-service
+                - text: Terms of Service
+              - link:
+                - /url: /cookie-policy
+                - text: Cookie Policy
+              - link:
+                - /url: /sitemap.xml
+                - text: Sitemap
+    - list
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - heading [level=3]: We Value Your Privacy
+            - paragraph: This website uses cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking "Accept All", you consent to our use of cookies as described in our Cookie Policy.
+          - generic:
+            - button: Decline Non-Essential
+            - button: Accept All Cookies
+          - button:
+            - img
+        - generic:
+          - paragraph:
+            - text: You can change your preferences at any time by visiting our Privacy Settings page. For more details about our cookies, see our
+            - link:
+              - /url: "#"
+              - text: Cookie Policy
+            - text: and
+            - link:
+              - /url: "#"
+              - text: Privacy Policy
+            - text: .
+  - listbox [ref=e1]:
+    - option "Fulfillment Services" [active] [ref=e2]:
+      - generic [ref=e4]: Fulfillment Services
+    - option "Warehousing" [ref=e5]:
+      - generic [ref=e7]: Warehousing
+    - option "Transportation" [ref=e8]:
+      - generic [ref=e10]: Transportation
+    - option "Supply Chain Consulting" [ref=e11]:
+      - generic [ref=e13]: Supply Chain Consulting
+    - option "E-commerce Solutions" [ref=e14]:
+      - generic [ref=e16]: E-commerce Solutions
+    - option "Inventory Management" [ref=e17]:
+      - generic [ref=e19]: Inventory Management
+    - option "Reverse Logistics" [ref=e20]:
+      - generic [ref=e22]: Reverse Logistics
+    - option "Value-Added Services" [ref=e23]:
+      - generic [ref=e25]: Value-Added Services
+    - option "Custom Solutions" [ref=e26]:
+      - generic [ref=e28]: Custom Solutions
+    - img [ref=e30]
+```

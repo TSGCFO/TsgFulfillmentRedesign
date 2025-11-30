@@ -1,0 +1,584 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - link "(289) 815-5869" [ref=e7] [cursor=pointer]:
+          - /url: tel:2898155869
+          - img [ref=e8]
+          - generic [ref=e10]: (289) 815-5869
+        - link "info@tsgfulfillment.com" [ref=e11] [cursor=pointer]:
+          - /url: mailto:info@tsgfulfillment.com
+          - img [ref=e12]
+          - generic [ref=e15]: info@tsgfulfillment.com
+        - link "Locations" [ref=e16] [cursor=pointer]:
+          - /url: /locations
+          - img [ref=e17]
+          - generic [ref=e20]: Locations
+      - generic [ref=e21]:
+        - link [ref=e22] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e23]
+        - link [ref=e25] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e26]
+        - link [ref=e28] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e29]
+        - link [ref=e33] [cursor=pointer]:
+          - /url: "#"
+          - img [ref=e34]
+    - banner [ref=e37]:
+      - navigation [ref=e38]:
+        - link "TSG Fulfillment Services Inc" [ref=e39] [cursor=pointer]:
+          - /url: /
+          - img "TSG Fulfillment Services Inc" [ref=e41]
+        - generic [ref=e42]:
+          - generic [ref=e44] [cursor=pointer]:
+            - generic [ref=e45]: Services
+            - img [ref=e46]
+          - button "Industries" [ref=e49] [cursor=pointer]
+          - button "About Us" [ref=e51] [cursor=pointer]
+          - link "Locations" [ref=e53] [cursor=pointer]:
+            - /url: /locations
+          - link "Contact Us" [ref=e55] [cursor=pointer]:
+            - /url: /quote
+          - button "Get a Quote" [ref=e56] [cursor=pointer]:
+            - text: Get a Quote
+            - img
+    - main [ref=e57]:
+      - region "Elevating Your E-Commerce Experience Through Strategic Fulfillment" [ref=e58]:
+        - img "Modern logistics and fulfillment center" [ref=e60]
+        - generic [ref=e63]:
+          - generic [ref=e64]: LOGISTICS & FULFILLMENT SOLUTIONS
+          - heading "Elevating Your E-Commerce Experience Through Strategic Fulfillment" [level=1] [ref=e65]
+          - paragraph [ref=e66]: TSG Fulfillment provides end-to-end supply chain solutions designed to streamline your operations and enhance customer satisfaction. With strategically located facilities and cutting-edge technology, we deliver exceptional logistics services to businesses of all sizes.
+          - generic "Hero navigation" [ref=e67]:
+            - button "Request a quote for our services" [ref=e68] [cursor=pointer]:
+              - generic [ref=e69]: Request a Quote
+              - img
+            - button "Learn more about our services" [ref=e70] [cursor=pointer]: Explore Our Services
+        - button "Scroll Down" [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]: Scroll Down
+          - img [ref=e75]
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: Trusted Partners
+          - heading "Powering Supply Chains for Market Leaders" [level=2] [ref=e82]
+          - paragraph [ref=e83]: Our enterprise-grade logistics solutions serve leading brands across various industries.
+        - generic [ref=e84]:
+          - generic [ref=e86]:
+            - img "Amazon logo - TSG Fulfillment client" [ref=e87]
+            - generic [ref=e88]: Amazon
+          - generic [ref=e90]:
+            - img "Walmart logo - TSG Fulfillment client" [ref=e91]
+            - generic [ref=e92]: Walmart
+          - generic [ref=e94]:
+            - img "Shopify logo - TSG Fulfillment client" [ref=e95]
+            - generic [ref=e96]: Shopify
+          - generic [ref=e98]:
+            - img "Costco logo - TSG Fulfillment client" [ref=e99]
+            - generic [ref=e100]: Costco
+        - paragraph [ref=e102]: "*These are representative logos. Our client list includes companies across retail, e-commerce, healthcare, and technology sectors."
+      - region "Comprehensive Logistics Solutions" [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - generic [ref=e106]: Our Services
+            - heading "Comprehensive Logistics Solutions" [level=2] [ref=e107]
+            - paragraph [ref=e108]: We provide end-to-end supply chain services tailored to meet your business needs, from storage to shipping and everything in between.
+          - list "Logistics and fulfillment services" [ref=e109]:
+            - listitem [ref=e110]:
+              - article [ref=e111]:
+                - generic [ref=e112]:
+                  - img "Warehousing" [ref=e115]
+                  - generic [ref=e116]:
+                    - generic [ref=e117]: "01"
+                    - img [ref=e119]
+                    - heading "Warehousing" [level=3] [ref=e122]
+                    - paragraph [ref=e124]: Strategic warehouse facilities optimized for efficient storage and inventory management with climate control and security monitoring.
+                    - button "Learn more about Warehousing" [ref=e125] [cursor=pointer]:
+                      - text: Learn More
+                      - img
+            - listitem [ref=e126]:
+              - article [ref=e127]:
+                - generic [ref=e128]:
+                  - img "Fulfillment" [ref=e131]
+                  - generic [ref=e132]:
+                    - generic [ref=e133]: "02"
+                    - img [ref=e135]
+                    - heading "Fulfillment" [level=3] [ref=e139]
+                    - paragraph [ref=e141]: End-to-end order fulfillment services including receiving, storage, pick & pack, and shipping with real-time tracking and reporting.
+                    - button "Learn more about Fulfillment" [ref=e142] [cursor=pointer]:
+                      - text: Learn More
+                      - img
+            - listitem [ref=e143]:
+              - article [ref=e144]:
+                - generic [ref=e145]:
+                  - img "Transportation" [ref=e148]
+                  - generic [ref=e149]:
+                    - generic [ref=e150]: "03"
+                    - img [ref=e152]
+                    - heading "Transportation" [level=3] [ref=e157]
+                    - paragraph [ref=e159]: Comprehensive transportation and logistics solutions with optimized routing and carrier selection for timely delivery and cost efficiency.
+                    - button "Learn more about Transportation" [ref=e160] [cursor=pointer]:
+                      - text: Learn More
+                      - img
+            - listitem [ref=e161]:
+              - article [ref=e162]:
+                - generic [ref=e163]:
+                  - img "Value Added Services" [ref=e166]
+                  - generic [ref=e167]:
+                    - generic [ref=e168]: "04"
+                    - img [ref=e170]
+                    - heading "Value Added Services" [level=3] [ref=e173]
+                    - paragraph [ref=e175]: Custom kitting, assembly, packaging, labeling, and quality control services tailored to your specific business requirements.
+                    - button "Learn more about Value Added Services" [ref=e176] [cursor=pointer]:
+                      - text: Learn More
+                      - img
+      - region "Specialized Solutions for Every Industry" [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]: Industries We Serve
+            - heading "Specialized Solutions for Every Industry" [level=2] [ref=e181]
+            - paragraph [ref=e182]: We provide customized fulfillment and logistics services tailored to the unique requirements of various industries, ensuring optimal performance for your supply chain.
+          - list "Industries served by TSG Fulfillment" [ref=e183]:
+            - listitem [ref=e184]:
+              - generic [ref=e186] [cursor=pointer]:
+                - img "E-Commerce logistics and fulfillment services" [ref=e188]
+                - generic [ref=e189]:
+                  - heading "E-Commerce" [level=3] [ref=e190]
+                  - paragraph [ref=e191]: Streamline your online retail operations with our end-to-end fulfillment solutions designed specifically for e-commerce businesses of all sizes.
+                  - generic [ref=e192]:
+                    - generic [ref=e193]: Learn More
+                    - img [ref=e194]
+            - listitem [ref=e196]:
+              - generic [ref=e198] [cursor=pointer]:
+                - img "Retail & CPG logistics and fulfillment services" [ref=e200]
+                - generic [ref=e201]:
+                  - heading "Retail & CPG" [level=3] [ref=e202]
+                  - paragraph [ref=e203]: Our retail and consumer packaged goods logistics solutions help you manage inventory, streamline distribution, and meet evolving consumer demands.
+                  - generic [ref=e204]:
+                    - generic [ref=e205]: Learn More
+                    - img [ref=e206]
+            - listitem [ref=e208]:
+              - generic [ref=e210] [cursor=pointer]:
+                - img "Health & Beauty logistics and fulfillment services" [ref=e212]
+                - generic [ref=e213]:
+                  - heading "Health & Beauty" [level=3] [ref=e214]
+                  - paragraph [ref=e215]: Specialized handling, storage, and fulfillment services for health, beauty, and personal care products with full regulatory compliance.
+                  - generic [ref=e216]:
+                    - generic [ref=e217]: Learn More
+                    - img [ref=e218]
+            - listitem [ref=e220]:
+              - generic [ref=e222] [cursor=pointer]:
+                - img "Technology logistics and fulfillment services" [ref=e224]
+                - generic [ref=e225]:
+                  - heading "Technology" [level=3] [ref=e226]
+                  - paragraph [ref=e227]: Secure warehousing and efficient distribution for high-value electronics and technology products with specialized handling procedures.
+                  - generic [ref=e228]:
+                    - generic [ref=e229]: Learn More
+                    - img [ref=e230]
+            - listitem [ref=e232]:
+              - generic [ref=e234] [cursor=pointer]:
+                - img "Food & Beverage logistics and fulfillment services" [ref=e236]
+                - generic [ref=e237]:
+                  - heading "Food & Beverage" [level=3] [ref=e238]
+                  - paragraph [ref=e239]: Temperature-controlled storage and specialized handling for food and beverage products with strict adherence to safety regulations.
+                  - generic [ref=e240]:
+                    - generic [ref=e241]: Learn More
+                    - img [ref=e242]
+            - listitem [ref=e244]:
+              - generic [ref=e246] [cursor=pointer]:
+                - img "Subscription Boxes logistics and fulfillment services" [ref=e248]
+                - generic [ref=e249]:
+                  - heading "Subscription Boxes" [level=3] [ref=e250]
+                  - paragraph [ref=e251]: Custom kitting, assembly, and recurring shipment management for subscription box businesses with flexible scaling options.
+                  - generic [ref=e252]:
+                    - generic [ref=e253]: Learn More
+                    - img [ref=e254]
+      - region "Your Trusted Partner for Logistics Excellence" [ref=e256]:
+        - generic [ref=e257]:
+          - generic [ref=e258]:
+            - generic [ref=e259]: Why Choose Us
+            - heading "Your Trusted Partner for Logistics Excellence" [level=2] [ref=e260]
+            - paragraph [ref=e261]: We combine cutting-edge technology, strategic locations, and industry expertise to deliver exceptional fulfillment solutions that help your business thrive.
+          - generic [ref=e262]:
+            - generic [ref=e263]:
+              - img [ref=e265]
+              - heading "200+" [level=3] [ref=e268]
+              - generic [ref=e269]: Active Clients
+              - paragraph [ref=e270]: Trusted by leading brands
+            - generic [ref=e271]:
+              - img [ref=e273]
+              - heading "15+" [level=3] [ref=e276]
+              - generic [ref=e277]: Years Experience
+              - paragraph [ref=e278]: Industry expertise
+            - generic [ref=e279]:
+              - img [ref=e281]
+              - heading "99.8%" [level=3] [ref=e286]
+              - generic [ref=e287]: Accuracy Rate
+              - paragraph [ref=e288]: Quality assurance
+          - generic [ref=e289]:
+            - generic [ref=e291]:
+              - generic [ref=e293]: Loading...
+              - img "Modern logistics warehouse with advanced technology and organized operations" [ref=e294]
+            - generic [ref=e295]:
+              - heading "Streamlining Your Supply Chain" [level=3] [ref=e296]
+              - paragraph [ref=e297]: At TSG Fulfillment, we understand the complexities of modern logistics. Our team of experts implements practical and cost-effective solutions to help you overcome your fulfillment challenges and achieve operational excellence.
+              - generic [ref=e298]:
+                - generic [ref=e299]:
+                  - img [ref=e300]
+                  - generic [ref=e303]: Strategic Locations
+                - generic [ref=e304]:
+                  - img [ref=e305]
+                  - generic [ref=e308]: Technology-Driven Operations
+                - generic [ref=e309]:
+                  - img [ref=e310]
+                  - generic [ref=e313]: Dedicated Account Management
+                - generic [ref=e314]:
+                  - img [ref=e315]
+                  - generic [ref=e318]: Scalable Solutions
+                - generic [ref=e319]:
+                  - img [ref=e320]
+                  - generic [ref=e323]: Industry Expertise
+                - generic [ref=e324]:
+                  - img [ref=e325]
+                  - generic [ref=e328]: Quality Assurance
+              - button "Learn more about our services and contact us" [ref=e329] [cursor=pointer]:
+                - text: Learn More
+                - img
+      - region "Excellence in Every Package" [ref=e330]:
+        - generic [ref=e332]:
+          - generic [ref=e333]:
+            - generic [ref=e334]: About TSG Fulfillment
+            - heading "Excellence in Every Package" [level=2] [ref=e335]
+            - paragraph [ref=e336]: TSG Fulfillment is a mid-size fulfillment company specializing in retail, e-commerce, and B2B fulfillment. We not only want to help companies succeed but also grow with them. Our customer-centric approach and commitment to quality have made us a trusted partner for businesses of all sizes.
+            - paragraph [ref=e337]: Our mission is to empower businesses with efficient, reliable, and scalable fulfillment solutions that enable growth and customer satisfaction. With strategically located facilities and cutting-edge technology, we deliver exceptional logistics services that help you stay ahead of the competition.
+            - button "Contact us to learn more about our company" [ref=e338] [cursor=pointer]:
+              - text: Contact Us
+              - img
+          - generic [ref=e340]:
+            - generic [ref=e341]:
+              - generic [ref=e343]: Loading...
+              - img "TSG Fulfillment warehouse operations showing organized logistics processes" [ref=e344]
+            - generic [ref=e345]:
+              - generic [ref=e346]: 15+
+              - generic [ref=e347]: Years of Excellence
+      - generic [ref=e349]:
+        - generic [ref=e350]:
+          - text: HOW IT WORKS
+          - heading "Our Fulfillment Process" [level=2] [ref=e351]
+          - paragraph [ref=e352]: Our streamlined logistics process is designed to increase efficiency, reduce costs, and help your business grow. From receiving your inventory to managing returns, we handle every step with precision and care.
+        - generic [ref=e355]:
+          - generic [ref=e356]:
+            - generic [ref=e357]:
+              - heading "Receiving & Inbound Solutions" [level=3] [ref=e358]
+              - paragraph [ref=e359]: We receive your inventory at our fulfillment center, performing detailed quality inspection to ensure everything is accounted for and in excellent condition. Our team meticulously documents and catalogs each item for accurate inventory tracking.
+            - generic [ref=e361]: "1"
+            - generic:
+              - img "Receiving inventory at TSG Fulfillment"
+          - generic [ref=e362]:
+            - generic:
+              - img "TSG Warehouse storage systems"
+            - generic [ref=e364]: "2"
+            - generic [ref=e365]:
+              - heading "Warehousing & Inventory Management" [level=3] [ref=e366]
+              - paragraph [ref=e367]: Your products are stored in our secure, climate-controlled facilities with advanced inventory management systems. We monitor stock levels in real-time, providing accurate reporting and ensuring efficient space utilization to keep your storage costs optimized.
+          - generic [ref=e368]:
+            - generic [ref=e369]:
+              - heading "Order Processing & Kitting" [level=3] [ref=e370]
+              - paragraph [ref=e371]: When orders arrive, our integrated system processes them automatically with precision. Our expert team handles picking, kitting, and packing with attention to detail. We can assemble multi-component orders and create custom product bundles according to your specifications.
+            - generic [ref=e373]: "3"
+            - generic:
+              - img "TSG Order processing system"
+          - generic [ref=e374]:
+            - generic:
+              - img "TSG Shipping and freight solutions"
+            - generic [ref=e376]: "4"
+            - generic [ref=e377]:
+              - heading "Shipping & Freight Solutions" [level=3] [ref=e378]
+              - paragraph [ref=e379]: We leverage our relationships with major carriers to optimize your shipping costs and transit times. Our team selects the most appropriate shipping method based on package size, destination, and delivery timeline requirements, ensuring your customers receive their orders promptly.
+          - generic [ref=e380]:
+            - generic [ref=e381]:
+              - heading "Reverse Logistics" [level=3] [ref=e382]
+              - paragraph [ref=e383]: Our comprehensive returns management system handles the entire returns process efficiently. We receive returns, inspect items, process them according to your specifications, and either restock them or dispose of them appropriately, reducing waste and improving customer satisfaction.
+            - generic [ref=e385]: "5"
+            - generic:
+              - img "TSG Returns management process"
+      - generic [ref=e390]:
+        - generic [ref=e391]:
+          - generic [ref=e392]: Testimonials
+          - heading "What Our Clients Say" [level=2] [ref=e393]
+          - paragraph [ref=e394]: Don't just take our word for it - hear from businesses who have transformed their operations with TSG Fulfillment.
+        - generic [ref=e397]:
+          - generic [ref=e398]:
+            - generic [ref=e399]:
+              - generic [ref=e400]:
+                - img [ref=e401]
+                - img [ref=e403]
+                - img [ref=e405]
+                - img [ref=e407]
+                - img [ref=e409]
+              - generic [ref=e411]:
+                - img [ref=e412]
+                - paragraph [ref=e415]: "\"Since partnering with TSG Fulfillment, our shipping costs have decreased by 23% while our delivery times have improved significantly. Their integrated technology platform provides us with real-time visibility, allowing us to make data-driven decisions and deliver exceptional customer experiences.\""
+            - generic [ref=e416]:
+              - img "Sarah Johnson" [ref=e418]
+              - generic [ref=e419]:
+                - heading "Sarah Johnson" [level=4] [ref=e420]
+                - generic [ref=e421]: CEO
+                - generic [ref=e422]: Fashion Retail Co.
+          - generic [ref=e425]:
+            - generic [ref=e426]: ❝
+            - generic [ref=e427]: Success Stories
+            - generic [ref=e428]:
+              - button "Previous testimonial" [ref=e429] [cursor=pointer]:
+                - img [ref=e430]
+              - button "Next testimonial" [ref=e432] [cursor=pointer]:
+                - img [ref=e433]
+            - generic [ref=e435]: 1 / 3
+      - region "Frequently Asked Questions" [ref=e436]:
+        - generic [ref=e437]:
+          - generic [ref=e438]:
+            - text: COMMON QUESTIONS
+            - heading "Frequently Asked Questions" [level=2] [ref=e439]
+            - paragraph [ref=e440]: Find answers to common questions about our fulfillment services.
+          - group "Frequently Asked Questions" [ref=e441]:
+            - generic [ref=e442]:
+              - heading "What is order fulfillment?" [level=3] [ref=e445]:
+                - button "What is order fulfillment?" [ref=e446] [cursor=pointer]:
+                  - text: What is order fulfillment?
+                  - img [ref=e447]
+              - heading "How can TSG Fulfillment help my business?" [level=3] [ref=e451]:
+                - button "How can TSG Fulfillment help my business?" [ref=e452] [cursor=pointer]:
+                  - text: How can TSG Fulfillment help my business?
+                  - img [ref=e453]
+              - heading "What are your shipping times and rates?" [level=3] [ref=e457]:
+                - button "What are your shipping times and rates?" [ref=e458] [cursor=pointer]:
+                  - text: What are your shipping times and rates?
+                  - img [ref=e459]
+              - heading "How do you handle returns?" [level=3] [ref=e463]:
+                - button "How do you handle returns?" [ref=e464] [cursor=pointer]:
+                  - text: How do you handle returns?
+                  - img [ref=e465]
+              - heading "What types of businesses do you work with?" [level=3] [ref=e469]:
+                - button "What types of businesses do you work with?" [ref=e470] [cursor=pointer]:
+                  - text: What types of businesses do you work with?
+                  - img [ref=e471]
+              - heading "Do you offer inventory management services?" [level=3] [ref=e475]:
+                - button "Do you offer inventory management services?" [ref=e476] [cursor=pointer]:
+                  - text: Do you offer inventory management services?
+                  - img [ref=e477]
+      - generic [ref=e481]:
+        - heading "Ready to Optimize Your Fulfillment Process?" [level=2] [ref=e482]
+        - paragraph [ref=e483]: Let's discuss how TSG Fulfillment can help streamline your operations and reduce costs while improving customer satisfaction.
+        - generic [ref=e484]:
+          - button "Get a Free Quote" [ref=e485] [cursor=pointer]:
+            - generic [ref=e486]: Get a Free Quote
+          - button "Learn More" [ref=e487] [cursor=pointer]
+      - generic [ref=e490]:
+        - generic [ref=e491]:
+          - text: GET IN TOUCH
+          - heading "Contact Us" [level=2] [ref=e492]
+          - paragraph [ref=e493]: Want to learn more about our fulfillment services? Fill out the form, and one of our logistics experts will contact you promptly. We're here to answer your questions and find practical, cost-effective solutions for your fulfillment challenges.
+          - generic [ref=e494]:
+            - generic [ref=e495]:
+              - img [ref=e497]
+              - generic [ref=e500]:
+                - heading "Our Location" [level=4] [ref=e501]
+                - paragraph [ref=e502]: 6750 Langstaff Road, Vaughan, Ontario, L4H 5K2
+            - generic [ref=e503]:
+              - img [ref=e505]
+              - generic [ref=e507]:
+                - heading "Phone Number" [level=4] [ref=e508]
+                - paragraph [ref=e509]: (289) 815-5869
+            - generic [ref=e510]:
+              - img [ref=e512]
+              - generic [ref=e515]:
+                - heading "Email Address" [level=4] [ref=e516]
+                - paragraph [ref=e517]: info@tsgfulfillment.com
+            - generic [ref=e518]:
+              - img [ref=e520]
+              - generic [ref=e523]:
+                - heading "Business Hours" [level=4] [ref=e524]
+                - paragraph [ref=e525]: "Monday - Friday: 9:00 AM - 5:00 PM ET"
+          - generic [ref=e526]:
+            - link "LinkedIn" [ref=e527] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e528]
+            - link "Twitter" [ref=e530] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e531]
+            - link "Facebook" [ref=e533] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e534]
+            - link "Instagram" [ref=e536] [cursor=pointer]:
+              - /url: "#"
+              - img [ref=e537]
+        - generic [ref=e541]:
+          - heading "Get a Free Quote" [level=3] [ref=e542]
+          - generic [ref=e543]:
+            - textbox "Name *" [ref=e545]
+            - textbox "Business Email *" [ref=e547]
+            - textbox "Mobile Number *" [ref=e549]
+            - textbox "Company Name *" [ref=e551]
+            - generic [ref=e552]:
+              - combobox [ref=e553] [cursor=pointer]:
+                - generic: Current Monthly Shipments*
+                - img [ref=e554]
+              - combobox [ref=e556]
+            - generic [ref=e557]:
+              - combobox [ref=e558] [cursor=pointer]:
+                - generic: Monthly shipments expected 12 months from now*
+                - img [ref=e559]
+              - combobox [ref=e561]
+            - generic [ref=e562]:
+              - combobox [ref=e563] [cursor=pointer]:
+                - generic: Looking for fulfillment services
+                - img [ref=e564]
+              - combobox [ref=e566]
+            - textbox "Additional Information" [ref=e568]
+            - generic [ref=e569]:
+              - checkbox [ref=e570]
+              - generic [ref=e571]: I'm not a robot
+              - generic [ref=e572]:
+                - generic [ref=e573]: reCAPTCHA
+                - generic [ref=e574]: Privacy - Terms
+            - button "Submit Request" [ref=e575] [cursor=pointer]
+    - contentinfo [ref=e576]:
+      - generic [ref=e579]:
+        - generic [ref=e580]:
+          - heading "Ready to optimize your logistics?" [level=3] [ref=e581]
+          - paragraph [ref=e582]: Get in touch with our experts for a free consultation.
+        - button "Contact Us" [ref=e583] [cursor=pointer]:
+          - text: Contact Us
+          - img
+      - generic [ref=e585]:
+        - generic [ref=e586]:
+          - generic [ref=e587]:
+            - img "TSG Fulfillment Services Inc" [ref=e590]
+            - paragraph [ref=e591]: TSG Fulfillment specializes in retail, e-commerce, and B2B fulfillment. We provide practical, cost-effective logistics solutions tailored to your business needs.
+            - generic [ref=e592]:
+              - link "LinkedIn" [ref=e593] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e594]
+              - link "Twitter" [ref=e598] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e599]
+              - link "Facebook" [ref=e601] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e602]
+              - link "Instagram" [ref=e604] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e605]
+          - generic [ref=e608]:
+            - heading "Services" [level=3] [ref=e609]
+            - list [ref=e610]:
+              - listitem [ref=e611]:
+                - link "Warehousing" [ref=e612] [cursor=pointer]:
+                  - /url: /services/warehousing
+                  - img [ref=e613]
+                  - text: Warehousing
+              - listitem [ref=e615]:
+                - link "Fulfillment" [ref=e616] [cursor=pointer]:
+                  - /url: /services/fulfillment
+                  - img [ref=e617]
+                  - text: Fulfillment
+              - listitem [ref=e619]:
+                - link "Transportation" [ref=e620] [cursor=pointer]:
+                  - /url: /services/transportation
+                  - img [ref=e621]
+                  - text: Transportation
+              - listitem [ref=e623]:
+                - link "Value Added Services" [ref=e624] [cursor=pointer]:
+                  - /url: /services/value-added-services
+                  - img [ref=e625]
+                  - text: Value Added Services
+          - generic [ref=e627]:
+            - heading "Quick Links" [level=3] [ref=e628]
+            - list [ref=e629]:
+              - listitem [ref=e630]:
+                - link "About Us" [ref=e631] [cursor=pointer]:
+                  - /url: /#about
+                  - img [ref=e632]
+                  - text: About Us
+              - listitem [ref=e634]:
+                - link "Industries" [ref=e635] [cursor=pointer]:
+                  - /url: /#industries
+                  - img [ref=e636]
+                  - text: Industries
+              - listitem [ref=e638]:
+                - link "Services" [ref=e639] [cursor=pointer]:
+                  - /url: /#services
+                  - img [ref=e640]
+                  - text: Services
+              - listitem [ref=e642]:
+                - link "Locations" [ref=e643] [cursor=pointer]:
+                  - /url: /locations
+                  - img [ref=e644]
+                  - text: Locations
+              - listitem [ref=e646]:
+                - link "Contact Us" [ref=e647] [cursor=pointer]:
+                  - /url: /#contact
+                  - img [ref=e648]
+                  - text: Contact Us
+          - generic [ref=e650]:
+            - heading "Contact Info" [level=3] [ref=e651]
+            - list [ref=e652]:
+              - listitem [ref=e653]:
+                - link "(289) 815-5869" [ref=e654] [cursor=pointer]:
+                  - /url: tel:2898155869
+                  - img [ref=e656]
+                  - generic [ref=e658]: (289) 815-5869
+              - listitem [ref=e659]:
+                - link "info@tsgfulfillment.com" [ref=e660] [cursor=pointer]:
+                  - /url: mailto:info@tsgfulfillment.com
+                  - img [ref=e662]
+                  - generic [ref=e665]: info@tsgfulfillment.com
+              - listitem [ref=e666]:
+                - link "6750 Langstaff Road, Vaughan, Ontario, L4H 5K2" [ref=e667] [cursor=pointer]:
+                  - /url: https://maps.google.com
+                  - img [ref=e669]
+                  - generic [ref=e672]: 6750 Langstaff Road, Vaughan, Ontario, L4H 5K2
+            - generic [ref=e673]:
+              - heading "Subscribe to Our Newsletter" [level=4] [ref=e674]
+              - generic [ref=e675]:
+                - textbox "Your email address" [ref=e676]
+                - button [ref=e677] [cursor=pointer]:
+                  - img
+              - paragraph [ref=e678]: Get the latest updates and insights directly to your inbox.
+        - separator [ref=e679]
+        - generic [ref=e680]:
+          - paragraph [ref=e681]: © 2025 TSG Fulfillment Services Inc. All rights reserved.
+          - generic [ref=e682]:
+            - link "Privacy Policy" [ref=e683] [cursor=pointer]:
+              - /url: /privacy-policy
+            - link "Terms of Service" [ref=e684] [cursor=pointer]:
+              - /url: /terms-of-service
+            - link "Cookie Policy" [ref=e685] [cursor=pointer]:
+              - /url: /cookie-policy
+            - link "Sitemap" [ref=e686] [cursor=pointer]:
+              - /url: /sitemap.xml
+  - region "Notifications (F8)":
+    - list
+  - generic [ref=e688]:
+    - generic [ref=e689]:
+      - generic [ref=e690]:
+        - heading "We Value Your Privacy" [level=3] [ref=e691]
+        - paragraph [ref=e692]: This website uses cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking "Accept All", you consent to our use of cookies as described in our Cookie Policy.
+      - generic [ref=e693]:
+        - button "Decline Non-Essential" [ref=e694] [cursor=pointer]
+        - button "Accept All Cookies" [ref=e695] [cursor=pointer]
+      - button "Close cookie consent" [ref=e696] [cursor=pointer]:
+        - img [ref=e697]
+    - paragraph [ref=e701]:
+      - text: You can change your preferences at any time by visiting our Privacy Settings page. For more details about our cookies, see our
+      - link "Cookie Policy" [ref=e702] [cursor=pointer]:
+        - /url: "#"
+      - text: and
+      - link "Privacy Policy" [ref=e703] [cursor=pointer]:
+        - /url: "#"
+      - text: .
+```

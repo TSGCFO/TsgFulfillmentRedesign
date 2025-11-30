@@ -4,6 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
+packages = ["glib", "nss", "nspr", "atk", "at-spi2-atk", "xorg.libX11", "xorg.libxcb", "xorg.libXcomposite", "xorg.libXdamage", "xorg.libXext", "xorg.libXfixes", "xorg.libXrandr", "mesa", "pango", "cairo", "alsa-lib", "dbus", "expat", "libxkbcommon", "cups"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -21,6 +22,10 @@ externalPort = 3000
 [[ports]]
 localPort = 42519
 externalPort = 3001
+
+[[ports]]
+localPort = 44709
+externalPort = 3002
 
 [workflows]
 runButton = "Project"
